@@ -11,5 +11,10 @@ namespace Scripts.Gameplay.Abillities
         {
             OnMove?.Invoke(vector);
         }
+
+        /// <summary>
+        /// Returns true if Move must be called only in FixedUpdate
+        /// </summary>
+        public abstract bool IsPhysicsMovement();
     }
 }

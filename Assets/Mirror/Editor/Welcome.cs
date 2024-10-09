@@ -7,7 +7,7 @@ namespace Mirror
 {
     static class Welcome
     {
-        [InitializeOnLoadMethod]
+        //[InitializeOnLoadMethod]
         static void OnInitializeOnLoad()
         {
             // InitializeOnLoad is called on start and after each rebuild,

@@ -5,21 +5,20 @@ using Scripts.Gameplay.Abillities;
 using Mirror;
 using System.Linq;
 using System;
+using Scripts.Extensions;
 
 namespace Scripts.Gameplay.Entities
 {
     /// <summary>
     /// Class for managing controlles and updating abillities
     /// </summary>
-    public class Entity : NetworkBehaviour
+    public class Entity : NetworkBehaviour, IInitializable
     {
         #region Fields && Properties
 
         private Controller controller;
 
         private Abillity[] abillities;
-
-
 
 
         public Controller Controller => controller;
@@ -75,18 +74,20 @@ namespace Scripts.Gameplay.Entities
         /// </summary>
         public T FindAbillity<T>() where T : Abillity
         {
-            return Abillities.Where(a => a is T)
-                             .FirstOrDefault() as T;
+            //return Abillities.Where(a => a is T)
+            //                 .FirstOrDefault() as T;
 
-            //return FindAbillity(typeof(T)) as T;
+            return Abillities.FindByType<T>();
         }
         /// <summary>
         /// Finds abillity by type
         /// </summary>
         public Abillity FindAbillity(Type type)
         {
-            return Abillities.Where(a => a.GetType() == type)
-                             .FirstOrDefault();
+            //return Abillities.Where(a => a.GetType() == type)
+            //                 .FirstOrDefault();
+
+            return Abillities.FindByType(type) as Abillity;
         }
     }
 }
