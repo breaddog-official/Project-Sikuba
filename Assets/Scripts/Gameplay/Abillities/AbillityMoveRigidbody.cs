@@ -1,11 +1,10 @@
-using Mirror;
 using UnityEngine;
 
 namespace Scripts.Gameplay.Abillities
 {
     public class AbillityMoveRigidbody : AbillityMove
     {
-        [field: SerializeField] public float Speed { get; private set; } 
+        [field: SerializeField] public float Speed { get; private set; } = 10.0f;
 
         private Rigidbody rb;
 
@@ -20,25 +19,43 @@ namespace Scripts.Gameplay.Abillities
 
 
 
-        public override void Move(Vector3 vector)
+        public override void Move(Vector3 input)
         {
-            vector = transform.TransformDirection(vector.normalized) * Speed;
+            Quaternion cameraRot = MainCamera.Instance.transform.rotation;
 
-            AddForce(vector);
+            HandleMovement(input, cameraRot);
 
-            if (NetworkClient.active)
-                CmdAddForce(vector);
-
-            base.Move(vector);
+            base.Move(input);
         }
 
 
 
-        [Command]
-        private void CmdAddForce(Vector3 force) => AddForce(force);
-        private void AddForce(Vector3 force) => rb.AddForce(force, ForceMode.Force);
+
+        private void AddForce(Vector3 force)
+        {
+            rb.AddForce(force, ForceMode.Impulse);
+        }
+
+        private void HandleMovement(Vector3 input, Quaternion cameraRotation)
+        {
+            Vector3 calculatedVector = CalculateVector(input, cameraRotation);
+            AddForce(calculatedVector);
+        }
 
 
-        public override bool IsPhysicsMovement() => true;
+
+        private Vector3 CalculateVector(Vector3 input, Quaternion cameraRotation)
+        {
+            // We leave only rotation along the Y
+            cameraRotation = Quaternion.Euler(0.0f, cameraRotation.eulerAngles.y, 0.0f);
+
+            // Same as camera.TransformDirection(input)
+            return cameraRotation * (input.normalized * Time.deltaTime) * (Speed * 10.0f);
+        }
+
+
+
+        // Although this component is powered by physics, to avoid input loss we will process it in Update
+        public override bool IsPhysicsMovement() => false;
     }
 }

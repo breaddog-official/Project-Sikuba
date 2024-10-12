@@ -48,7 +48,7 @@ namespace Scripts.Input
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Look"",
+                    ""name"": ""Turn"",
                     ""type"": ""Value"",
                     ""id"": ""e095d66d-5e00-4b3e-906a-5497e6a7cedf"",
                     ""expectedControlType"": ""Axis"",
@@ -57,10 +57,64 @@ namespace Scripts.Input
                     ""initialStateCheck"": true
                 },
                 {
+                    ""name"": ""Jump"",
+                    ""type"": ""Button"",
+                    ""id"": ""447a5f1a-39da-4600-8262-637a2e085636"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Crouch"",
+                    ""type"": ""Button"",
+                    ""id"": ""cc4b6ae3-5c3b-4bac-a3d1-6d6576466faf"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Reload"",
+                    ""type"": ""Button"",
+                    ""id"": ""9eddfbc7-d931-41c2-93b5-3af6223eebe2"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Map"",
+                    ""type"": ""Button"",
+                    ""id"": ""bb518fa9-da2d-4354-aabc-c94ee6b91f02"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""LookPosition"",
+                    ""type"": ""Value"",
+                    ""id"": ""329b681f-7c88-4bc0-b10a-95f5eca7eda0"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Look"",
+                    ""type"": ""Value"",
+                    ""id"": ""9e5bea27-8d12-4d8d-a6eb-e46441b2e428"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
                     ""name"": ""Move"",
                     ""type"": ""Value"",
                     ""id"": ""ae972165-499e-4e99-8d69-88c440795a6f"",
-                    ""expectedControlType"": ""Vector3"",
+                    ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
@@ -69,11 +123,22 @@ namespace Scripts.Input
             ""bindings"": [
                 {
                     ""name"": """",
-                    ""id"": ""e18c1a78-7fc6-4d74-91fa-935dcb06189f"",
+                    ""id"": ""fe16e374-fd0f-4ee2-9ca2-cda9ccd867d7"",
                     ""path"": ""<Mouse>/leftButton"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";Keyboard Mouse"",
+                    ""action"": ""Fire"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b92aa299-78a0-455a-8380-b0a4e3113f79"",
+                    ""path"": ""<Pen>/press"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard Pen"",
                     ""action"": ""Fire"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -84,7 +149,7 @@ namespace Scripts.Input
                     ""path"": ""<Gamepad>/rightTrigger"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";Default;Gamepad"",
                     ""action"": ""Fire"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -95,7 +160,18 @@ namespace Scripts.Input
                     ""path"": ""<Mouse>/rightButton"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";Default;Keyboard & Pointer;Keyboard Mouse"",
+                    ""action"": ""AlternateFire"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""712671ee-ae24-4bd3-8371-a2938cd212f3"",
+                    ""path"": ""<Pointer>/press"",
+                    ""interactions"": ""MultiTap"",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard & Pointer;Keyboard Pen"",
                     ""action"": ""AlternateFire"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -106,7 +182,7 @@ namespace Scripts.Input
                     ""path"": ""<Gamepad>/leftTrigger"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";Default;Gamepad"",
                     ""action"": ""AlternateFire"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -118,7 +194,7 @@ namespace Scripts.Input
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Look"",
+                    ""action"": ""Turn"",
                     ""isComposite"": true,
                     ""isPartOfComposite"": false
                 },
@@ -128,8 +204,8 @@ namespace Scripts.Input
                     ""path"": ""<Keyboard>/q"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Look"",
+                    ""groups"": "";Default;Keyboard & Pointer;Keyboard Mouse;Keyboard Pen"",
+                    ""action"": ""Turn"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -139,8 +215,8 @@ namespace Scripts.Input
                     ""path"": ""<Keyboard>/e"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Look"",
+                    ""groups"": "";Default;Keyboard & Pointer;Keyboard Pen;Keyboard Mouse"",
+                    ""action"": ""Turn"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -151,7 +227,7 @@ namespace Scripts.Input
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Look"",
+                    ""action"": ""Turn"",
                     ""isComposite"": true,
                     ""isPartOfComposite"": false
                 },
@@ -161,8 +237,8 @@ namespace Scripts.Input
                     ""path"": ""<Gamepad>/leftShoulder"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Look"",
+                    ""groups"": "";Default;Gamepad"",
+                    ""action"": ""Turn"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -172,15 +248,15 @@ namespace Scripts.Input
                     ""path"": ""<Gamepad>/rightShoulder"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Look"",
+                    ""groups"": "";Default;Gamepad"",
+                    ""action"": ""Turn"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
                 {
                     ""name"": ""Keyboard"",
                     ""id"": ""f257bcdf-05a6-46b1-b169-2b62fed3430c"",
-                    ""path"": ""3DVector"",
+                    ""path"": ""2DVector(mode=1)"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -189,156 +265,227 @@ namespace Scripts.Input
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": ""up"",
-                    ""id"": ""f6f66c0c-ed3e-4c6a-9429-4a4959c4d30a"",
-                    ""path"": ""<Keyboard>/space"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""down"",
-                    ""id"": ""542b8222-bf57-40c6-8821-35851689ebe2"",
-                    ""path"": ""<Keyboard>/c"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""left"",
+                    ""name"": ""Up"",
                     ""id"": ""7a715497-3702-40b7-8a9a-e54bac492723"",
-                    ""path"": ""<Keyboard>/a"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""e61fbe8f-8088-45ca-babb-b6c22c3dc7c1"",
-                    ""path"": ""<Keyboard>/d"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""forward"",
-                    ""id"": ""2a04d07c-8ae1-4f47-b172-bbda647b3149"",
                     ""path"": ""<Keyboard>/w"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";Default;Keyboard & Pointer;Keyboard Pen;Keyboard Mouse"",
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""backward"",
-                    ""id"": ""e19158b9-9b1d-4bb4-b90c-3fabe23b6711"",
+                    ""name"": ""Down"",
+                    ""id"": ""e61fbe8f-8088-45ca-babb-b6c22c3dc7c1"",
                     ""path"": ""<Keyboard>/s"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";Default;Keyboard & Pointer;Keyboard Pen;Keyboard Mouse"",
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""Gamepad"",
-                    ""id"": ""6ce9eccd-cd81-4dff-a67d-269168be5797"",
-                    ""path"": ""3DVector"",
+                    ""name"": ""Left"",
+                    ""id"": ""2a04d07c-8ae1-4f47-b172-bbda647b3149"",
+                    ""path"": ""<Keyboard>/a"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";Default;Keyboard & Pointer;Keyboard Pen;Keyboard Mouse"",
                     ""action"": ""Move"",
-                    ""isComposite"": true,
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""Right"",
+                    ""id"": ""e19158b9-9b1d-4bb4-b90c-3fabe23b6711"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Default;Keyboard & Pointer;Keyboard Pen;Keyboard Mouse"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4b0fcb95-2b94-4c84-8891-755761cf798b"",
+                    ""path"": ""<Gamepad>/leftStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Default;Gamepad"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": ""up"",
-                    ""id"": ""daa304c5-55ad-44cd-992a-b0f808189d4d"",
-                    ""path"": ""<Gamepad>/rightStick/up"",
+                    ""name"": """",
+                    ""id"": ""76e8ff9f-3591-4872-9556-8825ba9665a6"",
+                    ""path"": ""<Gamepad>/rightStick"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Move"",
+                    ""groups"": "";Default;Gamepad"",
+                    ""action"": ""Look"",
                     ""isComposite"": false,
-                    ""isPartOfComposite"": true
+                    ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": ""down"",
-                    ""id"": ""ba61517d-11be-4b79-a1a4-b9dd9b7a1226"",
-                    ""path"": ""<Gamepad>/rightStick/down"",
+                    ""name"": """",
+                    ""id"": ""2135c9a0-240b-4378-a9e5-d89c7c9ff6ec"",
+                    ""path"": ""<Pointer>/position"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Move"",
+                    ""groups"": "";Keyboard & Pointer;Keyboard Pen;Keyboard Mouse"",
+                    ""action"": ""LookPosition"",
                     ""isComposite"": false,
-                    ""isPartOfComposite"": true
+                    ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": ""left"",
-                    ""id"": ""ab7337b0-b005-426e-936f-55d47ed28bbc"",
-                    ""path"": ""<Gamepad>/leftStick/left"",
+                    ""name"": """",
+                    ""id"": ""531a54f3-e14f-4ab7-9462-f01916d19461"",
+                    ""path"": ""<Keyboard>/r"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Move"",
+                    ""groups"": "";Keyboard Mouse;Keyboard Pen"",
+                    ""action"": ""Reload"",
                     ""isComposite"": false,
-                    ""isPartOfComposite"": true
+                    ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": ""right"",
-                    ""id"": ""12a1a464-764e-4f14-8526-f654534b6a3e"",
-                    ""path"": ""<Gamepad>/leftStick/right"",
+                    ""name"": """",
+                    ""id"": ""3fa8a7c7-1f9d-4999-84b1-e65495c7024e"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Move"",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""Reload"",
                     ""isComposite"": false,
-                    ""isPartOfComposite"": true
+                    ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": ""forward"",
-                    ""id"": ""8a5002e8-0d50-4e83-97dc-fb3072bae3da"",
-                    ""path"": ""<Gamepad>/leftStick/up"",
+                    ""name"": """",
+                    ""id"": ""ec728ac0-6e78-49b2-8248-88f227d257ca"",
+                    ""path"": ""<Keyboard>/m"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Move"",
+                    ""groups"": "";Keyboard Mouse;Keyboard Pen"",
+                    ""action"": ""Map"",
                     ""isComposite"": false,
-                    ""isPartOfComposite"": true
+                    ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": ""backward"",
-                    ""id"": ""c2928e93-2a8f-45a2-8ebe-eb31a067c7e1"",
-                    ""path"": ""<Gamepad>/leftStick/down"",
+                    ""name"": """",
+                    ""id"": ""ef5bfe1e-d795-44a4-8ae3-f069e00c4c9a"",
+                    ""path"": ""<Gamepad>/dpad/down"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Move"",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""Map"",
                     ""isComposite"": false,
-                    ""isPartOfComposite"": true
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ce57892f-cb36-42e1-a02f-8f8ed9e07b01"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard Pen;Keyboard Mouse"",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c430c465-f076-474f-9b5f-815a58b6083d"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""49c9aa3b-53c3-4312-b9d1-8e6c846a6efe"",
+                    ""path"": ""<Keyboard>/ctrl"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard Mouse;Keyboard Pen"",
+                    ""action"": ""Crouch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ab00bc4a-ea26-4773-9aa7-3f1547e008f5"",
+                    ""path"": ""<Keyboard>/c"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard Pen;Keyboard Mouse"",
+                    ""action"": ""Crouch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ecb91d71-f7ed-4656-ba66-d2353862a852"",
+                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""Crouch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
     ],
     ""controlSchemes"": [
         {
-            ""name"": ""Default"",
-            ""bindingGroup"": ""Default"",
-            ""devices"": []
+            ""name"": ""Keyboard Mouse"",
+            ""bindingGroup"": ""Keyboard Mouse"",
+            ""devices"": [
+                {
+                    ""devicePath"": ""<Keyboard>"",
+                    ""isOptional"": false,
+                    ""isOR"": false
+                },
+                {
+                    ""devicePath"": ""<Mouse>"",
+                    ""isOptional"": false,
+                    ""isOR"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""Keyboard Pen"",
+            ""bindingGroup"": ""Keyboard Pen"",
+            ""devices"": [
+                {
+                    ""devicePath"": ""<Keyboard>"",
+                    ""isOptional"": false,
+                    ""isOR"": false
+                },
+                {
+                    ""devicePath"": ""<Pen>"",
+                    ""isOptional"": false,
+                    ""isOR"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""Gamepad"",
+            ""bindingGroup"": ""Gamepad"",
+            ""devices"": [
+                {
+                    ""devicePath"": ""<Gamepad>"",
+                    ""isOptional"": false,
+                    ""isOR"": false
+                }
+            ]
         }
     ]
 }");
@@ -346,6 +493,12 @@ namespace Scripts.Input
             m_Game = asset.FindActionMap("Game", throwIfNotFound: true);
             m_Game_Fire = m_Game.FindAction("Fire", throwIfNotFound: true);
             m_Game_AlternateFire = m_Game.FindAction("AlternateFire", throwIfNotFound: true);
+            m_Game_Turn = m_Game.FindAction("Turn", throwIfNotFound: true);
+            m_Game_Jump = m_Game.FindAction("Jump", throwIfNotFound: true);
+            m_Game_Crouch = m_Game.FindAction("Crouch", throwIfNotFound: true);
+            m_Game_Reload = m_Game.FindAction("Reload", throwIfNotFound: true);
+            m_Game_Map = m_Game.FindAction("Map", throwIfNotFound: true);
+            m_Game_LookPosition = m_Game.FindAction("LookPosition", throwIfNotFound: true);
             m_Game_Look = m_Game.FindAction("Look", throwIfNotFound: true);
             m_Game_Move = m_Game.FindAction("Move", throwIfNotFound: true);
         }
@@ -416,6 +569,12 @@ namespace Scripts.Input
         private List<IGameActions> m_GameActionsCallbackInterfaces = new List<IGameActions>();
         private readonly InputAction m_Game_Fire;
         private readonly InputAction m_Game_AlternateFire;
+        private readonly InputAction m_Game_Turn;
+        private readonly InputAction m_Game_Jump;
+        private readonly InputAction m_Game_Crouch;
+        private readonly InputAction m_Game_Reload;
+        private readonly InputAction m_Game_Map;
+        private readonly InputAction m_Game_LookPosition;
         private readonly InputAction m_Game_Look;
         private readonly InputAction m_Game_Move;
         public struct GameActions
@@ -424,6 +583,12 @@ namespace Scripts.Input
             public GameActions(@Controls wrapper) { m_Wrapper = wrapper; }
             public InputAction @Fire => m_Wrapper.m_Game_Fire;
             public InputAction @AlternateFire => m_Wrapper.m_Game_AlternateFire;
+            public InputAction @Turn => m_Wrapper.m_Game_Turn;
+            public InputAction @Jump => m_Wrapper.m_Game_Jump;
+            public InputAction @Crouch => m_Wrapper.m_Game_Crouch;
+            public InputAction @Reload => m_Wrapper.m_Game_Reload;
+            public InputAction @Map => m_Wrapper.m_Game_Map;
+            public InputAction @LookPosition => m_Wrapper.m_Game_LookPosition;
             public InputAction @Look => m_Wrapper.m_Game_Look;
             public InputAction @Move => m_Wrapper.m_Game_Move;
             public InputActionMap Get() { return m_Wrapper.m_Game; }
@@ -441,6 +606,24 @@ namespace Scripts.Input
                 @AlternateFire.started += instance.OnAlternateFire;
                 @AlternateFire.performed += instance.OnAlternateFire;
                 @AlternateFire.canceled += instance.OnAlternateFire;
+                @Turn.started += instance.OnTurn;
+                @Turn.performed += instance.OnTurn;
+                @Turn.canceled += instance.OnTurn;
+                @Jump.started += instance.OnJump;
+                @Jump.performed += instance.OnJump;
+                @Jump.canceled += instance.OnJump;
+                @Crouch.started += instance.OnCrouch;
+                @Crouch.performed += instance.OnCrouch;
+                @Crouch.canceled += instance.OnCrouch;
+                @Reload.started += instance.OnReload;
+                @Reload.performed += instance.OnReload;
+                @Reload.canceled += instance.OnReload;
+                @Map.started += instance.OnMap;
+                @Map.performed += instance.OnMap;
+                @Map.canceled += instance.OnMap;
+                @LookPosition.started += instance.OnLookPosition;
+                @LookPosition.performed += instance.OnLookPosition;
+                @LookPosition.canceled += instance.OnLookPosition;
                 @Look.started += instance.OnLook;
                 @Look.performed += instance.OnLook;
                 @Look.canceled += instance.OnLook;
@@ -457,6 +640,24 @@ namespace Scripts.Input
                 @AlternateFire.started -= instance.OnAlternateFire;
                 @AlternateFire.performed -= instance.OnAlternateFire;
                 @AlternateFire.canceled -= instance.OnAlternateFire;
+                @Turn.started -= instance.OnTurn;
+                @Turn.performed -= instance.OnTurn;
+                @Turn.canceled -= instance.OnTurn;
+                @Jump.started -= instance.OnJump;
+                @Jump.performed -= instance.OnJump;
+                @Jump.canceled -= instance.OnJump;
+                @Crouch.started -= instance.OnCrouch;
+                @Crouch.performed -= instance.OnCrouch;
+                @Crouch.canceled -= instance.OnCrouch;
+                @Reload.started -= instance.OnReload;
+                @Reload.performed -= instance.OnReload;
+                @Reload.canceled -= instance.OnReload;
+                @Map.started -= instance.OnMap;
+                @Map.performed -= instance.OnMap;
+                @Map.canceled -= instance.OnMap;
+                @LookPosition.started -= instance.OnLookPosition;
+                @LookPosition.performed -= instance.OnLookPosition;
+                @LookPosition.canceled -= instance.OnLookPosition;
                 @Look.started -= instance.OnLook;
                 @Look.performed -= instance.OnLook;
                 @Look.canceled -= instance.OnLook;
@@ -480,19 +681,43 @@ namespace Scripts.Input
             }
         }
         public GameActions @Game => new GameActions(this);
-        private int m_DefaultSchemeIndex = -1;
-        public InputControlScheme DefaultScheme
+        private int m_KeyboardMouseSchemeIndex = -1;
+        public InputControlScheme KeyboardMouseScheme
         {
             get
             {
-                if (m_DefaultSchemeIndex == -1) m_DefaultSchemeIndex = asset.FindControlSchemeIndex("Default");
-                return asset.controlSchemes[m_DefaultSchemeIndex];
+                if (m_KeyboardMouseSchemeIndex == -1) m_KeyboardMouseSchemeIndex = asset.FindControlSchemeIndex("Keyboard Mouse");
+                return asset.controlSchemes[m_KeyboardMouseSchemeIndex];
+            }
+        }
+        private int m_KeyboardPenSchemeIndex = -1;
+        public InputControlScheme KeyboardPenScheme
+        {
+            get
+            {
+                if (m_KeyboardPenSchemeIndex == -1) m_KeyboardPenSchemeIndex = asset.FindControlSchemeIndex("Keyboard Pen");
+                return asset.controlSchemes[m_KeyboardPenSchemeIndex];
+            }
+        }
+        private int m_GamepadSchemeIndex = -1;
+        public InputControlScheme GamepadScheme
+        {
+            get
+            {
+                if (m_GamepadSchemeIndex == -1) m_GamepadSchemeIndex = asset.FindControlSchemeIndex("Gamepad");
+                return asset.controlSchemes[m_GamepadSchemeIndex];
             }
         }
         public interface IGameActions
         {
             void OnFire(InputAction.CallbackContext context);
             void OnAlternateFire(InputAction.CallbackContext context);
+            void OnTurn(InputAction.CallbackContext context);
+            void OnJump(InputAction.CallbackContext context);
+            void OnCrouch(InputAction.CallbackContext context);
+            void OnReload(InputAction.CallbackContext context);
+            void OnMap(InputAction.CallbackContext context);
+            void OnLookPosition(InputAction.CallbackContext context);
             void OnLook(InputAction.CallbackContext context);
             void OnMove(InputAction.CallbackContext context);
         }

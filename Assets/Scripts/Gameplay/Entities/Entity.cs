@@ -21,6 +21,9 @@ namespace Scripts.Gameplay.Entities
         private Abillity[] abillities;
 
 
+
+        public bool IsInitialized { get; private set; }
+
         public Controller Controller => controller;
 
         public IReadOnlyCollection<Abillity> Abillities => abillities;

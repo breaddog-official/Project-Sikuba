@@ -8,6 +8,10 @@ namespace Scripts.Gameplay.Controllers
     /// </summary>
     public abstract class Controller : MonoBehaviour, IInitializable
     {
+        public Entity Entity { get; protected set; }
+
+        public bool IsInitialized { get; private set; }
+
         /// <summary>
         /// Initializes the controller with Entity from GameObject
         /// </summary>
@@ -22,6 +26,10 @@ namespace Scripts.Gameplay.Controllers
         /// <summary>
         /// Initializes the controller with given entity
         /// </summary>
-        public abstract void Initialize(Entity entity);
+        public virtual void Initialize(Entity entity)
+        {
+            Entity = entity;
+            IsInitialized = true;
+        }
     }
 }
