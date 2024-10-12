@@ -385,7 +385,7 @@ MonoBehaviour:
   onlineScene: 
   transport: {fileID: 179158420}
   networkAddress: localhost
-  maxConnections: 100
+  maxConnections: 128
   disconnectInactiveConnections: 0
   disconnectInactiveTimeout: 60
   authenticator: {fileID: 0}
@@ -866,7 +866,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4d379e4f8c93809428a800f33af9245c, type: 3}
       propertyPath: m_LocalScale.y
-      value: 5
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4d379e4f8c93809428a800f33af9245c, type: 3}
       propertyPath: m_LocalScale.z
@@ -878,7 +878,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4d379e4f8c93809428a800f33af9245c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3
+      value: 5.5
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4d379e4f8c93809428a800f33af9245c, type: 3}
       propertyPath: m_LocalPosition.z

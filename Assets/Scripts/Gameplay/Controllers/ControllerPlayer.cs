@@ -34,7 +34,7 @@ namespace Scripts.Gameplay.Controllers
             // Invokes non physics movement
             if (abillityMove.AvailableAndNotNull() && abillityMove.IsPhysicsMovement() == false)
             {
-                abillityMove.Move(InputManager.Controls.Game.Move.ReadValue<Vector2>().ConvertInput());
+                abillityMove.Move(InputManager.Controls.Game.Move.ReadValue<Vector2>().ConvertInputToVector3());
             }
         }
 
@@ -48,7 +48,7 @@ namespace Scripts.Gameplay.Controllers
             // Invokes physics movement
             if (abillityMove.AvailableAndNotNull() && abillityMove.IsPhysicsMovement() == true)
             {
-                abillityMove.Move(InputManager.Controls.Game.Move.ReadValue<Vector2>().ConvertInput());
+                abillityMove.Move(InputManager.Controls.Game.Move.ReadValue<Vector2>().ConvertInputToVector3());
             }
         }
 
@@ -60,12 +60,20 @@ namespace Scripts.Gameplay.Controllers
         [ClientCallback]
         private void Subscribe()
         {
+            // We don't need to control an entity if it's not ours.
+            if (Entity.isOwned == false)
+                return;
+
             InputManager.Controls.Game.Jump.performed += JumpAction;
         }
 
         [ClientCallback]
         private void Unsubscribe()
         {
+            // We don't need to control an entity if it's not ours.
+            if (Entity.isOwned == false)
+                return;
+
             InputManager.Controls.Game.Jump.performed -= JumpAction;
         }
 
@@ -73,7 +81,7 @@ namespace Scripts.Gameplay.Controllers
         private void JumpAction(InputAction.CallbackContext ctx)
         {
             if (abillityJump.AvailableAndNotNull())
-                abillityJump.TryJump();
+                abillityJump.Jump();
         }
     }
 }

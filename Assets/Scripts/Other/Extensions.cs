@@ -150,14 +150,22 @@ namespace Scripts.Extensions
 
         #endregion
 
-        #region GetAs
+        #region ConvertInput
 
         /// <summary>
         /// Converts Vector2 input to Vector3
         /// </summary>
-        public static Vector3 ConvertInput(this Vector2 input)
+        public static Vector3 ConvertInputToVector3(this Vector2 input)
         {
             return new Vector3(input.x, 0.0f, input.y);
+        }
+
+        /// <summary>
+        /// Converts Vector3 input to Vector2
+        /// </summary>
+        public static Vector2 ConvertInputToVector2(this Vector3 input)
+        {
+            return new Vector2(input.x, input.z);
         }
 
         #endregion

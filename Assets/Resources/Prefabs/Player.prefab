@@ -128,11 +128,12 @@ GameObject:
   - component: {fileID: 5265196507891526839}
   - component: {fileID: 6726522414752768753}
   - component: {fileID: 2719463511452175475}
-  - component: {fileID: -7351351015622627746}
+  - component: {fileID: 906315464027884080}
   - component: {fileID: 3397365942501102096}
   - component: {fileID: 6759642062967463256}
   - component: {fileID: 7070722003600754485}
   - component: {fileID: 2740786862432328647}
+  - component: {fileID: 760615020403780976}
   - component: {fileID: 1681577581953886793}
   m_Layer: 0
   m_Name: Player
@@ -187,7 +188,7 @@ Rigidbody:
   m_GameObject: {fileID: 2573031094699484338}
   serializedVersion: 4
   m_Mass: 1
-  m_Drag: 2
+  m_Drag: 9
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -222,7 +223,7 @@ MonoBehaviour:
   serverOnly: 0
   visibility: 0
   hasSpawned: 0
---- !u!114 &-7351351015622627746
+--- !u!114 &906315464027884080
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -231,32 +232,34 @@ MonoBehaviour:
   m_GameObject: {fileID: 2573031094699484338}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3b20dc110904e47f8a154cdcf6433eae, type: 3}
+  m_Script: {fileID: 11500000, guid: d38927cdc6024b9682b5fe9778b9ef99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncDirection: 1
+  syncDirection: 0
   syncMode: 0
   syncInterval: 0
-  target: {fileID: 6299956991253014043}
-  syncPosition: 1
-  syncRotation: 1
-  syncScale: 0
-  onlySyncOnChange: 1
-  compressRotation: 1
-  interpolatePosition: 1
-  interpolateRotation: 1
-  interpolateScale: 1
-  coordinateSpace: 0
-  sendIntervalMultiplier: 1
-  timelineOffset: 0
-  showGizmos: 0
-  showOverlay: 0
-  overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
-  bufferResetMultiplier: 3
-  changedDetection: 1
-  positionSensitivity: 0.01
-  rotationSensitivity: 0.01
-  scaleSensitivity: 0.01
+  predictedRigidbody: {fileID: 6726522414752768753}
+  mode: 1
+  motionSmoothingVelocityThreshold: 0.1
+  motionSmoothingAngularVelocityThreshold: 5
+  motionSmoothingTimeTolerance: 0.5
+  stateHistoryLimit: 32
+  recordInterval: 0.05
+  onlyRecordChanges: 1
+  compareLastFirst: 1
+  positionCorrectionThreshold: 0.1
+  rotationCorrectionThreshold: 5
+  oneFrameAhead: 1
+  snapThreshold: 2
+  showGhost: 1
+  ghostVelocityThreshold: 0.1
+  localGhostMaterial: {fileID: 2100000, guid: 411a48b4a197d4924bec3e3809bc9320, type: 2}
+  remoteGhostMaterial: {fileID: 2100000, guid: 04f0b2088c857414393bab3b80356776, type: 2}
+  checkGhostsEveryNthFrame: 4
+  positionInterpolationSpeed: 15
+  rotationInterpolationSpeed: 10
+  teleportDistanceMultiplier: 10
+  reduceSendsWhileIdle: 1
 --- !u!114 &3397365942501102096
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -299,7 +302,10 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
-  <Speed>k__BackingField: 5
+  <Speed>k__BackingField: 6
+  <MinInput>k__BackingField: 0.01
+  <AirMove>k__BackingField: 1
+  <AirMoveMultiplier>k__BackingField: 0.075
 --- !u!114 &2740786862432328647
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -315,8 +321,25 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
-  <JumpForce>k__BackingField: 25
-  <MaxGroundAngle>k__BackingField: 10
+  <JumpForce>k__BackingField: 7.5
+  <DisableDragInAir>k__BackingField: 1
+--- !u!114 &760615020403780976
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2573031094699484338}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb3b19f5978011c4e892812925ebc8ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  maxGroundAngle: 15
+  onGround: 0
 --- !u!114 &1681577581953886793
 MonoBehaviour:
   m_ObjectHideFlags: 0

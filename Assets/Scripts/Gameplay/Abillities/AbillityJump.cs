@@ -7,15 +7,9 @@ namespace Scripts.Gameplay.Abillities
     {
         public virtual event Action OnJump;
 
-        public virtual bool TryJump()
+        public virtual void Jump()
         {
             OnJump?.Invoke();
-            return true;
         }
-
-        /// <summary>
-        /// Returns true if Entity currently can jump
-        /// </summary>
-        public abstract bool CanJump();
     }
 }
