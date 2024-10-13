@@ -13,6 +13,8 @@ namespace Scripts.Gameplay.Controllers
         private AbillityMove abillityMove;
         private AbillityJump abillityJump;
 
+        private bool isSubscribed;
+
 
 
         public override void Initialize(Entity entity)
@@ -22,6 +24,8 @@ namespace Scripts.Gameplay.Controllers
 
             abillityMove = entity.FindAbillity<AbillityMove>();
             abillityJump = entity.FindAbillity<AbillityJump>();
+
+            Subscribe();
         }
 
         [ClientCallback]
@@ -45,6 +49,8 @@ namespace Scripts.Gameplay.Controllers
             if (!IsInitialized || Entity.isOwned == false)
                 return;
 
+            Subscribe();
+
             // Invokes physics movement
             if (abillityMove.AvailableAndNotNull() && abillityMove.IsPhysicsMovement() == true)
             {
@@ -61,8 +67,11 @@ namespace Scripts.Gameplay.Controllers
         private void Subscribe()
         {
             // We don't need to control an entity if it's not ours.
-            if (Entity.isOwned == false)
+            if (isSubscribed || !IsInitialized || Entity.isOwned == false)
                 return;
+
+            isSubscribed = true;
+
 
             InputManager.Controls.Game.Jump.performed += JumpAction;
         }
@@ -71,8 +80,11 @@ namespace Scripts.Gameplay.Controllers
         private void Unsubscribe()
         {
             // We don't need to control an entity if it's not ours.
-            if (Entity.isOwned == false)
+            if (!isSubscribed || !IsInitialized || Entity.isOwned == false)
                 return;
+
+            isSubscribed = false;
+
 
             InputManager.Controls.Game.Jump.performed -= JumpAction;
         }

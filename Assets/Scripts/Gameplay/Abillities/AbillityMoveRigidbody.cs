@@ -14,21 +14,28 @@ namespace Scripts.Gameplay.Abillities
         }
 
         [field: SerializeField] public float Speed { get; private set; } = 10.0f;
+        [field: SerializeField] public float MaxSpeed { get; private set; } = 10.0f;
         [field: SerializeField] public float MinInput { get; private set; } = 0.01f;
         [field: Space]
         [field: SerializeField] public AirMoveMode AirMove { get; private set; }
         [field: SerializeField] public float AirMoveMultiplier { get; private set; } = 0.5f;
 
-        private Rigidbody rb;
+        private PredictedRigidbody rb;
         private AbillityCollisioner collisioner;
 
 
         private void Awake()
         {
-            rb = GetComponent<Rigidbody>();
+            rb = GetComponent<PredictedRigidbody>();
             collisioner = GetComponent<AbillityCollisioner>();
         }
 
+
+        private void FixedUpdate()
+        {
+            if (rb.predictedRigidbody.velocity.magnitude > MaxSpeed)
+                rb.predictedRigidbody.velocity = rb.predictedRigidbody.velocity.normalized * MaxSpeed;
+        }
 
 
         public override void Move(Vector3 input)
@@ -58,35 +65,30 @@ namespace Scripts.Gameplay.Abillities
                 return;
 
 
+
+            // We leave only rotation along the Y
+            cameraRotation = Quaternion.Euler(0.0f, cameraRotation.eulerAngles.y, 0.0f);
+
             // Calculate move vector
-            Vector3 calculatedVector = CalculateVector(input, cameraRotation);
+            Vector3 calculatedVector = cameraRotation * (input.normalized * Time.fixedDeltaTime) * (Speed * 10.0f);
 
             // We work only with 2 axis
             calculatedVector.y = 0.0f;
-
 
             // Apply multiply if needed
             if (AirMove == AirMoveMode.Multiplied && collisioner.InAir())
                 calculatedVector *= AirMoveMultiplier;
 
 
+
             // Apply movement
-            rb.AddForce(calculatedVector, ForceMode.Impulse);
+            rb.predictedRigidbody.AddForce(calculatedVector, ForceMode.Impulse);
         }
 
-        [Command(channel = 2)]
+        [Command]
         private void CmdHandleMovement(Vector3 input, Quaternion cameraRotation)
         {
             HandleMovement(input, cameraRotation);
-        }
-
-        private Vector3 CalculateVector(Vector3 input, Quaternion cameraRotation)
-        {
-            // We leave only rotation along the Y
-            cameraRotation = Quaternion.Euler(0.0f, cameraRotation.eulerAngles.y, 0.0f);
-
-            // Same as camera.TransformDirection(input)
-            return cameraRotation * (input * Time.fixedDeltaTime) * (Speed * 10.0f);
         }
 
 

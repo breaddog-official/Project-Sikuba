@@ -9,7 +9,7 @@ namespace Scripts.Gameplay.Abillities
         [field: SerializeField] public float JumpForce { get; private set; } = 25.0f;
         [field: SerializeField] public bool DisableDragInAir { get; private set; }
 
-        private Rigidbody rb;
+        private PredictedRigidbody rb;
         private AbillityCollisioner collisioner;
 
         private float? lastDrag;
@@ -17,7 +17,7 @@ namespace Scripts.Gameplay.Abillities
 
         private void Awake()
         {
-            rb = GetComponent<Rigidbody>();
+            rb = GetComponent<PredictedRigidbody>();
             collisioner = GetComponent<AbillityCollisioner>();
         }
 
@@ -29,12 +29,12 @@ namespace Scripts.Gameplay.Abillities
 
             if (collisioner.InAir())
             {
-                lastDrag ??= rb.drag;
-                rb.drag = 0.0f;
+                lastDrag ??= rb.predictedRigidbody.drag;
+                rb.predictedRigidbody.drag = 0.0f;
             }
             else
             {
-                rb.drag = lastDrag ?? rb.drag;
+                rb.predictedRigidbody.drag = lastDrag ?? rb.predictedRigidbody.drag;
                 lastDrag = null;
             }
         }
@@ -64,7 +64,7 @@ namespace Scripts.Gameplay.Abillities
 
         private void ApplyJump()
         {
-            rb.AddForce(Vector3.up * JumpForce, ForceMode.Impulse);
+            rb.predictedRigidbody.AddForce(Vector3.up * JumpForce, ForceMode.Impulse);
         }
 
 
