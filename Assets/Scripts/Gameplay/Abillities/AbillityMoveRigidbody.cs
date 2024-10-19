@@ -43,13 +43,14 @@ namespace Scripts.Gameplay.Abillities
             if (input.sqrMagnitude < MinInput)
                 return;
 
-            Quaternion cameraRot = MainCamera.Instance.transform.rotation;
+            Vector3 relativeInput = MainCamera.Instance.transform.TransformDirection(input);
 
             // Apply local movement
-            HandleMovement(input, cameraRot);
+            HandleMovement(relativeInput);
             
             // Apply movement on server
-            if (!isServer) CmdHandleMovement(input, cameraRot);
+            if (!isServer) CmdHandleMovement(relativeInput);
+
 
             base.Move(input);
         }
@@ -58,19 +59,15 @@ namespace Scripts.Gameplay.Abillities
 
 
 
-        private void HandleMovement(Vector3 input, Quaternion cameraRotation)
+        private void HandleMovement(Vector3 input)
         {
             // Skip move if moving in air disabled
             if (AirMove == AirMoveMode.None && collisioner.InAir())
                 return;
 
 
-
-            // We leave only rotation along the Y
-            cameraRotation = Quaternion.Euler(0.0f, cameraRotation.eulerAngles.y, 0.0f);
-
-            // Calculate move vector
-            Vector3 calculatedVector = cameraRotation * (input.normalized * Time.fixedDeltaTime) * (Speed * 10.0f);
+            // Calculate move vector (same as camera.TransformDirection)
+            Vector3 calculatedVector = input.normalized * (Time.fixedDeltaTime * Speed * 10.0f);
 
             // We work only with 2 axis
             calculatedVector.y = 0.0f;
@@ -86,9 +83,9 @@ namespace Scripts.Gameplay.Abillities
         }
 
         [Command]
-        private void CmdHandleMovement(Vector3 input, Quaternion cameraRotation)
+        private void CmdHandleMovement(Vector3 input)
         {
-            HandleMovement(input, cameraRotation);
+            HandleMovement(input);
         }
 
 
