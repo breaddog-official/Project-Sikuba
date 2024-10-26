@@ -3,41 +3,29 @@ using UnityEngine;
 
 namespace Scripts.Gameplay
 {
-    public class GunProjectiler : Gun
+    public class GunProjectiler : Item
     {
         [field: SerializeField] public bool IsAutomaticFire { get; protected set; }
-        [field: SerializeField] public override bool IsReloadable { get; protected set; }
-        [field: SerializeField] public override uint MaxAmmo { get; protected set; }
+        [field: SerializeField] public bool IsReloadable { get; protected set; }
+        [field: SerializeField] public uint MaxAmmo { get; protected set; }
         [Space]
         [SerializeField] protected Transform projectilePrefab;
         [SerializeField] protected Animator animator;
         [SerializeField] protected Transform shootPoint;
         [SerializeField] protected ParticleSystem shootParticle;
 
-        public override uint CurrentAmmo { get; protected set; }
+        public uint CurrentAmmo { get; protected set; }
 
 
 
-        public override bool StartFire()
+        public override void StartUsing()
         {
             shootParticle.IfNotNull(shootParticle.Play);
-            return false;
         }
 
-        public override bool StopFire()
+        public override void StopUsing()
         {
-            return false;
-        }
-
-
-        public override bool Reload()
-        {
-            if (!IsReloadable)
-                return false;
-
-            // Realization
-
-            return base.Reload();
+            
         }
     }
 }
