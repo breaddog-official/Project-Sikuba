@@ -38,6 +38,12 @@ namespace Scripts.Gameplay.Entities
             // Find all abillities
             abillities = GetComponents<Abillity>();
 
+            // Initialize all abillities
+            foreach (IInitializable abillity in abillities)
+            {
+                abillity.Initialize();
+            }
+
             // Set initial controller if exists
             if (TryGetComponent<Controller>(out var initialController))
                 SetController(initialController);

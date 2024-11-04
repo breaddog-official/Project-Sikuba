@@ -107,7 +107,7 @@ namespace Scripts.Extensions
         /// </summary>
         public static bool IfNotNull(this object value, Action action)
         {
-            if (value != null)
+            if (value != null && action != null)
                 action?.Invoke();
 
             return value != null;
@@ -118,10 +118,29 @@ namespace Scripts.Extensions
         /// </summary>
         public static bool IfNull(this object value, Action action)
         {
-            if (value == null)
+            if (value == null && action != null)
                 action?.Invoke();
 
             return value == null;
+        }
+
+        #endregion
+
+        #region IfNotNull & IfNull
+        /// <summary>
+        /// Add value if is not null
+        /// </summary>
+        public static bool AddIfNotNull<T>(this ICollection<T> collection, T value, bool checkContains = false)
+        {
+            if (collection != null && value != null)
+            {
+                if (checkContains && collection.Contains(value))
+                    return false;
+
+                collection.Add(value);
+            }
+
+            return value != null;
         }
 
         #endregion

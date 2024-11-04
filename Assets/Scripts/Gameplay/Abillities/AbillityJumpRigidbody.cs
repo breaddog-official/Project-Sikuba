@@ -1,5 +1,5 @@
 using Mirror;
-using NaughtyAttributes;
+using Scripts.Gameplay.Entities;
 using UnityEngine;
 
 namespace Scripts.Gameplay.Abillities
@@ -15,10 +15,10 @@ namespace Scripts.Gameplay.Abillities
         private float? lastDrag;
 
 
-        private void Awake()
+        public override void Initialize()
         {
             rb = GetComponent<PredictedRigidbody>();
-            collisioner = GetComponent<AbillityCollisioner>();
+            collisioner = GetComponent<Entity>().FindAbillity<AbillityCollisioner>();
         }
 
 

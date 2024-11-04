@@ -3,33 +3,39 @@ using Scripts.Extensions;
 using Scripts.Gameplay.Abillities;
 using Scripts.Gameplay.Entities;
 using Scripts.Input;
+using Scripts.MonoCacher;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace Scripts.Gameplay.Controllers
 {
-    public class ControllerPlayer : Controller
+    public class ControllerPlayer : Controller, IMonoCacheUpdate, IMonoCacheFixedUpdate
     {
         private AbillityMove abillityMove;
         private AbillityJump abillityJump;
+        private AbillityItemSocket abillityItemSocket;
 
         private bool isSubscribed;
 
+
+        public Behaviour Behaviour => this;
 
 
         public override void Initialize(Entity entity)
         {
             base.Initialize(entity);
 
+            MonoCacher.MonoCacher.Registrate(this);
 
             abillityMove = entity.FindAbillity<AbillityMove>();
             abillityJump = entity.FindAbillity<AbillityJump>();
+            abillityItemSocket = entity.FindAbillity<AbillityItemSocket>();
 
             Subscribe();
         }
 
         [ClientCallback]
-        private void Update()
+        public void UpdateCached()
         {
             // We don't need to control an entity if it's not ours
             if (!IsInitialized || Entity.isOwned == false)
@@ -43,7 +49,7 @@ namespace Scripts.Gameplay.Controllers
         }
 
         [ClientCallback]
-        private void FixedUpdate()
+        public void FixedUpdateCached()
         {
             // We don't need to control an entity if it's not ours.
             if (!IsInitialized || Entity.isOwned == false)
@@ -74,6 +80,8 @@ namespace Scripts.Gameplay.Controllers
 
 
             InputManager.Controls.Game.Jump.performed += JumpAction;
+            InputManager.Controls.Game.Fire.started += StartUsingAction;
+            InputManager.Controls.Game.Fire.canceled += StopUsingAction;
         }
 
         [ClientCallback]
@@ -87,13 +95,29 @@ namespace Scripts.Gameplay.Controllers
 
 
             InputManager.Controls.Game.Jump.performed -= JumpAction;
+            InputManager.Controls.Game.Fire.started -= StartUsingAction;
+            InputManager.Controls.Game.Fire.canceled -= StopUsingAction;
         }
 
 
-        private void JumpAction(InputAction.CallbackContext ctx)
+
+
+        private void JumpAction(InputAction.CallbackContext ctx = default)
         {
             if (abillityJump.AvailableAndNotNull())
                 abillityJump.Jump();
+        }
+
+        private void StartUsingAction(InputAction.CallbackContext ctx = default)
+        {
+            if (abillityItemSocket.AvailableAndNotNull() && abillityItemSocket.HasItem())
+                abillityItemSocket.EquippedItem.StartUsing();
+        }
+
+        private void StopUsingAction(InputAction.CallbackContext ctx = default)
+        {
+            if (abillityItemSocket.AvailableAndNotNull() && abillityItemSocket.HasItem())
+                abillityItemSocket.EquippedItem.StopUsing();
         }
     }
 }

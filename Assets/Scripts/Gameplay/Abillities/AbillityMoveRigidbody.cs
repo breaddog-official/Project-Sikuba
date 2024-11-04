@@ -1,5 +1,6 @@
 using Mirror;
 using Scripts.Extensions;
+using Scripts.Gameplay.Entities;
 using UnityEngine;
 
 namespace Scripts.Gameplay.Abillities
@@ -24,10 +25,10 @@ namespace Scripts.Gameplay.Abillities
         private AbillityCollisioner collisioner;
 
 
-        private void Awake()
+        public override void Initialize()
         {
             rb = GetComponent<PredictedRigidbody>();
-            collisioner = GetComponent<AbillityCollisioner>();
+            collisioner = GetComponent<Entity>().FindAbillity<AbillityCollisioner>();
         }
 
 
@@ -40,9 +41,11 @@ namespace Scripts.Gameplay.Abillities
 
         public override void Move(Vector3 input)
         {
+            // We do not calculate the input if it is very small so as not to overload the traffic
             if (input.sqrMagnitude < MinInput)
                 return;
 
+            // Calculate camera relative input
             Vector3 relativeInput = MainCamera.Instance.transform.TransformDirection(input);
 
             // Apply local movement
@@ -66,7 +69,7 @@ namespace Scripts.Gameplay.Abillities
                 return;
 
 
-            // Calculate move vector (same as camera.TransformDirection)
+            // Calculate move vector
             Vector3 calculatedVector = input.normalized * (Time.fixedDeltaTime * Speed * 10.0f);
 
             // We work only with 2 axis

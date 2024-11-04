@@ -20,5 +20,9 @@ namespace Scripts.Gameplay
         /// By default calls <see cref="StopUsing"/>
         /// </summary>
         public virtual void CancelUsing() => StopUsing();
+
+
+        public abstract void OnEquip(NetworkConnectionToClient conn);
+        public abstract void OnDequip();
     }
 }

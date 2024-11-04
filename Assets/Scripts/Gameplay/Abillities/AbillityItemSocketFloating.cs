@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using Mirror;
 using UnityEngine;
 
@@ -7,11 +8,20 @@ namespace Scripts.Gameplay.Abillities
     {
         [SerializeField] protected Rigidbody floatingArms;
         [SerializeField] protected float dropForce;
+        [Space]
+        [SerializeField] protected float delayBetweenEquips;
 
+        protected bool canEquipByDelay = true;
 
-        [Command]
+        [Server]
         public override void EquipItem(Item item)
         {
+            // Checks
+            if (EquippedItem == item || !canEquipByDelay)
+                return;
+
+
+            // Base call
             base.EquipItem(item);
 
             // Realization
@@ -19,29 +29,40 @@ namespace Scripts.Gameplay.Abillities
             {
                 joint.connectedBody = floatingArms;
 
-                if (joint is FixedJoint && item.TryGetComponent(out Rigidbody rb))
+                if (joint is FixedJoint)
                 {
-                    rb.MovePosition(floatingArms.position);
-                    rb.MoveRotation(floatingArms.rotation);
+                    joint.transform.SetPositionAndRotation(floatingArms.transform.position, floatingArms.transform.rotation);
                 }
             }
+
+            EquipTimer().Forget();
         }
 
-        [Command]
+        [Server]
         public override void DropItem()
         {
+            // Base call
+            base.DropItem();
+
             // Realization
-            if (EquippedItem.TryGetComponent(out Joint joint))
+            if (LastEquippedItem.TryGetComponent(out Joint joint))
             {
                 joint.connectedBody = null;
             }
 
-            if (EquippedItem.TryGetComponent(out Rigidbody rb))
+            if (LastEquippedItem.TryGetComponent(out Rigidbody rb))
             {
                 rb.AddForce(floatingArms.transform.forward * dropForce, ForceMode.Impulse);
             }
+        }
 
-            base.DropItem();
+        private async UniTaskVoid EquipTimer()
+        {
+            canEquipByDelay = false;
+
+            await UniTask.Delay((int)(delayBetweenEquips * 1000));
+
+            canEquipByDelay = true;
         }
     }
 }

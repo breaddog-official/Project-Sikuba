@@ -2,14 +2,19 @@ using Mirror;
 
 namespace Scripts.Gameplay.Abillities
 {
+    /// <summary>
+    /// Class for displaying and management an equipped item
+    /// </summary>
     public class AbillityItemSocket : Abillity
     {
         public virtual Item EquippedItem { get; protected set; }
 
+        public virtual Item LastEquippedItem { get; protected set; }
+
         /// <summary>
-        /// Equips gun
+        /// Equips item
         /// </summary>
-        [Command]
+        [Server]
         public virtual void EquipItem(Item item)
         {
             if (EquippedItem != null)
@@ -18,12 +23,13 @@ namespace Scripts.Gameplay.Abillities
             item.netIdentity.AssignClientAuthority(connectionToClient);
 
             EquippedItem = item;
+            EquippedItem.OnEquip(connectionToClient);
         }
 
         /// <summary>
-        /// Drops the EquippedGun
+        /// Drops the EquippedItem
         /// </summary>
-        [Command]
+        [Server]
         public virtual void DropItem()
         {
             if (EquippedItem == null)
@@ -31,7 +37,13 @@ namespace Scripts.Gameplay.Abillities
 
             EquippedItem.netIdentity.RemoveClientAuthority();
 
+            EquippedItem.OnDequip();
+
+            LastEquippedItem = EquippedItem;
             EquippedItem = null;
         }
+
+
+        public virtual bool HasItem() => EquippedItem != null;
     }
 }

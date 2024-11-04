@@ -1,4 +1,4 @@
-using Scripts.Extensions;
+using Mirror;
 using UnityEngine;
 
 namespace Scripts.Gameplay
@@ -16,16 +16,38 @@ namespace Scripts.Gameplay
 
         public uint CurrentAmmo { get; protected set; }
 
+        private Rigidbody rb;
+        private Collider col;
+
+
+
+        private void Awake()
+        {
+            col = GetComponent<Collider>();
+            rb = col.attachedRigidbody;
+        }
 
 
         public override void StartUsing()
         {
-            shootParticle.IfNotNull(shootParticle.Play);
+            print("start firing");
         }
 
         public override void StopUsing()
         {
-            
+            print("stop firing");
+        }
+
+
+        public override void OnEquip(NetworkConnectionToClient conn)
+        {
+            col.isTrigger = true;
+            rb.useGravity = false;
+        }
+        public override void OnDequip()
+        {
+            col.isTrigger = false;
+            rb.useGravity = true;
         }
     }
 }

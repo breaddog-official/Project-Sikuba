@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Scripts.Gameplay.Abillities
 {
@@ -7,11 +8,8 @@ namespace Scripts.Gameplay.Abillities
         [SerializeField] private float maxGroundAngle;
 
         //[ShowNonSerializedField]
-        [SerializeField]
         private bool onGround;
-        private GameObject ground;
-
-
+        private HashSet<Collider> grounds = new(4);
 
 
         private void OnCollisionStay(Collision collision)
@@ -21,10 +19,12 @@ namespace Scripts.Gameplay.Abillities
 
         private void OnCollisionExit(Collision collision)
         {
-            if (collision.gameObject == ground)
+            if (grounds.Contains(collision.collider))
             {
-                onGround = false;
-                ground = null;
+                grounds.Remove(collision.collider);
+
+                if (grounds.Count == 0)
+                    onGround = false;
             }
         }
 
@@ -35,16 +35,18 @@ namespace Scripts.Gameplay.Abillities
         {
             foreach (ContactPoint contact in collision.contacts)
             {
-                if (IsGround(contact.normal))
+                if (IsGround(contact.normal) && !grounds.Contains(contact.otherCollider))
                 {
                     onGround = true;
-                    ground = contact.otherCollider.gameObject;
+                    grounds.Add(contact.otherCollider);
                     return;
                 }
-                else if (contact.otherCollider.gameObject == ground)
+                else if (grounds.Contains(contact.otherCollider))
                 {
-                    onGround = false;
-                    ground = null;
+                    grounds.Remove(contact.otherCollider);
+
+                    if (grounds.Count == 0)
+                        onGround = false;
                 }
             }
         }
