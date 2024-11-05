@@ -13,6 +13,7 @@ namespace Scripts.Gameplay.Controllers
     {
         private AbillityMove abillityMove;
         private AbillityJump abillityJump;
+        private AbillityRotater abillityRotater;
         private AbillityItemSocket abillityItemSocket;
 
         private bool isSubscribed;
@@ -29,6 +30,7 @@ namespace Scripts.Gameplay.Controllers
 
             abillityMove = entity.FindAbillity<AbillityMove>();
             abillityJump = entity.FindAbillity<AbillityJump>();
+            abillityRotater = entity.FindAbillity<AbillityRotater>();
             abillityItemSocket = entity.FindAbillity<AbillityItemSocket>();
 
             Subscribe();
@@ -46,6 +48,11 @@ namespace Scripts.Gameplay.Controllers
             {
                 abillityMove.Move(InputManager.Controls.Game.Move.ReadValue<Vector2>().ConvertInputToVector3());
             }
+
+            if (abillityRotater.AvailableAndNotNull() && abillityRotater.IsPhysicsRotater() == false)
+            {
+                RotateAction();
+            }
         }
 
         [ClientCallback]
@@ -61,6 +68,11 @@ namespace Scripts.Gameplay.Controllers
             if (abillityMove.AvailableAndNotNull() && abillityMove.IsPhysicsMovement() == true)
             {
                 abillityMove.Move(InputManager.Controls.Game.Move.ReadValue<Vector2>().ConvertInputToVector3());
+            }
+
+            if (abillityRotater.AvailableAndNotNull() && abillityRotater.IsPhysicsRotater() == true)
+            {
+                RotateAction();
             }
         }
 
@@ -118,6 +130,21 @@ namespace Scripts.Gameplay.Controllers
         {
             if (abillityItemSocket.AvailableAndNotNull() && abillityItemSocket.HasItem())
                 abillityItemSocket.EquippedItem.StopUsing();
+        }
+
+        private void RotateAction(InputAction.CallbackContext ctx = default)
+        {
+            InputAction look = InputManager.Controls.Game.Look;
+            InputAction lookPosition = InputManager.Controls.Game.LookPosition;
+
+            if (look.ReadValue<Vector2>().sqrMagnitude > 0)
+            {
+                abillityRotater.Rotate(look.ReadValue<Vector2>().ConvertInputToVector3());
+            }
+            else
+            {
+                abillityRotater.RotateToPoint(lookPosition.ReadValue<Vector2>());
+            }
         }
     }
 }

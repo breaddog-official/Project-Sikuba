@@ -132,6 +132,7 @@ GameObject:
   - component: {fileID: 3397365942501102096}
   - component: {fileID: 6759642062967463256}
   - component: {fileID: 7070722003600754485}
+  - component: {fileID: 9027261851957388999}
   - component: {fileID: 2740786862432328647}
   - component: {fileID: 760615020403780976}
   - component: {fileID: 2615508827734132044}
@@ -311,6 +312,27 @@ MonoBehaviour:
   <MinInput>k__BackingField: 0.01
   <AirMove>k__BackingField: 1
   <AirMoveMultiplier>k__BackingField: 0.075
+--- !u!114 &9027261851957388999
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2573031094699484338}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9cc94a2750a297d4eb4f1f9ae61e9180, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  <RotationSpeed>k__BackingField: 10
+  <MinInput>k__BackingField: 0.01
+  <MaxRayDistance>k__BackingField: 300
+  <IgnoreLayers>k__BackingField:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!114 &2740786862432328647
 MonoBehaviour:
   m_ObjectHideFlags: 0
