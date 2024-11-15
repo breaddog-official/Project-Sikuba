@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using UnityEngine;
 
 namespace Scripts.Gameplay.Abillities
@@ -9,22 +11,29 @@ namespace Scripts.Gameplay.Abillities
 
         //[ShowNonSerializedField]
         private bool onGround;
-        private HashSet<Collider> grounds = new(4);
+        private HashSet<Collider> grounds;
 
+
+        private void Awake()
+        {
+            grounds = new(4);
+        }
 
         private void OnCollisionStay(Collision collision)
         {
             HandleCollision(collision);
+            foreach (Collider collider in grounds)
+            {
+                print($"{collider}        {grounds.Count}       stay");
+            }
         }
 
         private void OnCollisionExit(Collision collision)
         {
-            if (grounds.Contains(collision.collider))
+            RemoveCollision(collision);
+            foreach (Collider collider in grounds)
             {
-                grounds.Remove(collision.collider);
-
-                if (grounds.Count == 0)
-                    onGround = false;
+                print($"{collider}        {grounds.Count}       exit");
             }
         }
 
@@ -35,13 +44,18 @@ namespace Scripts.Gameplay.Abillities
         {
             foreach (ContactPoint contact in collision.contacts)
             {
-                if (IsGround(contact.normal) && !grounds.Contains(contact.otherCollider))
+                bool containsCollider = grounds.Contains(contact.otherCollider);
+
+                if (IsGround(contact.normal))
                 {
                     onGround = true;
-                    grounds.Add(contact.otherCollider);
+
+                    if(!containsCollider)
+                        grounds.Add(contact.otherCollider);
+
                     return;
                 }
-                else if (grounds.Contains(contact.otherCollider))
+                else if (containsCollider)
                 {
                     grounds.Remove(contact.otherCollider);
 
@@ -49,6 +63,20 @@ namespace Scripts.Gameplay.Abillities
                         onGround = false;
                 }
             }
+        }
+
+        private void RemoveCollision(Collision collision)
+        {
+            IEnumerable<Collider> colliders = collision.contacts.Select(p => p.otherCollider);
+
+            grounds.RemoveWhere(g => colliders.Contains(g));
+
+            /*IEnumerable<Collider> intersect = grounds.Intersect(collision.contacts
+                                                                        .Select(p => p.otherCollider));
+            foreach (var i in intersect) grounds.Remove(i);*/
+
+            if (grounds.Count == 0)
+                onGround = false;
         }
 
 

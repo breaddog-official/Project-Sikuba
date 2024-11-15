@@ -366,6 +366,7 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0
   maxGroundAngle: 15
+  allowListOptimizations: 1
 --- !u!114 &2615508827734132044
 MonoBehaviour:
   m_ObjectHideFlags: 0
