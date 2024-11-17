@@ -46,7 +46,7 @@ namespace Scripts.Gameplay.Controllers
             // Invokes non physics movement
             if (abillityMove.AvailableAndNotNull() && abillityMove.IsPhysicsMovement() == false)
             {
-                abillityMove.Move(InputManager.Controls.Game.Move.ReadValue<Vector2>().ConvertInputToVector3());
+                MoveAction();
             }
 
             if (abillityRotater.AvailableAndNotNull() && abillityRotater.IsPhysicsRotater() == false)
@@ -67,7 +67,7 @@ namespace Scripts.Gameplay.Controllers
             // Invokes physics movement
             if (abillityMove.AvailableAndNotNull() && abillityMove.IsPhysicsMovement() == true)
             {
-                abillityMove.Move(InputManager.Controls.Game.Move.ReadValue<Vector2>().ConvertInputToVector3());
+                MoveAction();
             }
 
             if (abillityRotater.AvailableAndNotNull() && abillityRotater.IsPhysicsRotater() == true)
@@ -130,6 +130,11 @@ namespace Scripts.Gameplay.Controllers
         {
             if (abillityItemSocket.AvailableAndNotNull() && abillityItemSocket.HasItem())
                 abillityItemSocket.EquippedItem.StopUsing();
+        }
+
+        private void MoveAction(InputAction.CallbackContext ctx = default)
+        {
+            abillityMove.Move(InputManager.Controls.Game.Move.ReadValue<Vector2>().ConvertInputToVector3());
         }
 
         private void RotateAction(InputAction.CallbackContext ctx = default)

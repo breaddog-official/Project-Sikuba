@@ -107,7 +107,7 @@ namespace Scripts.Extensions
         /// </summary>
         public static bool IfNotNull(this object value, Action action)
         {
-            if (value != null && action != null)
+            if (value != null)
                 action?.Invoke();
 
             return value != null;
@@ -118,7 +118,7 @@ namespace Scripts.Extensions
         /// </summary>
         public static bool IfNull(this object value, Action action)
         {
-            if (value == null && action != null)
+            if (value == null)
                 action?.Invoke();
 
             return value == null;

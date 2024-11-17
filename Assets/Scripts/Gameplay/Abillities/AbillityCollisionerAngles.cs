@@ -22,19 +22,11 @@ namespace Scripts.Gameplay.Abillities
         private void OnCollisionStay(Collision collision)
         {
             HandleCollision(collision);
-            foreach (Collider collider in grounds)
-            {
-                print($"{collider}        {grounds.Count}       stay");
-            }
         }
 
         private void OnCollisionExit(Collision collision)
         {
             RemoveCollision(collision);
-            foreach (Collider collider in grounds)
-            {
-                print($"{collider}        {grounds.Count}       exit");
-            }
         }
 
 
@@ -44,18 +36,17 @@ namespace Scripts.Gameplay.Abillities
         {
             foreach (ContactPoint contact in collision.contacts)
             {
-                bool containsCollider = grounds.Contains(contact.otherCollider);
+                // We don't call Contains because Add and Remove already checks for this
 
                 if (IsGround(contact.normal))
                 {
-                    onGround = true;
+                    grounds.Add(contact.otherCollider);
 
-                    if(!containsCollider)
-                        grounds.Add(contact.otherCollider);
+                    onGround = true;
 
                     return;
                 }
-                else if (containsCollider)
+                else
                 {
                     grounds.Remove(contact.otherCollider);
 
@@ -67,13 +58,8 @@ namespace Scripts.Gameplay.Abillities
 
         private void RemoveCollision(Collision collision)
         {
-            IEnumerable<Collider> colliders = collision.contacts.Select(p => p.otherCollider);
-
-            grounds.RemoveWhere(g => colliders.Contains(g));
-
-            /*IEnumerable<Collider> intersect = grounds.Intersect(collision.contacts
-                                                                        .Select(p => p.otherCollider));
-            foreach (var i in intersect) grounds.Remove(i);*/
+            // We don't call Contains because Remove already checks for this
+            grounds.Remove(collision.collider);
 
             if (grounds.Count == 0)
                 onGround = false;

@@ -26,19 +26,16 @@ namespace Scripts.Gameplay.Abillities
 
         public override void RotateToPoint(Vector2 point)
         {
-            if (point.sqrMagnitude < MinInput)
-                return;
-
             //tf.rotation = GetSmoothRotation(CalculateRotationToScreenPoint(point));
-            //rb.MoveRotation(GetSmoothRotation(CalculateRotationToScreenPoint(point)));
+            rb.MoveRotation(GetSmoothRotation(CalculateRotationToScreenPoint(point)));
 
-            Vector3 curForward = tf.forward;
+            /*Vector3 curForward = tf.forward;
             Vector3 targetForward = CalculateTargetToScreenPoint(point);
 
             Vector3 torque = Vector3.Cross(curForward, targetForward);
 
             rb.AddTorque(torque * RotationSpeed, ForceMode.Impulse);
-            rb.AddTorque(-rb.angularVelocity);
+            rb.AddTorque(-rb.angularVelocity);*/
         }
 
         public override void Rotate(Vector3 vector)

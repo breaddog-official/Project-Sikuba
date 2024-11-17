@@ -27,12 +27,12 @@ namespace Scripts.Gameplay.Abillities
             // Realization
             if (item.TryGetComponent(out Joint joint))
             {
-                joint.connectedBody = floatingArms;
-
                 if (joint is FixedJoint)
                 {
                     joint.transform.SetPositionAndRotation(floatingArms.transform.position, floatingArms.transform.rotation);
                 }
+
+                joint.connectedBody = floatingArms;
             }
 
             EquipTimer().Forget();

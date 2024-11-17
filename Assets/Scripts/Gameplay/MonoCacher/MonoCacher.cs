@@ -1,5 +1,6 @@
 using Scripts.Extensions;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Scripts.MonoCacher
@@ -30,54 +31,30 @@ namespace Scripts.MonoCacher
 
         private void Update()
         {
-            foreach (IMonoCacheUpdate updateListner in listnersUpdate)
-            {
-                if (updateListner == null || updateListner.Behaviour == null)
-                {
-                    listnersUpdate.Remove(updateListner);
-                    continue;
-                }
-                if (updateListner.Behaviour.isActiveAndEnabled == false)
-                {
-                    continue;
-                }
+            listnersUpdate.RemoveWhere(m => m == null || m.Behaviour == null);
 
+            foreach (IMonoCacheUpdate updateListner in listnersUpdate.Where(l => l.Behaviour.isActiveAndEnabled))
+            {
                 updateListner.UpdateCached();
             }
         }
 
         private void FixedUpdate()
         {
-            foreach (IMonoCacheFixedUpdate fixedUpdateListner in listnersFixedUpdate)
-            {
-                if (fixedUpdateListner == null || fixedUpdateListner.Behaviour == null)
-                {
-                    listnersFixedUpdate.Remove(fixedUpdateListner);
-                    continue;
-                }
-                if (fixedUpdateListner.Behaviour.isActiveAndEnabled == false)
-                {
-                    continue;
-                }
+            listnersFixedUpdate.RemoveWhere(m => m == null || m.Behaviour == null);
 
+            foreach (IMonoCacheFixedUpdate fixedUpdateListner in listnersFixedUpdate.Where(l => l.Behaviour.isActiveAndEnabled))
+            {
                 fixedUpdateListner.FixedUpdateCached();
             }
         }
 
         private void LateUpdate()
         {
-            foreach (IMonoCacheLateUpdate lateUpdateListner in listnersLateUpdate)
-            {
-                if (lateUpdateListner == null || lateUpdateListner.Behaviour == null)
-                {
-                    listnersLateUpdate.Remove(lateUpdateListner);
-                    continue;
-                }
-                if (lateUpdateListner.Behaviour.isActiveAndEnabled == false)
-                {
-                    continue;
-                }
+            listnersLateUpdate.RemoveWhere(m => m == null || m.Behaviour == null);
 
+            foreach (IMonoCacheLateUpdate lateUpdateListner in listnersLateUpdate.Where(l => l.Behaviour.isActiveAndEnabled))
+            {
                 lateUpdateListner.LateUpdateCached();
             }
         }

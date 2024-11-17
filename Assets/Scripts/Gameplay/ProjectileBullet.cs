@@ -48,9 +48,10 @@ namespace Scripts.Gameplay
 
         protected virtual void OnCollisionEnter(Collision collision)
         {
-            if (curHits < maxHits && collision.gameObject.TryGetComponent(out IDamageable damageable))
+            if (curHits < maxHits)
             {
-                damageable.TakeDamage(damage);
+                if (collision.gameObject.TryGetComponent(out IDamageable damageable))
+                    damageable.TakeDamage(damage);
 
                 curHits++;
                 if (curHits >= maxHits)
@@ -62,8 +63,10 @@ namespace Scripts.Gameplay
 
         protected virtual void DestroyBullet()
         {
+            lifetimeCancellationToken.Cancel();
+
             if (NetworkServer.active)
-                NetworkServer.UnSpawn(gameObject);
+                NetworkServer.Destroy(gameObject);
             else
                 Destroy(gameObject);
         }
