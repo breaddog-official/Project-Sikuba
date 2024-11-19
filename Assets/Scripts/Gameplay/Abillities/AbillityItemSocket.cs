@@ -23,7 +23,7 @@ namespace Scripts.Gameplay.Abillities
             item.netIdentity.AssignClientAuthority(connectionToClient);
 
             EquippedItem = item;
-            EquippedItem.OnEquip(connectionToClient);
+            EquippedItem.OnEquip(Entity);
         }
 
         /// <summary>

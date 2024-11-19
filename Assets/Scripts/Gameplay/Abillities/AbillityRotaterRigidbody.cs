@@ -1,4 +1,4 @@
-﻿using System.Drawing;
+﻿using Mirror;
 using UnityEngine;
 
 namespace Scripts.Gameplay.Abillities
@@ -24,10 +24,12 @@ namespace Scripts.Gameplay.Abillities
             base.Initialize();
         }
 
+
+
         public override void RotateToPoint(Vector2 point)
         {
             //tf.rotation = GetSmoothRotation(CalculateRotationToScreenPoint(point));
-            rb.MoveRotation(GetSmoothRotation(CalculateRotationToScreenPoint(point)));
+            Quaternion rotation = GetSmoothRotation(CalculateRotationToScreenPoint(point));
 
             /*Vector3 curForward = tf.forward;
             Vector3 targetForward = CalculateTargetToScreenPoint(point);
@@ -36,16 +38,41 @@ namespace Scripts.Gameplay.Abillities
 
             rb.AddTorque(torque * RotationSpeed, ForceMode.Impulse);
             rb.AddTorque(-rb.angularVelocity);*/
+
+
+            HandleRotationToPoint(rotation);
+
+            if (!isServer) CmdHandleRotationToPoint(rotation);
         }
 
         public override void Rotate(Vector3 vector)
         {
-            if (vector.sqrMagnitude < MinInput)
-                return;
+            Quaternion rotation = GetSmoothRotation(Quaternion.LookRotation(vector));
 
-            tf.rotation = GetSmoothRotation(Quaternion.LookRotation(vector));
+
+            HandleRotation(rotation);
+
+            if (!isServer) CmdHandleRotation(rotation);
         }
 
+        #region Handlers
+        [Command(channel = 2)]
+        private void CmdHandleRotation(Quaternion rotation) => HandleRotation(rotation);
+        private void HandleRotation(Quaternion rotation)
+        {
+            tf.rotation = rotation;
+        }
+
+
+        [Command(channel = 2)]
+        private void CmdHandleRotationToPoint(Quaternion rotation) => HandleRotationToPoint(rotation);
+        private void HandleRotationToPoint(Quaternion rotation)
+        {
+            rb.MoveRotation(rotation);
+        }
+        #endregion
+
+        #region Calculations
         private Quaternion CalculateRotationToScreenPoint(Vector2 point)
         {
             Ray ray = MainCamera.Instance.Camera.ScreenPointToRay(point);
@@ -82,7 +109,7 @@ namespace Scripts.Gameplay.Abillities
         {
             return Quaternion.Slerp(tf.rotation, quaternion, RotationSpeed * Time.deltaTime);
         }
-
+        #endregion
 
         public override bool IsPhysicsRotater() => true;
     }

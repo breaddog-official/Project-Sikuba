@@ -39,9 +39,9 @@ namespace Scripts.Gameplay.Entities
             abillities = GetComponents<Abillity>();
 
             // Initialize all abillities
-            foreach (IInitializable abillity in abillities)
+            foreach (Abillity abillity in abillities)
             {
-                abillity.Initialize();
+                abillity.Initialize(this);
             }
 
             // Set initial controller if exists
@@ -97,6 +97,22 @@ namespace Scripts.Gameplay.Entities
             //                 .FirstOrDefault();
 
             return Abillities.FindByType(type) as Abillity;
+        }
+
+
+
+        public bool TryFindAbillity<T>(out T abillity) where T : Abillity
+        {
+            abillity = FindAbillity<T>();
+
+            return abillity != null;
+        }
+
+        public bool TryFindAbillity(out Abillity abillity, Type type)
+        {
+            abillity = FindAbillity(type);
+
+            return abillity != null;
         }
     }
 }

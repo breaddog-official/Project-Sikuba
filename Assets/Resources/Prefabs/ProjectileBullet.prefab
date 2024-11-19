@@ -186,7 +186,7 @@ MonoBehaviour:
   syncInterval: 0
   damage: 15
   lifetime: 3
-  maxHits: 1
+  maxHits: 2
 --- !u!1 &8131409997672978754
 GameObject:
   m_ObjectHideFlags: 0

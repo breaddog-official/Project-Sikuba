@@ -1,5 +1,8 @@
 ﻿using Cysharp.Threading.Tasks;
 using Mirror;
+using Scripts.Gameplay.Abillities;
+using Scripts.Gameplay.Entities;
+using Scripts.Gameplay.Fractions;
 using System.Threading;
 using UnityEngine;
 
@@ -16,12 +19,19 @@ namespace Scripts.Gameplay
 
         protected CancellationTokenSource lifetimeCancellationToken;
 
+        protected Fraction fraction;
 
 
-        public override void Initialize()
+
+        public override void Initialize(Entity sender)
         {
             lifetimeCancellationToken?.Dispose();
             lifetimeCancellationToken = new CancellationTokenSource();
+
+            if (sender.TryFindAbillity<AbillityFraction>(out var abillityFraction))
+            {
+                fraction = abillityFraction.GetFraction();
+            }
 
             curHits = 0;
             curLifetime = 0;
@@ -50,8 +60,14 @@ namespace Scripts.Gameplay
         {
             if (curHits < maxHits)
             {
-                if (collision.gameObject.TryGetComponent(out IDamageable damageable))
-                    damageable.TakeDamage(damage);
+                if (collision.gameObject.TryGetComponent(out Entity entity) && entity.TryFindAbillity<AbillityHealth>(out var health))
+                {
+                    if (fraction.GetFractionStatus(health.GetAbillityFraction().GetFraction()) != FractionStatus.Ally)
+                    {
+                        health.Hurt(damage);
+                    }
+                }
+                    
 
                 curHits++;
                 if (curHits >= maxHits)

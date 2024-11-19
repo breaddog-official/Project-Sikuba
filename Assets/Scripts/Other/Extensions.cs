@@ -35,6 +35,17 @@ namespace Scripts.Extensions
             if (index >= array.Length - 1)
                 index = 0;
         }
+
+        /// <summary>
+        /// Safely increments index within array length
+        /// </summary>
+        public static void IncreaseInBounds(this ref uint index, Array array)
+        {
+            index++;
+
+            if (index >= array.Length - 1)
+                index = 0;
+        }
         #endregion
 
         #region AvailableAndNotNull
@@ -112,6 +123,20 @@ namespace Scripts.Extensions
 
             return value != null;
         }
+
+        /// <summary>
+        /// Invokes an action if not null
+        /// </summary>
+        public static bool IfNotNull<T>(this T value, Action<T> action)
+        {
+            if (value != null)
+                action?.Invoke(value);
+
+            return value != null;
+        }
+
+
+
 
         /// <summary>
         /// Invokes an action if null

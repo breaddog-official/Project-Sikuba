@@ -1,10 +1,13 @@
 using Mirror;
+using Scripts.Gameplay.Entities;
 
 namespace Scripts.Gameplay.Abillities
 {
     public abstract class Abillity : NetworkBehaviour, IInitializable
     {
         public bool IsInitialized { get; protected set; }
+
+        public Entity Entity { get; protected set; }
 
         /// <summary>
         /// Is available abillity for use?
@@ -13,8 +16,14 @@ namespace Scripts.Gameplay.Abillities
 
         public virtual void Initialize() => IsInitialized = true;
 
-        // Needed for the checkbox in the inspector
+        public virtual void Initialize(Entity entity)
+        {
+            Initialize();
+            Entity = entity;
+        }
 
+
+        // Needed for the checkbox in the inspector
 
         /// <summary>
         /// If you override this, you don't need to write <see href="base.OnEnable"/>

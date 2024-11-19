@@ -1,6 +1,6 @@
 using Cysharp.Threading.Tasks;
 using Mirror;
-using Scripts.Extensions;
+using Scripts.Gameplay.Entities;
 using System.Threading;
 using UnityEngine;
 
@@ -33,6 +33,9 @@ namespace Scripts.Gameplay
         private bool canShoot = true;
 
 
+        private Entity entity;
+
+
         private void Awake()
         {
             col = GetComponent<Collider>();
@@ -56,13 +59,17 @@ namespace Scripts.Gameplay
         }
 
 
-        public override void OnEquip(NetworkConnectionToClient conn)
+        public override void OnEquip(Entity entity)
         {
+            this.entity = entity;
+
             col.isTrigger = true;
             rb.useGravity = false;
         }
         public override void OnDequip()
         {
+            entity = null;
+
             col.isTrigger = false;
             rb.useGravity = true;
         }
@@ -72,7 +79,7 @@ namespace Scripts.Gameplay
         {
             Projectile projectile = Instantiate(projectilePrefab, shootPoint.position, shootPoint.rotation);
 
-            projectile.Initialize();
+            projectile.Initialize(entity);
 
             Rigidbody projectileRb = projectile.GetComponent<Rigidbody>();
             projectileRb.AddForce(projectile.transform.forward * forceAmount);

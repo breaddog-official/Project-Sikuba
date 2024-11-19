@@ -1,4 +1,5 @@
 ﻿using Mirror;
+using Scripts.Gameplay.Entities;
 
 namespace Scripts.Gameplay
 {
@@ -22,7 +23,7 @@ namespace Scripts.Gameplay
         public virtual void CancelUsing() => StopUsing();
 
 
-        public abstract void OnEquip(NetworkConnectionToClient conn);
+        public abstract void OnEquip(Entity entity);
         public abstract void OnDequip();
     }
 }
