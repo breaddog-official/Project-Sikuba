@@ -11,8 +11,9 @@ namespace Scripts.Gameplay
     public class ProjectileBullet : Projectile
     {
         [SerializeField] protected float damage;
-        [SerializeField] protected float lifetime;
+        [SerializeField] protected float lifetime = 3;
         [SerializeField, Min(1)] protected uint maxHits = 1;
+        [SerializeField] protected bool ignoreHitsWhenDamageable;
 
         protected uint curHits;
         protected float curLifetime;
@@ -61,11 +62,14 @@ namespace Scripts.Gameplay
         {
             if (curHits < maxHits)
             {
-                if (collision.gameObject.TryGetComponent(out Entity entity) && entity.TryFindAbillity<AbillityHealth>(out var health))
+                if (CanHurt(collision.gameObject, out AbillityHealth health))
                 {
-                    if (fraction.GetFractionStatus(health.GetAbillityFraction().GetFraction()) != FractionStatus.Ally)
+                    health.Hurt(damage);
+
+                    if (ignoreHitsWhenDamageable)
                     {
-                        health.Hurt(damage);
+                        DestroyBullet();
+                        return;
                     }
                 }
                     
@@ -86,6 +90,26 @@ namespace Scripts.Gameplay
                 NetworkServer.Destroy(gameObject);
             else
                 Destroy(gameObject);
+        }
+
+
+        protected virtual bool CanHurt(GameObject gameObject, out AbillityHealth health)
+        {
+            health = null;
+
+            if (!gameObject.TryGetComponent(out Entity entity))
+                return false;
+
+            if (!entity.TryFindAbillity<AbillityHealth>(out health))
+                return false;
+
+            if (health.GetAbillityFraction().GetFraction() == null)
+                return true;
+
+            if (fraction.GetFractionStatus(health.GetAbillityFraction().GetFraction()) != FractionStatus.Ally)
+                return true;
+
+            return false;
         }
     }
 }

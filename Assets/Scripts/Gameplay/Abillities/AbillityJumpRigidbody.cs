@@ -1,10 +1,11 @@
 using Mirror;
 using Scripts.Gameplay.Entities;
+using Scripts.MonoCacher;
 using UnityEngine;
 
 namespace Scripts.Gameplay.Abillities
 {
-    public class AbillityJumpRigidbody : AbillityJump
+    public class AbillityJumpRigidbody : AbillityJump, IMonoCacheFixedUpdate
     {
         [field: SerializeField] public float JumpForce { get; private set; } = 25.0f;
         [field: SerializeField] public bool DisableDragInAir { get; private set; }
@@ -12,17 +13,22 @@ namespace Scripts.Gameplay.Abillities
         private PredictedRigidbody rb;
         private AbillityCollisioner collisioner;
 
+        public Behaviour Behaviour => this;
+
         private float? lastDrag;
+
 
 
         public override void Initialize()
         {
             rb = GetComponent<PredictedRigidbody>();
             collisioner = GetComponent<Entity>().FindAbillity<AbillityCollisioner>();
+
+            MonoCacher.MonoCacher.Registrate(this);
         }
 
 
-        private void FixedUpdate()
+        public void FixedUpdateCached()
         {
             if (!DisableDragInAir)
                 return;

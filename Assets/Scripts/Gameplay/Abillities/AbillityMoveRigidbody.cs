@@ -1,11 +1,12 @@
 using Mirror;
 using Scripts.Extensions;
 using Scripts.Gameplay.Entities;
+using Scripts.MonoCacher;
 using UnityEngine;
 
 namespace Scripts.Gameplay.Abillities
 {
-    public class AbillityMoveRigidbody : AbillityMove
+    public class AbillityMoveRigidbody : AbillityMove, IMonoCacheFixedUpdate
     {
         public enum AirMoveMode
         {
@@ -24,16 +25,20 @@ namespace Scripts.Gameplay.Abillities
         private PredictedRigidbody rb;
         private AbillityCollisioner collisioner;
 
+        public Behaviour Behaviour => this;
+
 
         public override void Initialize()
         {
             base.Initialize();
 
+            MonoCacher.MonoCacher.Registrate(this);
+
             rb = GetComponent<PredictedRigidbody>();
             collisioner = Entity.FindAbillity<AbillityCollisioner>();
         }
 
-        private void FixedUpdate()
+        public void FixedUpdateCached()
         {
             if (!isServer && !isOwned && !IsInitialized)
                 return;

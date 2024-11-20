@@ -61,13 +61,13 @@ namespace Scripts.Gameplay
         }
 
 
-        [ClientRpc]
+        [Server]
         public override void OnEquip()
         {
             col.isTrigger = true;
             rb.useGravity = false;
         }
-        [ClientRpc]
+        [Server]
         public override void OnDequip()
         {
             col.isTrigger = false;

@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using Scripts.Extensions;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,13 @@ namespace Scripts.MonoCacher
     /// </summary>
     public sealed class MonoCacher : MonoBehaviour
     {
+        enum RemoveTimings
+        {
+            Update,
+            FixedUpdate,
+            LateUpdate
+        }
+
         private readonly static HashSet<IMonoCacheUpdate> listnersUpdate = new(CACHE_CAPACITY / 3);
         private readonly static HashSet<IMonoCacheFixedUpdate> listnersFixedUpdate = new(CACHE_CAPACITY / 3);
         private readonly static HashSet<IMonoCacheLateUpdate> listnersLateUpdate = new(CACHE_CAPACITY / 3);
@@ -31,32 +39,73 @@ namespace Scripts.MonoCacher
 
         private void Update()
         {
-            listnersUpdate.RemoveWhere(m => m == null || m.Behaviour == null);
+            RemoveNulls(RemoveTimings.Update);
 
-            foreach (IMonoCacheUpdate updateListner in listnersUpdate.Where(l => l.Behaviour.isActiveAndEnabled))
+            foreach (IMonoCacheUpdate updateListner in listnersUpdate)
             {
+                if (!IsValid(updateListner, true))
+                    continue;
+
                 updateListner.UpdateCached();
             }
         }
 
         private void FixedUpdate()
         {
-            listnersFixedUpdate.RemoveWhere(m => m == null || m.Behaviour == null);
+            RemoveNulls(RemoveTimings.FixedUpdate);
 
-            foreach (IMonoCacheFixedUpdate fixedUpdateListner in listnersFixedUpdate.Where(l => l.Behaviour.isActiveAndEnabled))
+            foreach (IMonoCacheFixedUpdate fixedUpdateListner in listnersFixedUpdate)
             {
+                if (!IsValid(fixedUpdateListner, true))
+                    continue;
+
                 fixedUpdateListner.FixedUpdateCached();
             }
         }
 
         private void LateUpdate()
         {
-            listnersLateUpdate.RemoveWhere(m => m == null || m.Behaviour == null);
+            RemoveNulls(RemoveTimings.LateUpdate);
 
-            foreach (IMonoCacheLateUpdate lateUpdateListner in listnersLateUpdate.Where(l => l.Behaviour.isActiveAndEnabled))
+            foreach (IMonoCacheLateUpdate lateUpdateListner in listnersLateUpdate)
             {
+                if (!IsValid(lateUpdateListner, true))
+                    continue;
+
                 lateUpdateListner.LateUpdateCached();
             }
         }
+
+
+        private void RemoveNulls(RemoveTimings timing)
+        {
+            switch (timing)
+            {
+                case RemoveTimings.Update:
+                    listnersUpdate.RemoveWhere(IsNull);
+                    return;
+
+                case RemoveTimings.FixedUpdate:
+                    listnersFixedUpdate.RemoveWhere(IsNull);
+                    return;
+
+                case RemoveTimings.LateUpdate:
+                    listnersLateUpdate.RemoveWhere(IsNull);
+                    return;
+            }
+        }
+
+
+        /// <summary>
+        /// Checks if not null and active
+        /// </summary>
+        private bool IsValid(IMonoCacheListner listner, bool skipNullCheck = false)
+                            => (skipNullCheck || !IsNull(listner)) && listner.Behaviour.isActiveAndEnabled;
+
+        /// <summary>
+        /// Checks if null
+        /// </summary>
+        private bool IsNull(IMonoCacheListner listner) 
+                            => listner == null || listner.Behaviour == null;
     }
 }
