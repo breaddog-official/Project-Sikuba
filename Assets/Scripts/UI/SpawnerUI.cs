@@ -4,17 +4,14 @@ using UnityEngine;
 
 namespace Scripts.UI
 {
-    public class FractionSelector : MonoBehaviour
+    public class SpawnerUI : MonoBehaviour
     {
         [SerializeField] private SessionManagerCommandMatch sessionManager;
 
 
-        public void SelectTeam(Fraction fraction)
+        public void Spawn()
         {
-            CommandMatchConfig config = new() 
-            {
-                fraction = fraction
-            };
+            CommandMatchConfig config = new();
 
             sessionManager.SendRequestToSpawn(config);
         }

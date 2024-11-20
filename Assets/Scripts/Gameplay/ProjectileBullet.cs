@@ -56,6 +56,7 @@ namespace Scripts.Gameplay
             DestroyBullet();
         }
 
+        [ServerCallback]
         protected virtual void OnCollisionEnter(Collision collision)
         {
             if (curHits < maxHits)

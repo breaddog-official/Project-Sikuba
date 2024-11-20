@@ -16,6 +16,9 @@ namespace Scripts.Gameplay.Entities
     {
         #region Fields && Properties
 
+        [SerializeField] private bool initializeIfLocalPlayer = true;
+
+
         private Controller controller;
 
         private Abillity[] abillities;
@@ -30,11 +33,24 @@ namespace Scripts.Gameplay.Entities
 
         #endregion
 
+        public override void OnStartLocalPlayer()
+        {
+            if (initializeIfLocalPlayer)
+                Initialize();
+        }
+
+
         /// <summary>
         /// Initializes the entity
         /// </summary>
         public virtual void Initialize()
         {
+            if (IsInitialized)
+                return;
+
+            IsInitialized = true;
+
+
             // Find all abillities
             abillities = GetComponents<Abillity>();
 

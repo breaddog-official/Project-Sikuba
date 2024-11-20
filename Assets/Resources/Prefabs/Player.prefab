@@ -139,6 +139,7 @@ GameObject:
   - component: {fileID: 2396446135309140712}
   - component: {fileID: -7550949738416565582}
   - component: {fileID: 4325606651660950852}
+  - component: {fileID: 1192594577022268083}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -281,6 +282,7 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
+  initializeIfLocalPlayer: 1
 --- !u!114 &6759642062967463256
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -395,7 +397,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   syncDirection: 0
-  syncMode: 0
+  syncMode: 1
   syncInterval: 0
   floatingArms: {fileID: 6527960312415655447}
   dropForce: 25
@@ -432,6 +434,21 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
+--- !u!114 &1192594577022268083
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2573031094699484338}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84a62c39763a2fa43867d5c0ab642a92, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <InitializeOnAwake>k__BackingField: 1
+  <Initializable>k__BackingField:
+    target: {fileID: 3397365942501102096}
 --- !u!1 &3555780261707948678
 GameObject:
   m_ObjectHideFlags: 0

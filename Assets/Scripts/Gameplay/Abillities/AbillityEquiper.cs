@@ -1,5 +1,6 @@
 using UnityEngine;
 using Scripts.Gameplay.Entities;
+using Mirror;
 
 namespace Scripts.Gameplay.Abillities
 {
@@ -19,10 +20,14 @@ namespace Scripts.Gameplay.Abillities
             }
         }
 
+        [ServerCallback]
         private void OnTriggerEnter(Collider other)
         {
             if (other.TryGetComponent(out Item item) && socket != null)
             {
+                if (item.Owner != null)
+                    return;
+
                 socket.EquipItem(item);
             }
         }

@@ -3,6 +3,8 @@ using UnityEngine;
 using System.Collections.Generic;
 using Scripts.Extensions;
 using System;
+using Scripts.Gameplay.Entities;
+using Scripts.Gameplay.Abillities;
 
 namespace Scripts.Gameplay.Fractions
 {
@@ -66,6 +68,34 @@ namespace Scripts.Gameplay.Fractions
 
 
 
+        [Command(requiresAuthority = false)]
+        public void Join(NetworkConnectionToClient sender = null)
+        {
+            if (sender.identity == null)
+                return;
+
+            if (sender.identity.TryGetComponent<Entity>(out var entity) == false)
+                return;
+
+            if (CanJoin(entity) == false)
+                return;
+
+
+
+            entity.FindAbillity<AbillityFraction>().SetFraction(this);
+
+
+            Transform spawnPoint = GetSpawnPoint();
+
+            if (entity.TryGetComponent<Rigidbody>(out var rb))
+                rb.Move(spawnPoint.position, spawnPoint.rotation);
+
+            else
+                entity.transform.SetPositionAndRotation(spawnPoint.position, spawnPoint.rotation);
+        }
+
+
+
         public Transform GetSpawnPoint()
         {
             if (spawnPoints == null || spawnPoints.Length == 0)
@@ -75,6 +105,14 @@ namespace Scripts.Gameplay.Fractions
             currentSpawnPoint.IncreaseInBounds(spawnPoints);
 
             return spawnPoint;
+        }
+
+        protected virtual bool CanJoin(Entity entity)
+        {
+            if (entity.FindAbillity<AbillityFraction>().GetFraction() != null)
+                return false;
+
+            return true;
         }
     }
 }

@@ -5,6 +5,9 @@ namespace Scripts.Gameplay
 {
     public abstract class Item : NetworkBehaviour
     {
+        [field: SyncVar]
+        public Entity Owner { get; protected set; }
+
         /// <summary>
         /// Start using an item (by default left mouse button press)
         /// </summary>
@@ -23,7 +26,10 @@ namespace Scripts.Gameplay
         public virtual void CancelUsing() => StopUsing();
 
 
-        public abstract void OnEquip(Entity entity);
+        public abstract void OnEquip();
         public abstract void OnDequip();
+
+        [Server]
+        public virtual void SetOwner(Entity entity) => Owner = entity;
     }
 }

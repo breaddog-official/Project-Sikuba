@@ -5,6 +5,6 @@ namespace Scripts.SessionManagers
 {
     public struct CommandMatchConfig : NetworkMessage
     {
-        public Fraction fraction;
+        //public Fraction fraction;
     }
 }

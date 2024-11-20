@@ -18,8 +18,8 @@ namespace Scripts.Gameplay.Abillities
 
         public virtual void Initialize(Entity entity)
         {
-            Initialize();
             Entity = entity;
+            Initialize();
         }
 
 

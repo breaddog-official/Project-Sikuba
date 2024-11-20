@@ -27,13 +27,17 @@ namespace Scripts.Gameplay.Abillities
 
         public override void Initialize()
         {
-            rb = GetComponent<PredictedRigidbody>();
-            collisioner = GetComponent<Entity>().FindAbillity<AbillityCollisioner>();
-        }
+            base.Initialize();
 
+            rb = GetComponent<PredictedRigidbody>();
+            collisioner = Entity.FindAbillity<AbillityCollisioner>();
+        }
 
         private void FixedUpdate()
         {
+            if (!isServer && !isOwned && !IsInitialized)
+                return;
+
             if (rb.predictedRigidbody.velocity.magnitude > MaxSpeed)
                 rb.predictedRigidbody.velocity = rb.predictedRigidbody.velocity.normalized * MaxSpeed;
         }

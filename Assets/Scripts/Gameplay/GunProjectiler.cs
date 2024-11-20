@@ -33,13 +33,15 @@ namespace Scripts.Gameplay
         private bool canShoot = true;
 
 
-        private Entity entity;
-
-
         private void Awake()
         {
             col = GetComponent<Collider>();
             rb = col.attachedRigidbody;
+
+            if (!isOwned && Owner != null)
+            {
+                col.isTrigger = true;
+            }
         }
 
         [Command]
@@ -59,27 +61,26 @@ namespace Scripts.Gameplay
         }
 
 
-        public override void OnEquip(Entity entity)
+        [ClientRpc]
+        public override void OnEquip()
         {
-            this.entity = entity;
-
             col.isTrigger = true;
             rb.useGravity = false;
         }
+        [ClientRpc]
         public override void OnDequip()
         {
-            entity = null;
-
             col.isTrigger = false;
             rb.useGravity = true;
         }
+
 
         [Server]
         protected virtual void Fire()
         {
             Projectile projectile = Instantiate(projectilePrefab, shootPoint.position, shootPoint.rotation);
 
-            projectile.Initialize(entity);
+            projectile.Initialize(Owner);
 
             Rigidbody projectileRb = projectile.GetComponent<Rigidbody>();
             projectileRb.AddForce(projectile.transform.forward * forceAmount);

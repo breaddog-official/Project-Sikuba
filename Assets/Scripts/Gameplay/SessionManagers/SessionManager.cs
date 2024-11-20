@@ -17,11 +17,6 @@ namespace Scripts.SessionManagers
 
 
 
-        public override void OnStartClient()
-        {
-            base.OnStartClient();
-        }
-
         public override void OnStartServer()
         {
             base.OnStartServer();

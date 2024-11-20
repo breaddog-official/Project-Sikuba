@@ -7,8 +7,10 @@ namespace Scripts.Gameplay.Abillities
     /// </summary>
     public class AbillityItemSocket : Abillity
     {
+        [field: SyncVar]
         public virtual Item EquippedItem { get; protected set; }
 
+        [field: SyncVar]
         public virtual Item LastEquippedItem { get; protected set; }
 
         /// <summary>
@@ -23,7 +25,9 @@ namespace Scripts.Gameplay.Abillities
             item.netIdentity.AssignClientAuthority(connectionToClient);
 
             EquippedItem = item;
-            EquippedItem.OnEquip(Entity);
+
+            EquippedItem.SetOwner(Entity);
+            EquippedItem.OnEquip();
         }
 
         /// <summary>
@@ -37,6 +41,7 @@ namespace Scripts.Gameplay.Abillities
 
             EquippedItem.netIdentity.RemoveClientAuthority();
 
+            EquippedItem.SetOwner(null);
             EquippedItem.OnDequip();
 
             LastEquippedItem = EquippedItem;
