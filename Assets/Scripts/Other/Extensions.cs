@@ -4,11 +4,16 @@ using UnityEngine;
 using Scripts.Gameplay.Abillities;
 using System.Collections.Generic;
 using System.Linq;
+using Cysharp.Threading.Tasks;
+using Scripts.Gameplay.Entities;
+using Mirror;
+using System.Threading;
 
 namespace Scripts.Extensions
 {
     public static class Extensions
     {
+        // Global
         #region CheckInitialization
         /// <summary>
         /// If already initialized, returns true, however if not initialized, <br />
@@ -62,16 +67,16 @@ namespace Scripts.Extensions
         /// <summary>
         /// Looking for the first <see href="T"/>
         /// </summary>
-        public static T FindByType<T>(this IEnumerable enumerable) where T : class
+        public static T FindByType<T>(this IEnumerable enumerable)
         {
             foreach (var t in enumerable)
             {
-                if (t is T)
+                if (t is T result)
                 {
-                    return t as T;
+                    return result;
                 }
             }
-            return null;
+            return default;
         }
 
         /// <summary>
@@ -210,6 +215,59 @@ namespace Scripts.Extensions
         public static Vector2 ConvertInputToVector2(this Vector3 input)
         {
             return new Vector2(input.x, input.z);
+        }
+
+        #endregion
+
+        #region ConvertSecondsToMiliseconds
+
+        /// <summary>
+        /// Converts float seconds to int miliseconds
+        /// </summary>
+        public static int ConvertSecondsToMiliseconds(this float seconds)
+        {
+            return (int)(seconds * 1000);
+        }
+
+
+        #endregion
+
+
+
+        // Gameplay
+        #region Stun
+
+        /// <summary>
+        /// Disables all movement abillities for the given delay
+        /// </summary>
+        [Server]
+        public static async UniTaskVoid Stun(this Entity entity, float delay = 0f, CancellationToken token = default)
+        {
+            List<Abillity> movementAbillities = new()
+            {
+                entity.FindAbillity<AbillityMove>(),
+                entity.FindAbillity<AbillityRotater>(),
+                entity.FindAbillity<AbillityJump>()
+            };
+
+            foreach (Abillity abillity in movementAbillities)
+            {
+                if (abillity != null)
+                    abillity.enabled = false;
+            }
+
+            if (delay <= 0)
+                await UniTask.NextFrame(cancellationToken: token);
+
+            else
+                await UniTask.Delay(delay.ConvertSecondsToMiliseconds(), cancellationToken: token);
+
+
+            foreach (Abillity abillity in movementAbillities)
+            {
+                if (abillity != null)
+                    abillity.enabled = true;
+            }
         }
 
         #endregion

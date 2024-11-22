@@ -12,8 +12,12 @@ namespace Scripts.Gameplay
     {
         [SerializeField] protected float damage;
         [SerializeField] protected float lifetime = 3;
+        [Space]
         [SerializeField, Min(1)] protected uint maxHits = 1;
         [SerializeField] protected bool ignoreHitsWhenDamageable;
+        [Space]
+        [SerializeField] private Effector ricochetEffector;
+        [SerializeField] private Effector destroyEffector;
 
         protected uint curHits;
         protected float curLifetime;
@@ -78,6 +82,12 @@ namespace Scripts.Gameplay
                 if (curHits >= maxHits)
                 {
                     DestroyBullet();
+                    return;
+                }
+
+                else if (ricochetEffector != null)
+                {
+                    ricochetEffector.Play();
                 }
             }
         }
@@ -85,6 +95,11 @@ namespace Scripts.Gameplay
         protected virtual void DestroyBullet()
         {
             lifetimeCancellationToken.Cancel();
+
+            if (destroyEffector != null)
+                destroyEffector.Play();
+
+
 
             if (NetworkServer.active)
                 NetworkServer.Destroy(gameObject);
