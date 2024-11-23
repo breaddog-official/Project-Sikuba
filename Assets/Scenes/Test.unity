@@ -1168,6 +1168,12 @@ MonoBehaviour:
   - {fileID: 617712313}
   - {fileID: 710826851}
   - {fileID: 383546850}
+  mainColor: {r: 0.10980392, g: 0.37254903, b: 1, a: 1}
+  additiveColor: {r: 0.16470589, g: 0.91764706, b: 1, a: 1}
+  agressiveColor: {r: 0, g: 0.2951541, b: 1, a: 1}
+  passiveColor: {r: 0.39811313, g: 0.58841556, b: 1, a: 1}
+  reverseColor: {r: 1, g: 0.14901961, b: 0.14901961, a: 1}
+  reverseAdditiveColor: {r: 1, g: 0.47058824, b: 0, a: 1}
 --- !u!114 &510667274
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2490,6 +2496,12 @@ MonoBehaviour:
   - {fileID: 2073987375}
   - {fileID: 154908442}
   - {fileID: 58301904}
+  mainColor: {r: 1, g: 0.1490565, b: 0.1490565, a: 1}
+  additiveColor: {r: 1, g: 0.47155797, b: 0, a: 1}
+  agressiveColor: {r: 1, g: 0, b: 0, a: 1}
+  passiveColor: {r: 1, g: 0.32156864, b: 0.32156864, a: 1}
+  reverseColor: {r: 0.109803915, g: 0.37155947, b: 1, a: 1}
+  reverseAdditiveColor: {r: 0.1641509, g: 0.91585857, b: 1, a: 1}
 --- !u!114 &1185806322
 MonoBehaviour:
   m_ObjectHideFlags: 0

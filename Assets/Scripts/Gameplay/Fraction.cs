@@ -15,6 +15,15 @@ namespace Scripts.Gameplay.Fractions
         [SerializeField] private FractionStatus defaultFractionStatus = FractionStatus.Neutral;
         [SerializeField] private FractionStatus fractionStatusForMembers = FractionStatus.Ally;
         [SerializeField] private Transform[] spawnPoints;
+        [Space]
+        [SerializeField] private Color mainColor;
+        [SerializeField] private Color additiveColor;
+        [Space(10f)]
+        [SerializeField] private Color agressiveColor;
+        [SerializeField] private Color passiveColor;
+        [Space(10f)]
+        [SerializeField] private Color reverseColor;
+        [SerializeField] private Color reverseAdditiveColor;
 
         private Dictionary<Fraction, FractionStatus> statusDictionary;
 
@@ -106,6 +115,22 @@ namespace Scripts.Gameplay.Fractions
 
             return spawnPoint;
         }
+
+        public virtual Color GetColor(FractionColor fractionColor)
+        {
+            return fractionColor switch
+            {
+                FractionColor.Main => mainColor,
+                FractionColor.Additive => additiveColor,
+                FractionColor.Reverse => reverseColor,
+                FractionColor.ReverseAdditive => reverseAdditiveColor,
+                FractionColor.Agressive => agressiveColor,
+                FractionColor.Passive => passiveColor,
+                _ => mainColor
+            };
+        }
+
+
 
         protected virtual bool CanJoin(Entity entity)
         {

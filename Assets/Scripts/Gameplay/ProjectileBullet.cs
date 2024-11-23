@@ -1,5 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
 using Mirror;
+using Scripts.Extensions;
 using Scripts.Gameplay.Abillities;
 using Scripts.Gameplay.Entities;
 using Scripts.Gameplay.Fractions;
@@ -16,11 +17,11 @@ namespace Scripts.Gameplay
         [SerializeField, Min(1)] protected uint maxHits = 1;
         [SerializeField] protected bool ignoreHitsWhenDamageable;
         [Space]
+        [SerializeField] private FractionColor fractionColor;
         [SerializeField] private Effector ricochetEffector;
         [SerializeField] private Effector destroyEffector;
 
         protected uint curHits;
-        protected float curLifetime;
 
         protected CancellationTokenSource lifetimeCancellationToken;
 
@@ -33,13 +34,13 @@ namespace Scripts.Gameplay
             lifetimeCancellationToken?.Dispose();
             lifetimeCancellationToken = new CancellationTokenSource();
 
-            if (sender.TryFindAbillity<AbillityFraction>(out var abillityFraction))
+            if (sender.TryFindAbillity<AbillityFraction>(out var abillityFraction) && abillityFraction.HasFraction())
             {
                 fraction = abillityFraction.GetFraction();
+                ApplyFractionColor();
             }
 
             curHits = 0;
-            curLifetime = 0;
 
             if (TryGetComponent<Rigidbody>(out var rb))
             { 
@@ -51,14 +52,18 @@ namespace Scripts.Gameplay
 
         protected async UniTaskVoid Lifetime()
         {
-            while (curLifetime < lifetime)
-            {
-                curLifetime += Time.deltaTime;
-
-                await UniTask.NextFrame(lifetimeCancellationToken.Token);
-            }
+            await UniTask.Delay(lifetime.ConvertSecondsToMiliseconds(), cancellationToken: lifetimeCancellationToken.Token);
 
             DestroyBullet();
+        }
+
+        [ClientRpc]
+        protected virtual void ApplyFractionColor()
+        {
+            foreach (MeshRenderer meshRenderer in GetComponentsInChildren<MeshRenderer>())
+            {
+                meshRenderer.material.color = fraction.GetColor(fractionColor);
+            }
         }
 
         [ServerCallback]
@@ -112,15 +117,19 @@ namespace Scripts.Gameplay
         {
             health = null;
 
+            // We can't hurt non Entity GameObject
             if (!gameObject.TryGetComponent(out Entity entity))
                 return false;
 
+            // We can't hurt if Entity don't have health abillity
             if (!entity.TryFindAbillity<AbillityHealth>(out health))
                 return false;
 
+            // Even if the Entity has no fraction, we can hit it. Fraction is the ability to skip a hurt, not to confirm
             if (health.GetAbillityFraction().GetFraction() == null)
                 return true;
 
+            // If the fraction is not our ally, we can hurt it
             if (fraction.GetFractionStatus(health.GetAbillityFraction().GetFraction()) != FractionStatus.Ally)
                 return true;
 

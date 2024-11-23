@@ -80,13 +80,13 @@ namespace Scripts.Gameplay
         {
             Projectile projectile = Instantiate(projectilePrefab, shootPoint.position, shootPoint.rotation);
 
-            projectile.Initialize(Owner);
+            NetworkServer.Spawn(projectile.gameObject);
 
             Rigidbody projectileRb = projectile.GetComponent<Rigidbody>();
             projectileRb.AddForce(projectile.transform.forward * forceAmount);
             projectileRb.AddTorque(projectile.transform.forward * torqueAmount);
 
-            NetworkServer.Spawn(projectile.gameObject);
+            projectile.Initialize(Owner);
 
             if (shootEffector != null)
                 shootEffector.Play();

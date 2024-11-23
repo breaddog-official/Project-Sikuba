@@ -144,7 +144,7 @@
                 {
                     "name": "",
                     "id": "712671ee-ae24-4bd3-8371-a2938cd212f3",
-                    "path": "<Pointer>/press",
+                    "path": "<Pen>/eraser",
                     "interactions": "MultiTap",
                     "processors": "",
                     "groups": ";Keyboard & Pointer;Keyboard Pen",
@@ -230,7 +230,18 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "Keyboard",
+                    "name": "",
+                    "id": "4b0fcb95-2b94-4c84-8891-755761cf798b",
+                    "path": "<Gamepad>/leftStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Default;Gamepad",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "WASD",
                     "id": "f257bcdf-05a6-46b1-b169-2b62fed3430c",
                     "path": "2DVector(mode=1)",
                     "interactions": "",
@@ -283,17 +294,6 @@
                     "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": true
-                },
-                {
-                    "name": "",
-                    "id": "4b0fcb95-2b94-4c84-8891-755761cf798b",
-                    "path": "<Gamepad>/leftStick",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Default;Gamepad",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": false
                 },
                 {
                     "name": "",
@@ -364,10 +364,21 @@
                 {
                     "name": "",
                     "id": "2135c9a0-240b-4378-a9e5-d89c7c9ff6ec",
-                    "path": "<Pointer>/position",
+                    "path": "<Mouse>/position",
                     "interactions": "",
                     "processors": "",
-                    "groups": ";Keyboard & Pointer;Keyboard Pen;Keyboard Mouse",
+                    "groups": ";Keyboard & Pointer;Keyboard Mouse",
+                    "action": "LookPosition",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0be918a1-b0d7-4d40-86bc-d013d6865090",
+                    "path": "<Pen>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard Pen",
                     "action": "LookPosition",
                     "isComposite": false,
                     "isPartOfComposite": false
