@@ -69,7 +69,7 @@ namespace Scripts.Gameplay.Abillities
         [ServerCallback]
         protected virtual void OnDestroy()
         {
-            cancellationTokenSource.Cancel();
+            cancellationTokenSource.RenewToken(false);
         }
 
 
@@ -97,9 +97,7 @@ namespace Scripts.Gameplay.Abillities
             rb.predictedRigidbody.MovePosition(spawnPoint.position);
             rb.predictedRigidbody.MoveRotation(spawnPoint.rotation);
 
-            cancellationTokenSource?.Cancel();
-            cancellationTokenSource?.Dispose();
-            cancellationTokenSource = new();
+            cancellationTokenSource.RenewToken();
 
             Entity.Stun(deadStanCooldown, cancellationTokenSource.Token).Forget();
 

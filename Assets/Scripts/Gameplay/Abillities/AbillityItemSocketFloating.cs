@@ -1,5 +1,7 @@
 using Cysharp.Threading.Tasks;
 using Mirror;
+using Scripts.Extensions;
+using System.Threading;
 using UnityEngine;
 
 namespace Scripts.Gameplay.Abillities
@@ -12,6 +14,8 @@ namespace Scripts.Gameplay.Abillities
         [SerializeField] protected float delayBetweenEquips;
 
         protected bool canEquipByDelay = true;
+
+        protected CancellationTokenSource equipCancellationToken;
 
         [Server]
         public override void EquipItem(Item item)
@@ -58,11 +62,27 @@ namespace Scripts.Gameplay.Abillities
 
         private async UniTaskVoid EquipTimer()
         {
+            equipCancellationToken ??= new();
+
+
             canEquipByDelay = false;
 
-            await UniTask.Delay((int)(delayBetweenEquips * 1000));
+            await UniTask.Delay(delayBetweenEquips.ConvertSecondsToMiliseconds(), cancellationToken: equipCancellationToken.Token);
 
             canEquipByDelay = true;
+        }
+
+
+
+        public override void OnStopServer()
+        {
+            equipCancellationToken?.Cancel();
+            equipCancellationToken?.Dispose();
+
+            if (EquippedItem != null)
+                EquippedItem.gameObject.SetActive(true);
+
+            DropItem();
         }
     }
 }

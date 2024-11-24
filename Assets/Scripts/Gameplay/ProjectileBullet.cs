@@ -4,6 +4,7 @@ using Scripts.Extensions;
 using Scripts.Gameplay.Abillities;
 using Scripts.Gameplay.Entities;
 using Scripts.Gameplay.Fractions;
+using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 
@@ -27,6 +28,10 @@ namespace Scripts.Gameplay
 
         protected Fraction fraction;
 
+        [SyncVar(hook = nameof(ApplyFractionColor))]
+        protected Color color;
+
+        protected HashSet<Material> cachedMaterials;
 
 
         public override void Initialize(Entity sender)
@@ -37,7 +42,7 @@ namespace Scripts.Gameplay
             if (sender.TryFindAbillity<AbillityFraction>(out var abillityFraction) && abillityFraction.HasFraction())
             {
                 fraction = abillityFraction.GetFraction();
-                ApplyFractionColor();
+                color = fraction.GetColor(fractionColor);
             }
 
             curHits = 0;
@@ -57,12 +62,19 @@ namespace Scripts.Gameplay
             DestroyBullet();
         }
 
-        [ClientRpc]
-        protected virtual void ApplyFractionColor()
+        protected virtual void ApplyFractionColor(Color oldColor, Color newColor)
         {
-            foreach (MeshRenderer meshRenderer in GetComponentsInChildren<MeshRenderer>())
+            Renderer[] renderers = GetComponentsInChildren<MeshRenderer>();
+            cachedMaterials ??= new(renderers.Length);
+
+            foreach (Renderer renderer in renderers)
             {
-                meshRenderer.material.color = fraction.GetColor(fractionColor);
+                Material material = renderer.material;
+                material.color = newColor;
+
+                // Unity makes a clone of the Material every time Renderer.material is used.
+                // We will Destroy it in OnDestroy to prevent a memory leak.
+                cachedMaterials.Add(material);
             }
         }
 
@@ -134,6 +146,19 @@ namespace Scripts.Gameplay
                 return true;
 
             return false;
+        }
+
+
+        private void OnDestroy()
+        {
+            if (cachedMaterials == null)
+                return;
+
+            foreach(Material material in cachedMaterials)
+            {
+                // Destroy it to prevent a memory leak.
+                Destroy(material);
+            }
         }
     }
 }

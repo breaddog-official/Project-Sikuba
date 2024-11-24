@@ -232,6 +232,26 @@ namespace Scripts.Extensions
 
         #endregion
 
+        #region RenewToken
+
+        /// <summary>
+        /// Cancels, disposes and creates a new token
+        /// </summary>
+        public static void RenewToken(this CancellationTokenSource source, bool createNew = true)
+        {
+            source?.Cancel();
+            source?.Dispose();
+
+            if (createNew)
+            {
+                ref CancellationTokenSource reference = ref source;
+                reference = new CancellationTokenSource();
+            }
+        }
+
+
+        #endregion
+
 
 
         // Gameplay

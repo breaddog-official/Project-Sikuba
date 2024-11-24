@@ -10,7 +10,7 @@ namespace Scripts.SessionManagers
     /// </summary>
     public abstract class SessionManager<Config> : NetworkManager where Config : struct, NetworkMessage
     {
-        [SerializeField] private Fraction[] initialFractions;
+        //[SerializeField] private Fraction[] initialFractions;
 
         public event Action OnSendRequestToSpawn;
         public event Action OnRecieveRequestToSpawn;
@@ -24,10 +24,10 @@ namespace Scripts.SessionManagers
             NetworkServer.RegisterHandler<Config>(RecieveRequestToSpawn);
 
 
-            foreach (Fraction fraction in initialFractions)
+            /*foreach (Fraction fraction in initialFractions)
             {
                 NetworkServer.Spawn(fraction.gameObject);
-            }
+            }*/
         }
 
         /// <summary>

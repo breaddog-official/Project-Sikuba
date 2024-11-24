@@ -40,9 +40,9 @@ namespace Scripts.Gameplay.Abillities
             rb.AddTorque(-rb.angularVelocity);*/
 
 
-            HandleRotationToPoint(rotation);
+            HandleRotation(rotation);
 
-            if (!isServer) CmdHandleRotationToPoint(rotation);
+            if (!isServer) CmdHandleRotation(rotation);
         }
 
         public override void Rotate(Vector3 vector)
@@ -59,14 +59,6 @@ namespace Scripts.Gameplay.Abillities
         [Command(channel = 2)]
         private void CmdHandleRotation(Quaternion rotation) => HandleRotation(rotation);
         private void HandleRotation(Quaternion rotation)
-        {
-            tf.rotation = rotation;
-        }
-
-
-        [Command(channel = 2)]
-        private void CmdHandleRotationToPoint(Quaternion rotation) => HandleRotationToPoint(rotation);
-        private void HandleRotationToPoint(Quaternion rotation)
         {
             rb.MoveRotation(rotation);
         }

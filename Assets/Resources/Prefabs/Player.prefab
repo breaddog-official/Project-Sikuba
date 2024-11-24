@@ -266,7 +266,7 @@ MonoBehaviour:
   positionInterpolationSpeed: 15
   rotationInterpolationSpeed: 10
   teleportDistanceMultiplier: 10
-  reduceSendsWhileIdle: 1
+  reduceSendsWhileIdle: 0
 --- !u!114 &3397365942501102096
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -419,6 +419,11 @@ MonoBehaviour:
   syncInterval: 0
   maxHealth: 100
   initialHealth: 100
+  deadStanCooldown: 3
+  hurtEffector: {fileID: 0}
+  healEffector: {fileID: 0}
+  respawnEffector: {fileID: 0}
+  deadEffector: {fileID: 0}
 --- !u!114 &4325606651660950852
 MonoBehaviour:
   m_ObjectHideFlags: 0

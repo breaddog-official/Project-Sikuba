@@ -878,9 +878,6 @@ MonoBehaviour:
   evaluationMethod: 0
   evaluationInterval: 1
   timeInterpolationGui: 0
-  initialFractions:
-  - {fileID: 1185806321}
-  - {fileID: 510667273}
   spawnPoints:
   - {fileID: 1109203769}
   - {fileID: 86835179}

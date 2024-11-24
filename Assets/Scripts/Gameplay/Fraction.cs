@@ -32,7 +32,6 @@ namespace Scripts.Gameplay.Fractions
 
 
 
-        [ServerCallback]
         private void Awake()
         {
             statusDictionary = new(4);

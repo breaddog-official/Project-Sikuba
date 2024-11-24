@@ -1602,6 +1602,7 @@ namespace Mirror
         public static void UnSpawn(GameObject obj)
         {
             // Debug.Log($"DestroyObject instance:{identity.netId}");
+             Debug.Log($"DestroyObject instance: {obj}");
 
             // NetworkServer.Unspawn should only be called on server or host.
             // on client, show a warning to explain what it does.

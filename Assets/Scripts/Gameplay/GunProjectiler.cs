@@ -72,6 +72,8 @@ namespace Scripts.Gameplay
         {
             col.isTrigger = false;
             rb.useGravity = true;
+
+            cancellationToken?.Cancel();
         }
 
 
@@ -96,6 +98,7 @@ namespace Scripts.Gameplay
 
         protected async UniTaskVoid FireLoop()
         {
+            cancellationToken?.Cancel();
             cancellationToken?.Dispose();
             cancellationToken = new();
 
@@ -122,6 +125,12 @@ namespace Scripts.Gameplay
 
             canShoot = true;
         }
+
+        private void OnDestroy()
+        {
+            cancellationToken?.Cancel();
+        }
+
 
         protected bool CanShoot() => canShoot;
     }
