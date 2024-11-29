@@ -2,6 +2,8 @@
 using Scripts.Gameplay.Entities;
 using UnityEngine;
 using Scripts.Extensions;
+using Mirror;
+using System.Collections.Generic;
 
 namespace Scripts.SessionManagers
 {

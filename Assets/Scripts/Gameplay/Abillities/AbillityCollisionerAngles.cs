@@ -48,10 +48,7 @@ namespace Scripts.Gameplay.Abillities
                 }
                 else
                 {
-                    grounds.Remove(contact.otherCollider);
-
-                    if (grounds.Count == 0)
-                        onGround = false;
+                    RemoveCollision(collision);
                 }
             }
         }

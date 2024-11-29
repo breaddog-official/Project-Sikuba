@@ -79,8 +79,8 @@ namespace Scripts.Gameplay.Abillities
             equipCancellationToken?.Cancel();
             equipCancellationToken?.Dispose();
 
-            if (EquippedItem != null)
-                EquippedItem.gameObject.SetActive(true);
+            //if (EquippedItem != null)
+            //    EquippedItem.gameObject.SetActive(true);
 
             DropItem();
         }
