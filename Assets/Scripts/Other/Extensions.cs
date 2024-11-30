@@ -232,23 +232,40 @@ namespace Scripts.Extensions
 
         #endregion
 
-        #region RenewToken
+        #region Renew & Reset Token
 
         /// <summary>
         /// Cancels, disposes and creates a new token
         /// </summary>
-        public static void RenewToken(this CancellationTokenSource source, bool createNew = true)
+        public static void RenewToken(this CancellationTokenSource source)
+        {
+            source.ResetToken();
+
+            ref CancellationTokenSource reference = ref source;
+            reference = new CancellationTokenSource();
+        }
+
+        /// <summary>
+        /// Cancels and disposes a token
+        /// </summary>
+        public static void ResetToken(this CancellationTokenSource source)
         {
             source?.Cancel();
             source?.Dispose();
-
-            if (createNew)
-            {
-                ref CancellationTokenSource reference = ref source;
-                reference = new CancellationTokenSource();
-            }
         }
 
+
+        #endregion
+
+        #region Vector Max
+
+        /// <summary>
+        /// Returns max axis in vector
+        /// </summary>
+        public static float Max(this Vector3 value)
+        {
+            return ExtendedMath.Max(value.x, value.y, value.z);
+        }
 
         #endregion
 
@@ -291,5 +308,19 @@ namespace Scripts.Extensions
         }
 
         #endregion
+    }
+
+
+    public static class ExtendedMath
+    {
+        public static int Max(params int[] values)
+        {
+            return Enumerable.Max(values);
+        }
+
+        public static float Max(params float[] values)
+        {
+            return Enumerable.Max(values);
+        }
     }
 }

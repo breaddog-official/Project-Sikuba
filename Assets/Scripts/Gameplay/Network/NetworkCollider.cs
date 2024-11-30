@@ -1,6 +1,6 @@
 using Mirror;
 using UnityEngine;
-using Scripts.MonoCacher;
+using Scripts.MonoCache;
 
 namespace Scripts.Gameplay.Network
 {
@@ -20,7 +20,7 @@ namespace Scripts.Gameplay.Network
 
         protected virtual void Awake()
         {
-            MonoCacher.MonoCacher.Registrate(this);
+            MonoCacher.Registrate(this);
 
             col = GetComponent<Collider>();
         }

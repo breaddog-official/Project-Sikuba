@@ -3,7 +3,7 @@ using Scripts.Extensions;
 using Scripts.Gameplay.Abillities;
 using Scripts.Gameplay.Entities;
 using Scripts.Input;
-using Scripts.MonoCacher;
+using Scripts.MonoCache;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -26,7 +26,7 @@ namespace Scripts.Gameplay.Controllers
         {
             base.Initialize(entity);
 
-            MonoCacher.MonoCacher.Registrate(this);
+            MonoCacher.Registrate(this);
 
             abillityMove = entity.FindAbillity<AbillityMove>();
             abillityJump = entity.FindAbillity<AbillityJump>();

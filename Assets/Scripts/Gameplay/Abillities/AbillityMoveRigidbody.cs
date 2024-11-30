@@ -1,7 +1,7 @@
 using Mirror;
 using Scripts.Extensions;
 using Scripts.Gameplay.Entities;
-using Scripts.MonoCacher;
+using Scripts.MonoCache;
 using UnityEngine;
 
 namespace Scripts.Gameplay.Abillities
@@ -15,8 +15,11 @@ namespace Scripts.Gameplay.Abillities
             None
         }
 
+        [field: SerializeField] public int Channel { get; private set; }
         [field: SerializeField] public float Speed { get; private set; } = 10.0f;
         [field: SerializeField] public float MaxSpeed { get; private set; } = 10.0f;
+        [field: Space]
+        [field: SerializeField] public BandwidthOptimizationMode OptimizationMode { get; private set; } = BandwidthOptimizationMode.Normal;
         [field: SerializeField] public float MinInput { get; private set; } = 0.01f;
         [field: Space]
         [field: SerializeField] public AirMoveMode AirMove { get; private set; }
@@ -32,7 +35,7 @@ namespace Scripts.Gameplay.Abillities
         {
             base.Initialize();
 
-            MonoCacher.MonoCacher.Registrate(this);
+            MonoCacher.Registrate(this);
 
             rb = GetComponent<PredictedRigidbody>();
             collisioner = Entity.FindAbillity<AbillityCollisioner>();
@@ -50,18 +53,18 @@ namespace Scripts.Gameplay.Abillities
 
         public override void Move(Vector3 input)
         {
-            // We do not calculate the input if it is very small so as not to overload the traffic
-            if (input.sqrMagnitude < MinInput)
+            // We don't calculate the input for reducing bandwidth if it is very small
+            if (OptimizationMode != BandwidthOptimizationMode.None && input.Max() < MinInput)
                 return;
 
             // Calculate camera relative input
             Vector3 relativeInput = MainCamera.Instance.transform.TransformDirection(input);
 
             // Apply local movement
-            HandleMovement(relativeInput);
+            ApplyMovement(relativeInput);
             
             // Apply movement on server
-            if (!isServer) CmdHandleMovement(relativeInput);
+            if (!isServer) ServerApplyMovement(relativeInput);
 
 
             base.Move(input);
@@ -71,8 +74,15 @@ namespace Scripts.Gameplay.Abillities
 
 
 
-        private void HandleMovement(Vector3 input)
+        private void ApplyMovement(Vector3 input)
         {
+            // We don't calculate the input for increasing server's perfomance if it is very small
+
+            // We will get a very small increase in performance and it will be more logical to calculate
+            // the input anyway for greater prediction accuracy, so this optimization is classified as Aggressive.
+            if (OptimizationMode == BandwidthOptimizationMode.Aggressive && isServer && input.Max() < MinInput)
+                return;
+
             // Skip move if moving in air disabled
             if (AirMove == AirMoveMode.None && collisioner.InAir())
                 return;
@@ -94,12 +104,28 @@ namespace Scripts.Gameplay.Abillities
             rb.predictedRigidbody.AddForce(calculatedVector, ForceMode.Impulse);
         }
 
-        [Command]
-        private void CmdHandleMovement(Vector3 input)
+        [Client]
+        protected virtual void ServerApplyMovement(Vector3 input)
         {
-            HandleMovement(input);
+            switch (Channel)
+            {
+                case Channels.Reliable:
+                    CmdApplyMovementReliable(input);
+                    break;
+
+                default:
+                case Channels.Unreliable:
+                    CmdApplyMovementUnreliable(input);
+                    break;
+            }
         }
 
+        [Command(channel = 0)]
+        private void CmdApplyMovementReliable(Vector3 input) => ApplyMovement(input);
+
+        // Channel 2 is usually UnrealiableSequenced, instead simple Unrealiable
+        [Command(channel = 2)]
+        private void CmdApplyMovementUnreliable(Vector3 input) => ApplyMovement(input);
 
 
 

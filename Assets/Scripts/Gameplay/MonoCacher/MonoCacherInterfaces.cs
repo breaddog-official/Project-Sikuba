@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Scripts.MonoCacher
+namespace Scripts.MonoCache
 {
     public interface IMonoCacheListner
     {

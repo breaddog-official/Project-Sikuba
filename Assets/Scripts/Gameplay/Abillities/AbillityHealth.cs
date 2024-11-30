@@ -69,7 +69,7 @@ namespace Scripts.Gameplay.Abillities
         [ServerCallback]
         protected virtual void OnDestroy()
         {
-            cancellationTokenSource.RenewToken(false);
+            cancellationTokenSource.ResetToken();
         }
 
 

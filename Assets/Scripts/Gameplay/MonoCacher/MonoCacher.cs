@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace Scripts.MonoCacher
+namespace Scripts.MonoCache
 {
     /// <summary>
     /// Class for caching default unity events, since they use reflection by default
@@ -18,21 +18,31 @@ namespace Scripts.MonoCacher
             LateUpdate
         }
 
-        private readonly static HashSet<IMonoCacheUpdate> listnersUpdate = new(CACHE_CAPACITY / 3);
-        private readonly static HashSet<IMonoCacheFixedUpdate> listnersFixedUpdate = new(CACHE_CAPACITY / 3);
-        private readonly static HashSet<IMonoCacheLateUpdate> listnersLateUpdate = new(CACHE_CAPACITY / 3);
+        private readonly static HashSet<IMonoCacheUpdate> listnersUpdate = new(CACHE_CAPACITY);
+        private readonly static HashSet<IMonoCacheFixedUpdate> listnersFixedUpdate = new(CACHE_CAPACITY);
+        private readonly static HashSet<IMonoCacheLateUpdate> listnersLateUpdate = new(CACHE_CAPACITY);
 
         /// <summary>
-        /// Initial capacity of all caches <br /> <br />
+        /// Initial capacity of every cache
         /// </summary>
-        private const int CACHE_CAPACITY = 384; // ~3 kb
+        private const int CACHE_CAPACITY = 128; // ~1 kb
 
 
         public static void Registrate(IMonoCacheListner listner)
         {
-            listnersUpdate.AddIfNotNull(listner as IMonoCacheUpdate, true);
-            listnersFixedUpdate.AddIfNotNull(listner as IMonoCacheFixedUpdate, true);
-            listnersLateUpdate.AddIfNotNull(listner as IMonoCacheLateUpdate, true);
+            listnersUpdate.AddIfNotNull(listner as IMonoCacheUpdate);
+            listnersFixedUpdate.AddIfNotNull(listner as IMonoCacheFixedUpdate);
+            listnersLateUpdate.AddIfNotNull(listner as IMonoCacheLateUpdate);
+        }
+
+        /// <summary>
+        /// You don't need call this in OnDestroy. MonoCacher automatically removing destroyed or null listners
+        /// </summary>
+        public static void UnRegistrate(IMonoCacheListner listner)
+        {
+            listnersUpdate.Remove(listner as IMonoCacheUpdate);
+            listnersFixedUpdate.Remove(listner as IMonoCacheFixedUpdate);
+            listnersLateUpdate.Remove(listner as IMonoCacheLateUpdate);
         }
 
 
@@ -43,6 +53,7 @@ namespace Scripts.MonoCacher
 
             foreach (IMonoCacheUpdate updateListner in listnersUpdate)
             {
+                // We skip null checks because we already removed all null listners in RemoveNulls
                 if (!IsValid(updateListner, true))
                     continue;
 
@@ -56,6 +67,7 @@ namespace Scripts.MonoCacher
 
             foreach (IMonoCacheFixedUpdate fixedUpdateListner in listnersFixedUpdate)
             {
+                // We skip null checks because we already removed all null listners in RemoveNulls
                 if (!IsValid(fixedUpdateListner, true))
                     continue;
 
@@ -69,6 +81,7 @@ namespace Scripts.MonoCacher
 
             foreach (IMonoCacheLateUpdate lateUpdateListner in listnersLateUpdate)
             {
+                // We skip null checks because we already removed all null listners in RemoveNulls
                 if (!IsValid(lateUpdateListner, true))
                     continue;
 
@@ -99,13 +112,13 @@ namespace Scripts.MonoCacher
         /// <summary>
         /// Checks if not null and active
         /// </summary>
-        private bool IsValid(IMonoCacheListner listner, bool skipNullCheck = false)
+        private static bool IsValid(IMonoCacheListner listner, bool skipNullCheck = false)
                             => (skipNullCheck || !IsNull(listner)) && listner.Behaviour.isActiveAndEnabled;
 
         /// <summary>
         /// Checks if null
         /// </summary>
-        private bool IsNull(IMonoCacheListner listner) 
+        private static bool IsNull(IMonoCacheListner listner) 
                             => listner == null || listner.Behaviour == null;
     }
 }

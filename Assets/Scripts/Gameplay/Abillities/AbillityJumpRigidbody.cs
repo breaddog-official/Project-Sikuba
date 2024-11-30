@@ -1,6 +1,6 @@
 using Mirror;
 using Scripts.Gameplay.Entities;
-using Scripts.MonoCacher;
+using Scripts.MonoCache;
 using UnityEngine;
 
 namespace Scripts.Gameplay.Abillities
@@ -24,7 +24,7 @@ namespace Scripts.Gameplay.Abillities
             rb = GetComponent<PredictedRigidbody>();
             collisioner = GetComponent<Entity>().FindAbillity<AbillityCollisioner>();
 
-            MonoCacher.MonoCacher.Registrate(this);
+            MonoCacher.Registrate(this);
         }
 
 

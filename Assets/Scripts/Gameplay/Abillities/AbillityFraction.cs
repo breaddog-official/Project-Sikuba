@@ -5,6 +5,7 @@ namespace Scripts.Gameplay.Abillities
 {
     public class AbillityFraction : Abillity
     {
+        [SyncVar]
         private Fraction fraction;
 
 

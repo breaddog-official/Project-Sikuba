@@ -3,6 +3,7 @@ using Mirror;
 using Scripts.Extensions;
 using System.Threading;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 namespace Scripts.Gameplay.Abillities
 {
@@ -45,6 +46,10 @@ namespace Scripts.Gameplay.Abillities
         [Server]
         public override void DropItem()
         {
+            // Checks
+            if (EquippedItem == null)
+                return;
+
             // Base call
             base.DropItem();
 
@@ -62,7 +67,7 @@ namespace Scripts.Gameplay.Abillities
 
         private async UniTaskVoid EquipTimer()
         {
-            equipCancellationToken ??= new();
+            equipCancellationToken.RenewToken();
 
 
             canEquipByDelay = false;
@@ -76,11 +81,7 @@ namespace Scripts.Gameplay.Abillities
 
         public override void OnStopServer()
         {
-            equipCancellationToken?.Cancel();
-            equipCancellationToken?.Dispose();
-
-            //if (EquippedItem != null)
-            //    EquippedItem.gameObject.SetActive(true);
+            equipCancellationToken.ResetToken();
 
             DropItem();
         }
