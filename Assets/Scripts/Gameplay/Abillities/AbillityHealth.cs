@@ -97,7 +97,8 @@ namespace Scripts.Gameplay.Abillities
             rb.predictedRigidbody.MovePosition(spawnPoint.position);
             rb.predictedRigidbody.MoveRotation(spawnPoint.rotation);
 
-            cancellationTokenSource.RenewToken();
+            cancellationTokenSource.ResetToken();
+            cancellationTokenSource = new();
 
             Entity.Stun(deadStanCooldown, cancellationTokenSource.Token).Forget();
 

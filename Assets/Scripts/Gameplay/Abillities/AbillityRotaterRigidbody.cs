@@ -1,17 +1,20 @@
 ﻿using Mirror;
+using NaughtyAttributes;
 using Scripts.Extensions;
-using System.Drawing;
+using Scripts.Network;
 using UnityEngine;
-using UnityEngine.Windows;
 
 namespace Scripts.Gameplay.Abillities
 {
     public class AbillityRotaterRigidbody : AbillityRotater
     {
+        [field: Dropdown(nameof(GetChannelValues))]
         [field: SerializeField] public int Channel { get; private set; }
+        [field: Space]
         [field: SerializeField] public float RotationSpeed { get; private set; } = 10;
         [field: Space]
         [field: SerializeField] public BandwidthOptimizationMode OptimizationMode { get; private set; } = BandwidthOptimizationMode.Normal;
+        [field: HideIf(nameof(OptimizationMode), BandwidthOptimizationMode.None)]
         [field: SerializeField] public float MinInput { get; private set; } = 0.01f;
         [field: Space]
         [field: SerializeField] public float MaxRayDistance { get; private set; } = 300;
@@ -33,12 +36,13 @@ namespace Scripts.Gameplay.Abillities
 
         public override void RotateToPoint(Vector2 point)
         {
-            //Quaternion rotation = GetSmoothRotation(CalculateRotationToScreenPoint(point));
+            Quaternion rotation = CalculateRotationToScreenPoint(point);
+            Vector3 rotationEulers = rotation.eulerAngles;
 
-            Vector3 curForward = tf.forward;
-            Vector3 targetForward = CalculateVectorToScreenPoint(point);
+            //Vector3 curForward = tf.forward;
+            //Vector3 targetForward = CalculateVectorToScreenPoint(point);
 
-            Vector3 rotationEulers = GetSmoothVector(Vector3.Cross(curForward, targetForward));
+            //Vector3 rotationEulers = GetSmoothVector(Vector3.Cross(curForward, targetForward));
 
 
 
@@ -54,7 +58,7 @@ namespace Scripts.Gameplay.Abillities
             if (OptimizationMode != BandwidthOptimizationMode.None && vector.Max() < MinInput)
                 return;
 
-            Quaternion rotation = GetSmoothRotation(Quaternion.LookRotation(vector));
+            Quaternion rotation = Quaternion.LookRotation(vector);
 
 
             ApplyRotation(rotation.eulerAngles);
@@ -74,7 +78,7 @@ namespace Scripts.Gameplay.Abillities
                     break;
 
                 default:
-                case Channels.Unreliable:
+                case 2:
                     CmdApplyRotationUnreliable(rotationEulers);
                     break;
             }
@@ -91,13 +95,17 @@ namespace Scripts.Gameplay.Abillities
         private void ApplyRotation(Vector3 rotationEulers)
         {
             // To reduce bandwidth, we use euler angles because they contain 3 floats unlike quaternions which contain 4
-            //Quaternion rotation = Quaternion.Euler(rotationEulers);
+            Quaternion rotation = Quaternion.Euler(rotationEulers);
 
-            //rb.MoveRotation(rotation);
+            // Apply smooth rotation
+            rotation = GetSmoothRotation(rotation);
 
-            print(rotationEulers * RotationSpeed);
-            rb.AddTorque(-rb.angularVelocity);
-            rb.AddTorque(rotationEulers * RotationSpeed, ForceMode.Impulse);
+
+
+            rb.MoveRotation(rotation);
+
+            //rb.AddTorque(-rb.angularVelocity);
+            //rb.AddTorque(rotationEulers * RotationSpeed, ForceMode.Impulse);
 
         }
         #endregion
@@ -119,10 +127,13 @@ namespace Scripts.Gameplay.Abillities
         private Vector3 CalculateVectorToScreenPoint(Vector2 point, RaycastHit? hit = null)
         {
             // Creates non ? struct
-            RaycastHit hitInfo = hit ?? hit.Value;
+            RaycastHit hitInfo;
 
-            // If we don't have hit and we can't throw our ray, return
-            if (hit.HasValue == false && ThrowCameraRay(out hitInfo, point) == false)
+            if (hit.HasValue)
+                hitInfo = hit.Value;
+
+            // If we don't have raycasthit and we can't throw our ray, return
+            else if (ThrowCameraRay(out hitInfo, point) == false)
                 return tf.forward;
 
             // Otherwise - calculating
@@ -141,18 +152,30 @@ namespace Scripts.Gameplay.Abillities
 
         private Quaternion GetSmoothRotation(Quaternion quaternion)
         {
-            return Quaternion.Slerp(tf.rotation, quaternion, RotationSpeed * GetDeltaTime());
+            return Quaternion.Lerp(tf.rotation, quaternion, RotationSpeed * GetDeltaTime());
         }
 
         private Vector3 GetSmoothVector(Vector3 rotation)
         {
-            return Vector3.Slerp(tf.rotation.eulerAngles, rotation, RotationSpeed * GetDeltaTime());
+            return Vector3.Lerp(tf.rotation.eulerAngles, rotation, RotationSpeed * GetDeltaTime());
         }
 
         private float GetDeltaTime()
         {
             return IsPhysicsRotater() ? Time.fixedDeltaTime : Time.deltaTime;
         }
+
+
+        protected virtual DropdownList<int> GetChannelValues()
+        {
+            return new()
+            {
+                { "Reliable",   Mirror.Channels.Reliable },
+                { "Unreilable",   Mirror.Channels.Unreliable },
+                { "Unreliable Sequenced",    2 },
+            };
+        }
+
         #endregion
 
         public override bool IsPhysicsRotater() => true;

@@ -1,7 +1,9 @@
 using Mirror;
+using NaughtyAttributes;
 using Scripts.Extensions;
 using Scripts.Gameplay.Entities;
 using Scripts.MonoCache;
+using Scripts.Network;
 using UnityEngine;
 
 namespace Scripts.Gameplay.Abillities
@@ -15,14 +17,18 @@ namespace Scripts.Gameplay.Abillities
             None
         }
 
+        [field: Dropdown(nameof(GetChannelValues))]
         [field: SerializeField] public int Channel { get; private set; }
+        [field: Space]
         [field: SerializeField] public float Speed { get; private set; } = 10.0f;
         [field: SerializeField] public float MaxSpeed { get; private set; } = 10.0f;
         [field: Space]
         [field: SerializeField] public BandwidthOptimizationMode OptimizationMode { get; private set; } = BandwidthOptimizationMode.Normal;
+        [field: HideIf(nameof(OptimizationMode), BandwidthOptimizationMode.None)]
         [field: SerializeField] public float MinInput { get; private set; } = 0.01f;
         [field: Space]
         [field: SerializeField] public AirMoveMode AirMove { get; private set; }
+        [field: ShowIf(nameof(AirMove), AirMoveMode.Multiplied)]
         [field: SerializeField] public float AirMoveMultiplier { get; private set; } = 0.5f;
 
         private PredictedRigidbody rb;
@@ -89,7 +95,7 @@ namespace Scripts.Gameplay.Abillities
 
 
             // Calculate move vector
-            Vector3 calculatedVector = input.normalized * (Time.fixedDeltaTime * Speed * 10.0f);
+            Vector3 calculatedVector = input.normalized * (GetDeltaTime() * Speed * 10.0f);
 
             // We work only with 2 axis
             calculatedVector.y = 0.0f;
@@ -114,7 +120,7 @@ namespace Scripts.Gameplay.Abillities
                     break;
 
                 default:
-                case Channels.Unreliable:
+                case 2:
                     CmdApplyMovementUnreliable(input);
                     break;
             }
@@ -129,27 +135,22 @@ namespace Scripts.Gameplay.Abillities
 
 
 
-        /*private Vector3 lastInput;
-        private Vector3 smoothInput;
-
-        private Vector3 CalculateVector(Vector3 input, Quaternion cameraRotation)
+        private float GetDeltaTime()
         {
-            // Calculate smooth input
-            Vector3 smoothInput = GetSmoothInput(input.normalized);
-
-            // We leave only rotation along the Y
-            cameraRotation = Quaternion.Euler(0.0f, cameraRotation.eulerAngles.y, 0.0f);
-
-            // Same as camera.TransformDirection(input)
-            return cameraRotation * (smoothInput * Time.fixedDeltaTime) * (Speed * 10.0f);
+            return IsPhysicsMovement() ? Time.fixedDeltaTime : Time.deltaTime;
         }
 
-        private Vector3 GetSmoothInput(Vector3 currentInput)
-        {
-            lastInput = Vector3.SmoothDamp(lastInput, currentInput, ref smoothInput, MovementAcceleration);
-            return lastInput;
-        }*/
 
+
+        protected virtual DropdownList<int> GetChannelValues()
+        {
+            return new()
+            {
+                { "Reliable",   Mirror.Channels.Reliable },
+                { "Unreilable",   Mirror.Channels.Unreliable },
+                { "Unreliable Sequenced",    2 },
+            };
+        }
 
         public override bool IsPhysicsMovement() => true;
     }

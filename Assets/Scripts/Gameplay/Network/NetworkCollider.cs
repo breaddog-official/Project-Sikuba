@@ -2,7 +2,7 @@ using Mirror;
 using UnityEngine;
 using Scripts.MonoCache;
 
-namespace Scripts.Gameplay.Network
+namespace Scripts.Network
 {
     [RequireComponent(typeof(Collider))]
     [AddComponentMenu("Network/Network Collider")]

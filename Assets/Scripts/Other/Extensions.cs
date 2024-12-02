@@ -8,6 +8,7 @@ using Cysharp.Threading.Tasks;
 using Scripts.Gameplay.Entities;
 using Mirror;
 using System.Threading;
+using Cinemachine.Utility;
 
 namespace Scripts.Extensions
 {
@@ -235,22 +236,13 @@ namespace Scripts.Extensions
         #region Renew & Reset Token
 
         /// <summary>
-        /// Cancels, disposes and creates a new token
-        /// </summary>
-        public static void RenewToken(this CancellationTokenSource source)
-        {
-            source.ResetToken();
-
-            ref CancellationTokenSource reference = ref source;
-            reference = new CancellationTokenSource();
-        }
-
-        /// <summary>
         /// Cancels and disposes a token
         /// </summary>
         public static void ResetToken(this CancellationTokenSource source)
         {
-            source?.Cancel();
+            if (source != null && source.Token.CanBeCanceled)
+                source?.Cancel();
+
             source?.Dispose();
         }
 
@@ -264,7 +256,8 @@ namespace Scripts.Extensions
         /// </summary>
         public static float Max(this Vector3 value)
         {
-            return ExtendedMath.Max(value.x, value.y, value.z);
+            Vector3 absValue = value.Abs();
+            return ExtendedMath.Max(absValue.x, absValue.y, absValue.z);
         }
 
         #endregion

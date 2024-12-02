@@ -3,7 +3,6 @@ using Mirror;
 using Scripts.Extensions;
 using System.Threading;
 using UnityEngine;
-using static UnityEditor.Progress;
 
 namespace Scripts.Gameplay.Abillities
 {
@@ -40,6 +39,9 @@ namespace Scripts.Gameplay.Abillities
                 joint.connectedBody = floatingArms;
             }
 
+            equipCancellationToken.ResetToken();
+            equipCancellationToken = new();
+
             EquipTimer().Forget();
         }
 
@@ -67,11 +69,8 @@ namespace Scripts.Gameplay.Abillities
 
         private async UniTaskVoid EquipTimer()
         {
-            equipCancellationToken.RenewToken();
-
-
             canEquipByDelay = false;
-
+            
             await UniTask.Delay(delayBetweenEquips.ConvertSecondsToMiliseconds(), cancellationToken: equipCancellationToken.Token);
 
             canEquipByDelay = true;
