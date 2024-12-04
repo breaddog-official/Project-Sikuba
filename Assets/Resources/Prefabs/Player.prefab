@@ -492,6 +492,11 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0
   target: {fileID: 8022781346050191497}
+  initialDirection: 0
+  offset: {x: -15, y: 15, z: -15}
+  offsetYRotation: 45
+  followSpeed: 5
+  rotateSpeed: 5
 --- !u!114 &1192594577022268083
 MonoBehaviour:
   m_ObjectHideFlags: 0

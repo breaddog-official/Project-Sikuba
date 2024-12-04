@@ -49,10 +49,10 @@ namespace Scripts.Input
                 },
                 {
                     ""name"": ""Turn"",
-                    ""type"": ""Value"",
+                    ""type"": ""PassThrough"",
                     ""id"": ""e095d66d-5e00-4b3e-906a-5497e6a7cedf"",
                     ""expectedControlType"": ""Axis"",
-                    ""processors"": """",
+                    ""processors"": ""Normalize(max=1)"",
                     ""interactions"": """",
                     ""initialStateCheck"": true
                 },

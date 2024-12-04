@@ -15,6 +15,7 @@ namespace Scripts.Gameplay.Controllers
         private AbillityJump abillityJump;
         private AbillityRotater abillityRotater;
         private AbillityItemSocket abillityItemSocket;
+        private AbillityCamera abillityCamera;
 
         private bool isSubscribed;
 
@@ -32,6 +33,7 @@ namespace Scripts.Gameplay.Controllers
             abillityJump = entity.FindAbillity<AbillityJump>();
             abillityRotater = entity.FindAbillity<AbillityRotater>();
             abillityItemSocket = entity.FindAbillity<AbillityItemSocket>();
+            abillityCamera = entity.FindAbillity<AbillityCamera>();
 
             Subscribe();
         }
@@ -94,6 +96,7 @@ namespace Scripts.Gameplay.Controllers
             InputManager.Controls.Game.Jump.performed += JumpAction;
             InputManager.Controls.Game.Fire.started += StartUsingAction;
             InputManager.Controls.Game.Fire.canceled += StopUsingAction;
+            InputManager.Controls.Game.Turn.performed += CameraTurnAction;
         }
 
         [ClientCallback]
@@ -109,6 +112,7 @@ namespace Scripts.Gameplay.Controllers
             InputManager.Controls.Game.Jump.performed -= JumpAction;
             InputManager.Controls.Game.Fire.started -= StartUsingAction;
             InputManager.Controls.Game.Fire.canceled -= StopUsingAction;
+            InputManager.Controls.Game.Turn.performed -= CameraTurnAction;
         }
 
 
@@ -150,6 +154,21 @@ namespace Scripts.Gameplay.Controllers
             {
                 abillityRotater.RotateToPoint(lookPosition.ReadValue<Vector2>());
             }
+        }
+
+        private void CameraTurnAction(InputAction.CallbackContext ctx = default)
+        {
+            if (abillityCamera.AvailableAndNotNull())
+            {
+                float value = ctx.action.ReadValue<float>();
+
+                if (value < 0)
+                    abillityCamera.TurnLeft();
+
+                else if (value > 0)
+                    abillityCamera.TurnRight();
+            }
+                
         }
     }
 }

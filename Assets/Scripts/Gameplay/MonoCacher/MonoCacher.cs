@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using Scripts.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -57,7 +58,14 @@ namespace Scripts.MonoCache
                 if (!IsValid(updateListner, true))
                     continue;
 
-                updateListner.UpdateCached();
+                try
+                {
+                    updateListner.UpdateCached();
+                }
+                catch (Exception exp)
+                {
+                    Debug.LogException(exp);
+                }
             }
         }
 
@@ -71,7 +79,14 @@ namespace Scripts.MonoCache
                 if (!IsValid(fixedUpdateListner, true))
                     continue;
 
-                fixedUpdateListner.FixedUpdateCached();
+                try
+                {
+                    fixedUpdateListner.FixedUpdateCached();
+                }
+                catch (Exception exp)
+                {
+                    Debug.LogException(exp);
+                }
             }
         }
 
@@ -85,7 +100,14 @@ namespace Scripts.MonoCache
                 if (!IsValid(lateUpdateListner, true))
                     continue;
 
-                lateUpdateListner.LateUpdateCached();
+                try
+                {
+                    lateUpdateListner.LateUpdateCached();
+                }
+                catch (Exception exp)
+                {
+                    Debug.LogException(exp);
+                }
             }
         }
 
@@ -118,7 +140,7 @@ namespace Scripts.MonoCache
         /// <summary>
         /// Checks if null
         /// </summary>
-        private static bool IsNull(IMonoCacheListner listner) 
+        private static bool IsNull(IMonoCacheListner listner)
                             => listner == null || listner.Behaviour == null;
     }
 }
