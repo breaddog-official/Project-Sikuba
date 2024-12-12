@@ -1,7 +1,6 @@
 using Mirror;
 using UnityEngine;
 using Scripts.Gameplay.Entities;
-using Cysharp.Threading.Tasks;
 using Scripts.Extensions;
 using System.Threading;
 
@@ -13,7 +12,7 @@ namespace Scripts.Gameplay.Abillities
         [SerializeField, Min(0f)] private float maxHealth = 100f;
         [SerializeField, Min(0f)] private float initialHealth = 100f;
         [Header("Dead")]
-        [SerializeField] private float deadStanCooldown;
+        [SerializeField] private float deadStunCooldown;
         [Header("Effectors")]
         [SerializeField] private Effector hurtEffector;
         [SerializeField] private Effector healEffector;
@@ -23,20 +22,22 @@ namespace Scripts.Gameplay.Abillities
         [field: SyncVar]
         public float Health { get; protected set; }
 
-        AbillityFraction abillityFraction;
+        AbillityDataFraction abillityFraction;
         PredictedRigidbody rb;
 
         CancellationTokenSource cancellationTokenSource;
 
 
-        public override void Initialize()
+        public override bool Initialize()
         {
             base.Initialize();
 
             rb = GetComponent<PredictedRigidbody>();
-            abillityFraction = Entity.FindAbillity<AbillityFraction>();
+            abillityFraction = Entity.FindAbillity<AbillityDataFraction>();
 
             OnRespawn();
+
+            return true;
         }
 
         [Server]
@@ -92,7 +93,7 @@ namespace Scripts.Gameplay.Abillities
             if (deadEffector != null)
                 deadEffector.Play();
 
-            Transform spawnPoint = abillityFraction.GetFraction().GetSpawnPoint();
+            Transform spawnPoint = abillityFraction.Get().GetSpawnPoint();
 
             rb.predictedRigidbody.MovePosition(spawnPoint.position);
             rb.predictedRigidbody.MoveRotation(spawnPoint.rotation);
@@ -100,7 +101,7 @@ namespace Scripts.Gameplay.Abillities
             cancellationTokenSource.ResetToken();
             cancellationTokenSource = new();
 
-            Entity.Stun(deadStanCooldown, cancellationTokenSource.Token).Forget();
+            Entity.Stun(deadStunCooldown, cancellationTokenSource.Token).Forget();
 
             OnRespawn();
         }
@@ -118,10 +119,10 @@ namespace Scripts.Gameplay.Abillities
         /// <summary>
         /// Optimization for once GetComponent (AbillityHealth) call (for example in bullet script)
         /// </summary>
-        public AbillityFraction GetAbillityFraction()
+        public AbillityDataFraction GetAbillityFraction()
         {
             if (abillityFraction == null && Entity != null)
-                abillityFraction = Entity.FindAbillity<AbillityFraction>();
+                abillityFraction = Entity.FindAbillity<AbillityDataFraction>();
 
             return abillityFraction;
         }

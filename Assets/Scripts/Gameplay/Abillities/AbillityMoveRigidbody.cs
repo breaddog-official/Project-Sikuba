@@ -37,7 +37,7 @@ namespace Scripts.Gameplay.Abillities
         public Behaviour Behaviour => this;
 
 
-        public override void Initialize()
+        public override bool Initialize()
         {
             base.Initialize();
 
@@ -45,6 +45,8 @@ namespace Scripts.Gameplay.Abillities
 
             rb = GetComponent<PredictedRigidbody>();
             collisioner = Entity.FindAbillity<AbillityCollisioner>();
+
+            return true;
         }
 
         public void FixedUpdateCached()

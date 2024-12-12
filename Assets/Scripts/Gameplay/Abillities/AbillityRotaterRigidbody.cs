@@ -24,12 +24,12 @@ namespace Scripts.Gameplay.Abillities
         private Transform tf;
 
 
-        public override void Initialize()
+        public override bool Initialize()
         {
             rb = GetComponent<Rigidbody>();
             tf = transform;
 
-            base.Initialize();
+            return base.Initialize();
         }
 
 

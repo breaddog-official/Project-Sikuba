@@ -12,12 +12,15 @@ namespace Scripts.Gameplay.Abillities
         protected AbillityItemSocket socket;
 
 
-        public override void Initialize()
+        public override bool Initialize()
         {
             if (gameObject.TryGetComponent(out Entity entity))
             {
                 socket = entity.FindAbillity<AbillityItemSocket>();
+                return true;
             }
+
+            return false;
         }
 
         [ServerCallback]

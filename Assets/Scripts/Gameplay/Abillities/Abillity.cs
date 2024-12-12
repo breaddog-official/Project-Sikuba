@@ -14,12 +14,12 @@ namespace Scripts.Gameplay.Abillities
         /// </summary>
         public virtual bool Available() => isActiveAndEnabled;
 
-        public virtual void Initialize() => IsInitialized = true;
+        public virtual bool Initialize() => IsInitialized = true;
 
-        public virtual void Initialize(Entity entity)
+        public virtual bool Initialize(Entity entity)
         {
             Entity = entity;
-            Initialize();
+            return Initialize();
         }
 
 

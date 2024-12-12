@@ -90,7 +90,7 @@ namespace Scripts.Gameplay.Fractions
 
 
 
-            entity.FindAbillity<AbillityFraction>().SetFraction(this);
+            entity.FindAbillity<AbillityDataFraction>().Set(this);
 
 
             Transform spawnPoint = GetSpawnPoint();
@@ -133,7 +133,7 @@ namespace Scripts.Gameplay.Fractions
 
         protected virtual bool CanJoin(Entity entity)
         {
-            if (entity.FindAbillity<AbillityFraction>().GetFraction() != null)
+            if (entity.FindAbillity<AbillityDataFraction>().Get() != null)
                 return false;
 
             return true;

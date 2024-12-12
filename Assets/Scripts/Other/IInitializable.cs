@@ -4,6 +4,6 @@ namespace Scripts
     {
         bool IsInitialized { get; }
 
-        void Initialize();
+        bool Initialize();
     }
 }

@@ -161,6 +161,8 @@ GameObject:
   - component: {fileID: 2719463511452175475}
   - component: {fileID: 906315464027884080}
   - component: {fileID: 3397365942501102096}
+  - component: {fileID: 5544142427845735699}
+  - component: {fileID: 8006923706214179769}
   - component: {fileID: 6759642062967463256}
   - component: {fileID: 7070722003600754485}
   - component: {fileID: 9027261851957388999}
@@ -169,9 +171,7 @@ GameObject:
   - component: {fileID: 2615508827734132044}
   - component: {fileID: 2396446135309140712}
   - component: {fileID: -7550949738416565582}
-  - component: {fileID: 4325606651660950852}
   - component: {fileID: 1255407192817135307}
-  - component: {fileID: 1192594577022268083}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -316,6 +316,36 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0
   initializeIfLocalPlayer: 1
+--- !u!114 &5544142427845735699
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2573031094699484338}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 446d48bdcb269a4489b659593c5c0969, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+--- !u!114 &8006923706214179769
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2573031094699484338}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b70e0e686194304589ecf2b0147f8e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
 --- !u!114 &6759642062967463256
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -456,26 +486,11 @@ MonoBehaviour:
   syncInterval: 0
   maxHealth: 100
   initialHealth: 100
-  deadStanCooldown: 3
+  deadStunCooldown: 0
   hurtEffector: {fileID: 0}
   healEffector: {fileID: 0}
   respawnEffector: {fileID: 0}
   deadEffector: {fileID: 0}
---- !u!114 &4325606651660950852
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2573031094699484338}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b48feb97fe0ac144aa3ed5fbe577ea1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncDirection: 0
-  syncMode: 0
-  syncInterval: 0
 --- !u!114 &1255407192817135307
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -492,26 +507,11 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0
   target: {fileID: 8022781346050191497}
-  initialDirection: 0
   offset: {x: -15, y: 15, z: -15}
-  offsetYRotation: 45
+  initialDirection: 0
+  directionsCount: 4
   followSpeed: 4
   rotateSpeed: 5
---- !u!114 &1192594577022268083
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2573031094699484338}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 84a62c39763a2fa43867d5c0ab642a92, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  <InitializeOnAwake>k__BackingField: 1
-  <Initializable>k__BackingField:
-    target: {fileID: 3397365942501102096}
 --- !u!1 &3555780261707948678
 GameObject:
   m_ObjectHideFlags: 0

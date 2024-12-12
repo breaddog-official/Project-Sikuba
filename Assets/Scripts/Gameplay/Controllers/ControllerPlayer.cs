@@ -23,7 +23,7 @@ namespace Scripts.Gameplay.Controllers
         public Behaviour Behaviour => this;
 
 
-        public override void Initialize(Entity entity)
+        public override bool Initialize(Entity entity)
         {
             base.Initialize(entity);
 
@@ -36,6 +36,8 @@ namespace Scripts.Gameplay.Controllers
             abillityCamera = entity.FindAbillity<AbillityCamera>();
 
             Subscribe();
+
+            return true;
         }
 
         [ClientCallback]

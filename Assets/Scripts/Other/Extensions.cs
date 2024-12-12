@@ -34,23 +34,68 @@ namespace Scripts.Extensions
         /// <summary>
         /// Safely increments index within array length
         /// </summary>
-        public static void IncreaseInBounds(this ref int index, Array array)
+        public static void IncreaseInBounds(this ref int index, Array array) => index.IncreaseInBounds(array.Length);
+
+        /// <summary>
+        /// Safely increments index within array length
+        /// </summary>
+        public static void IncreaseInBounds(this ref uint index, Array array) => index.IncreaseInBounds((uint)array.Length);
+
+        /// <summary>
+        /// Safely increments index within array length
+        /// </summary>
+        public static void IncreaseInBounds(this ref int index, int bounds, bool dontCollideBounds = true)
         {
             index++;
 
-            if (index >= array.Length - 1)
+            if (index >= bounds - (dontCollideBounds ? 1 : 0))
                 index = 0;
         }
 
         /// <summary>
         /// Safely increments index within array length
         /// </summary>
-        public static void IncreaseInBounds(this ref uint index, Array array)
+        public static void IncreaseInBounds(this ref uint index, uint bounds, bool dontCollideBounds = true)
         {
             index++;
 
-            if (index >= array.Length - 1)
+            if (index >= bounds - (dontCollideBounds ? 1 : 0))
                 index = 0;
+        }
+        #endregion
+
+        #region DecreaseInBounds
+        /// <summary>
+        /// Safely decrements index within array length
+        /// </summary>
+        public static void DecreaseInBounds(this ref int index, Array array) => index.DecreaseInBounds(array.Length);
+
+        /// <summary>
+        /// Safely decrements index within array length
+        /// </summary>
+        public static void DecreaseInBounds(this ref uint index, Array array) => index.DecreaseInBounds((uint)array.Length);
+
+        /// <summary>
+        /// Safely decrements index within array length
+        /// </summary>
+        public static void DecreaseInBounds(this ref int index, int bounds, bool dontCollideBounds = true)
+        {
+            if (index > 0)
+                index--;
+            else
+                index = bounds - (dontCollideBounds ? 1 : 0);
+        }
+
+        /// <summary>
+        /// Safely decrements index within array length
+        /// </summary>
+        public static void DecreaseInBounds(this ref uint index, uint bounds, bool dontCollideBounds = true)
+        {
+            if (index > 0)
+                index--;
+            else
+                index = bounds - (dontCollideBounds ? 1u : 0u);
+
         }
         #endregion
 
@@ -182,7 +227,8 @@ namespace Scripts.Extensions
         /// </summary>
         public static bool InitializeIfNotNull<T>(this T value) where T : IInitializable
         {
-            return value.IfNotNull(value.Initialize);
+            //return value.IfNotNull(value.Initialize);
+            return value != null ? value.Initialize() : false;
         }
         #endregion
 
@@ -273,6 +319,7 @@ namespace Scripts.Extensions
         [Server]
         public static async UniTaskVoid Stun(this Entity entity, float delay = 0f, CancellationToken token = default)
         {
+            // Todo: create movement interface or some kind of group for finding movement abillities
             List<Abillity> movementAbillities = new()
             {
                 entity.FindAbillity<AbillityMove>(),

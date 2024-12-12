@@ -19,12 +19,16 @@ namespace Scripts.Gameplay.Abillities
 
 
 
-        public override void Initialize()
+        public override bool Initialize()
         {
+            base.Initialize();
+
             rb = GetComponent<PredictedRigidbody>();
             collisioner = GetComponent<Entity>().FindAbillity<AbillityCollisioner>();
 
             MonoCacher.Registrate(this);
+
+            return true;
         }
 
 

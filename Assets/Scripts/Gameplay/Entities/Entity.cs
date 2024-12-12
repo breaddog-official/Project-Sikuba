@@ -3,7 +3,6 @@ using UnityEngine;
 using Scripts.Gameplay.Controllers;
 using Scripts.Gameplay.Abillities;
 using Mirror;
-using System.Linq;
 using System;
 using Scripts.Extensions;
 
@@ -43,10 +42,10 @@ namespace Scripts.Gameplay.Entities
         /// <summary>
         /// Initializes the entity
         /// </summary>
-        public virtual void Initialize()
+        public virtual bool Initialize()
         {
             if (IsInitialized)
-                return;
+                return false;
 
             IsInitialized = true;
 
@@ -63,9 +62,12 @@ namespace Scripts.Gameplay.Entities
             // Set initial controller if exists
             if (TryGetComponent<Controller>(out var initialController))
                 SetController(initialController);
+
+            return true;
         }
 
 
+        #region Controller
 
         /// <summary>
         /// Adds the controller and sets it to entity
@@ -93,6 +95,8 @@ namespace Scripts.Gameplay.Entities
 
             return true;
         }
+
+        #endregion
 
         /// <summary>
         /// Finds abillity by T

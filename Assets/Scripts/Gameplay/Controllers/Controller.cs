@@ -15,21 +15,23 @@ namespace Scripts.Gameplay.Controllers
         /// <summary>
         /// Initializes the controller with Entity from GameObject
         /// </summary>
-        public virtual void Initialize()
+        public virtual bool Initialize()
         {
             if (gameObject.TryGetComponent(out Entity entity))
             {
-                Initialize(entity);
+                return Initialize(entity);
             }
+
+            return false;
         }
 
         /// <summary>
         /// Initializes the controller with given entity
         /// </summary>
-        public virtual void Initialize(Entity entity)
+        public virtual bool Initialize(Entity entity)
         {
             Entity = entity;
-            IsInitialized = true;
+            return IsInitialized = true;
         }
     }
 }

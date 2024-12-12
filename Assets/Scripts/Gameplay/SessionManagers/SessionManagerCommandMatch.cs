@@ -1,31 +1,28 @@
-﻿using Scripts.Gameplay.Abillities;
-using Scripts.Gameplay.Entities;
+﻿using Scripts.Gameplay.Entities;
 using UnityEngine;
 using Scripts.Extensions;
-using Mirror;
-using System.Collections.Generic;
 
 namespace Scripts.SessionManagers
 {
-    public class SessionManagerCommandMatch : SessionManager<CommandMatchConfig>
+    public class SessionManagerCommandMatch : SessionManager
     {
+        [SerializeField] private GameObject playerPrefab;
         [SerializeField] private Transform[] spawnPoints;
 
         private uint currentSpawnPoint;
 
 
-        protected override GameObject SpawnPlayerBeforeStart(CommandMatchConfig message)
+        protected override GameObject SpawnPlayerBeforeStart()
         {
             Transform spawnPoint = GetSpawnPoint();
             return Instantiate(playerPrefab, spawnPoint.position, spawnPoint.rotation);
         }
 
-        protected override void ConfigurePlayerBeforeStart(GameObject player, CommandMatchConfig config)
+        protected override void ConfigurePlayerBeforeStart(GameObject player)
         {
             if (player.TryGetComponent<Entity>(out var entity))
             {
                 entity.Initialize();
-                //entity.FindAbillity<AbillityFraction>().IfNotNull(abillity => abillity.SetFraction(config.fraction));
             }
         }
 
