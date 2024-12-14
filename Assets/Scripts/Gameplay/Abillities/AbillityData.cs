@@ -18,6 +18,12 @@ namespace Scripts.Gameplay.Abillities
         public virtual void Set(T value) => Value = value;
 
         /// <summary>
+        /// Resets value to null (only on server)
+        /// </summary>
+        [Server]
+        public virtual void Void() => Value = default;
+
+        /// <summary>
         /// Gets the value
         /// </summary>
         public virtual T Get() => Value;

@@ -9,7 +9,14 @@ namespace Scripts.Gameplay.Abillities
 {
     public class AbillityCamera : Abillity, IMonoCacheUpdate
     {
+        enum FollowMode
+        {
+            Player,
+            Manual
+        }
+
         [SerializeField] private Transform target;
+        [SerializeField] private FollowMode followMode;
         [Space]
         [SerializeField] private Vector3 offset;
         [SerializeField] private float rotationOffsetY = 45f;
@@ -21,8 +28,12 @@ namespace Scripts.Gameplay.Abillities
 
         protected uint currentDirection;
 
+
+
         Vector3 targetOffset;
         Quaternion targetRotation;
+
+
 
         public Behaviour Behaviour => this;
 
@@ -38,7 +49,7 @@ namespace Scripts.Gameplay.Abillities
 
             MonoCacher.Registrate(this);
 
-            SetFollow(true);
+            SetFollow(target);
             ApplyDirection();
 
             return true;
@@ -47,37 +58,31 @@ namespace Scripts.Gameplay.Abillities
         [ClientCallback]
         protected override void OnEnable()
         {
-            if (!isOwned)
-                return;
-
-            SetFollow(true);
+            SetFollow(target);
         }
 
         [ClientCallback]
         protected override void OnDisable()
         {
-            if (!isOwned)
-                return;
-
-            SetFollow(false);
+            SetFollow(null);
         }
 
 
         [ClientCallback]
         public void UpdateCached()
         {
-            if (!isOwned)
-                return;
-
             ApplyCameraTransforms(Time.deltaTime);
         }
 
 
-        protected virtual void SetFollow(bool state)
+        public virtual void SetFollow(Transform follow)
         {
+            if (followMode == FollowMode.Player && !isLocalPlayer)
+                return;
+
             if (MainCamera.Instance != null && MainCamera.Instance.VirtualCamera != null)
             {
-                MainCamera.Instance.VirtualCamera.Follow = state ? target : null;
+                MainCamera.Instance.VirtualCamera.Follow = follow;
             }
         }
 
@@ -132,36 +137,29 @@ namespace Scripts.Gameplay.Abillities
             float xSin = Mathf.Cos(xLerp);
             float zSin = Mathf.Cos(zLerp);
 
-
-            //Vector3 modifiedOffset = time < 0.5f ? offset : -offset;
-
             float targetVectorX = offset.x * xSin;
             float targetVectorZ = offset.z * zSin;
 
-            print($"Sin Z: {zSin} \n X: {targetVectorX} \n Z: {targetVectorZ}");
+            //print($"Sin X: {xSin}  Sin Z: {zSin} \nX: {targetVectorX}  Z: {targetVectorZ}");
 
-            targetOffset.Set(targetVectorX, targetOffset.y, targetVectorZ);
+            //targetOffset.Set(targetVectorX, targetOffset.y, targetVectorZ);
 
             switch (currentDirection)
             {
                 case 0: // Forward
-                    //targetOffset = offset;
-                    //targetRotation = Quaternion.Euler(new Vector3(cameraRotationEulers.x, offsetYRotation, cameraRotationEulers.z));
+                    targetOffset = offset;
                     break;
 
-                case 1: // Backward
-                    //targetOffset = new Vector3(-offset.x, offset.y, -offset.z);
-                    //targetRotation = Quaternion.Euler(new Vector3(cameraRotationEulers.x, -(90 + offsetYRotation), cameraRotationEulers.z));
+                case 2: // Backward
+                    targetOffset = new Vector3(-offset.x, offset.y, -offset.z);
                     break;
 
-                case 2: // Right
-                    //targetOffset = new Vector3(-offset.x, offset.y, offset.z);
-                    //targetRotation = Quaternion.Euler(new Vector3(cameraRotationEulers.x, -offsetYRotation, cameraRotationEulers.z));
+                case 1: // Right
+                    targetOffset = new Vector3(-offset.x, offset.y, offset.z);
                     break;
 
                 case 3: // Left
-                    //targetOffset = new Vector3(offset.x, offset.y, -offset.z);
-                    //targetRotation = Quaternion.Euler(new Vector3(cameraRotationEulers.x, 90 + offsetYRotation, cameraRotationEulers.z));
+                    targetOffset = new Vector3(offset.x, offset.y, -offset.z);
                     break;
             }
         }
@@ -169,6 +167,9 @@ namespace Scripts.Gameplay.Abillities
 
         protected virtual void ApplyCameraTransforms(float deltaTime)
         {
+            if (followMode == FollowMode.Player && !isLocalPlayer)
+                return;
+
             CinemachineTransposer transposer = MainCamera.Instance.CameraTransposer;
             Transform cameraTransform = MainCamera.Instance.VirtualCamera.transform;
 

@@ -26,7 +26,7 @@ namespace Scripts.Gameplay.Fractions
         [SerializeField] private Color reverseAdditiveColor;
 
         private Dictionary<Fraction, FractionStatus> statusDictionary;
-
+        private HashSet<Entity> members;
 
         private uint currentSpawnPoint;
 
@@ -35,6 +35,7 @@ namespace Scripts.Gameplay.Fractions
         private void Awake()
         {
             statusDictionary = new(4);
+            members = new(16); 
         }
 
 
@@ -79,6 +80,9 @@ namespace Scripts.Gameplay.Fractions
         [Command(requiresAuthority = false)]
         public void Join(NetworkConnectionToClient sender = null)
         {
+            if (sender == null)
+                return;
+
             if (sender.identity == null)
                 return;
 
@@ -90,7 +94,10 @@ namespace Scripts.Gameplay.Fractions
 
 
 
-            entity.FindAbillity<AbillityDataFraction>().Set(this);
+            if (entity.TryFindAbillity<AbillityDataFraction>(out var fraction))
+                fraction.Set(this);
+
+            members.Add(entity);
 
 
             Transform spawnPoint = GetSpawnPoint();
@@ -100,6 +107,28 @@ namespace Scripts.Gameplay.Fractions
 
             else
                 entity.transform.SetPositionAndRotation(spawnPoint.position, spawnPoint.rotation);
+        }
+
+        [Command(requiresAuthority = false)]
+        public void Leave(NetworkConnectionToClient sender = null)
+        {
+            if (sender == null)
+                return;
+
+            if (sender.identity == null)
+                return;
+
+            if (sender.identity.TryGetComponent<Entity>(out var entity) == false)
+                return;
+
+
+            if (entity.TryFindAbillity<AbillityDataFraction>(out var fraction))
+                fraction.Void();
+
+            members.Remove(entity);
+
+
+            // ToDo: Teleportate to lobby
         }
 
 
@@ -133,9 +162,6 @@ namespace Scripts.Gameplay.Fractions
 
         protected virtual bool CanJoin(Entity entity)
         {
-            if (entity.FindAbillity<AbillityDataFraction>().Get() != null)
-                return false;
-
             return true;
         }
     }

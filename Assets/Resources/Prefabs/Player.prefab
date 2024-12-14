@@ -508,10 +508,11 @@ MonoBehaviour:
   syncInterval: 0
   target: {fileID: 8022781346050191497}
   offset: {x: -15, y: 15, z: -15}
+  rotationOffsetY: 45
   initialDirection: 0
   directionsCount: 4
   followSpeed: 4
-  rotateSpeed: 5
+  rotateSpeed: 4
 --- !u!1 &3555780261707948678
 GameObject:
   m_ObjectHideFlags: 0
