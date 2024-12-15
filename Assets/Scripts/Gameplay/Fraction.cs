@@ -78,7 +78,7 @@ namespace Scripts.Gameplay.Fractions
 
 
         [Command(requiresAuthority = false)]
-        public void Join(NetworkConnectionToClient sender = null)
+        public void RequestToJoin(NetworkConnectionToClient sender = null)
         {
             if (sender == null)
                 return;
@@ -89,10 +89,31 @@ namespace Scripts.Gameplay.Fractions
             if (sender.identity.TryGetComponent<Entity>(out var entity) == false)
                 return;
 
-            if (CanJoin(entity) == false)
+
+            Join(entity);
+        }
+
+        [Command(requiresAuthority = false)]
+        public void RequestToLeave(NetworkConnectionToClient sender = null)
+        {
+            if (sender == null)
+                return;
+
+            if (sender.identity == null)
+                return;
+
+            if (sender.identity.TryGetComponent<Entity>(out var entity) == false)
                 return;
 
 
+            Leave(entity);
+        }
+
+        [Server]
+        public void Join(Entity entity)
+        {
+            if (CanJoin(entity) == false)
+                return;
 
             if (entity.TryFindAbillity<AbillityDataFraction>(out var fraction))
                 fraction.Set(this);
@@ -100,6 +121,7 @@ namespace Scripts.Gameplay.Fractions
             members.Add(entity);
 
 
+            // ToDo: move it to realization
             Transform spawnPoint = GetSpawnPoint();
 
             if (entity.TryGetComponent<Rigidbody>(out var rb))
@@ -109,18 +131,11 @@ namespace Scripts.Gameplay.Fractions
                 entity.transform.SetPositionAndRotation(spawnPoint.position, spawnPoint.rotation);
         }
 
-        [Command(requiresAuthority = false)]
-        public void Leave(NetworkConnectionToClient sender = null)
+        [Server]
+        public void Leave(Entity entity)
         {
-            if (sender == null)
+            if (CanLeave(entity) == false)
                 return;
-
-            if (sender.identity == null)
-                return;
-
-            if (sender.identity.TryGetComponent<Entity>(out var entity) == false)
-                return;
-
 
             if (entity.TryFindAbillity<AbillityDataFraction>(out var fraction))
                 fraction.Void();
@@ -161,6 +176,11 @@ namespace Scripts.Gameplay.Fractions
 
 
         protected virtual bool CanJoin(Entity entity)
+        {
+            return true;
+        }
+
+        protected virtual bool CanLeave(Entity entity)
         {
             return true;
         }

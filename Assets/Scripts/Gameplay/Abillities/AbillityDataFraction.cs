@@ -7,5 +7,12 @@ namespace Scripts.Gameplay.Abillities
     {
         [field: SyncVar]
         protected override Fraction Value { get; set; }
+
+
+        public override void OnStopServer()
+        {
+            if (Value != null) 
+                Value.Leave(Entity);
+        }
     }
 }

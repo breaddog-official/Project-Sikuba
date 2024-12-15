@@ -55,15 +55,29 @@ namespace Scripts.Gameplay.Abillities
             return true;
         }
 
+        public override void OnStartLocalPlayer()
+        {
+            if (followMode == FollowMode.Player)
+                return;
+            
+            SetFollow(target);
+        }
+
         [ClientCallback]
         protected override void OnEnable()
         {
+            if (followMode == FollowMode.Player && !isLocalPlayer)
+                return;
+
             SetFollow(target);
         }
 
         [ClientCallback]
         protected override void OnDisable()
         {
+            if (followMode == FollowMode.Player && !isLocalPlayer)
+                return;
+
             SetFollow(null);
         }
 
@@ -77,9 +91,6 @@ namespace Scripts.Gameplay.Abillities
 
         public virtual void SetFollow(Transform follow)
         {
-            if (followMode == FollowMode.Player && !isLocalPlayer)
-                return;
-
             if (MainCamera.Instance != null && MainCamera.Instance.VirtualCamera != null)
             {
                 MainCamera.Instance.VirtualCamera.Follow = follow;
@@ -154,11 +165,11 @@ namespace Scripts.Gameplay.Abillities
                     targetOffset = new Vector3(-offset.x, offset.y, -offset.z);
                     break;
 
-                case 1: // Right
+                case 3: // Left
                     targetOffset = new Vector3(-offset.x, offset.y, offset.z);
                     break;
 
-                case 3: // Left
+                case 1: // Right
                     targetOffset = new Vector3(offset.x, offset.y, -offset.z);
                     break;
             }

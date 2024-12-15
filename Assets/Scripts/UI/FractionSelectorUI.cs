@@ -7,7 +7,7 @@ namespace Scripts.UI
     {
         public void JoinTo(Fraction fraction)
         {
-            fraction.Join();
+            fraction.RequestToJoin();
         }
     }
 }
