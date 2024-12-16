@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using NaughtyAttributes;
 
 namespace Mirror
 {
@@ -24,14 +25,21 @@ namespace Mirror
     [HelpURL("https://mirror-networking.gitbook.io/docs/guides/networkbehaviour")]
     public abstract class NetworkBehaviour : MonoBehaviour
     {
+        [BoxGroup("Sync Settings")]
+        public bool showSyncSettings;
+
         /// <summary>Sync direction for OnSerialize. ServerToClient by default. ClientToServer for client authority.</summary>
+        [ShowIf(nameof(showSyncSettings))]
         [Tooltip("Server Authority calls OnSerialize on the server and syncs it to clients.\n\nClient Authority calls OnSerialize on the owning client, syncs it to server, which then broadcasts it to all other clients.\n\nUse server authority for cheat safety.")]
-        [HideInInspector] public SyncDirection syncDirection = SyncDirection.ServerToClient;
+        [BoxGroup("Sync Settings")]
+        public SyncDirection syncDirection = SyncDirection.ServerToClient;
 
         /// <summary>sync mode for OnSerialize</summary>
         // hidden because NetworkBehaviourInspector shows it only if has OnSerialize.
+        [ShowIf(nameof(showSyncSettings))]
         [Tooltip("By default synced data is sent from the server to all Observers of the object.\nChange this to Owner to only have the server update the client that has ownership authority for this object")]
-        [HideInInspector] public SyncMode syncMode = SyncMode.Observers;
+        [BoxGroup("Sync Settings")]
+        public SyncMode syncMode = SyncMode.Observers;
 
         /// <summary>sync interval for OnSerialize (in seconds)</summary>
         // hidden because NetworkBehaviourInspector shows it only if has OnSerialize.

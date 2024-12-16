@@ -275,6 +275,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d38927cdc6024b9682b5fe9778b9ef99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  showSyncDirection: 0
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
@@ -312,6 +313,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a9593138747a9349b88b425cacb3d01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  showSyncDirection: 0
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
@@ -328,6 +330,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 446d48bdcb269a4489b659593c5c0969, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  showSyncDirection: 0
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
@@ -343,6 +346,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b70e0e686194304589ecf2b0147f8e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  showSyncDirection: 0
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
@@ -370,6 +374,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 502841f750c400d439dae8994f627b08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  showSyncDirection: 0
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
@@ -392,6 +397,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9cc94a2750a297d4eb4f1f9ae61e9180, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  showSyncDirection: 0
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
@@ -415,6 +421,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35528e9a172658e4ea98d98013749a94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  showSyncDirection: 0
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
@@ -432,6 +439,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb3b19f5978011c4e892812925ebc8ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  showSyncDirection: 0
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
@@ -448,6 +456,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 837fbaa57f5b7064fbcaf303caf7e80c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  showSyncDirection: 0
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
@@ -463,6 +472,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4094c6087ad53b145888d63e28250afe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  showSyncDirection: 0
   syncDirection: 0
   syncMode: 1
   syncInterval: 0
@@ -481,6 +491,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41ba45b8f896392428280fd4408ddeb2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  showSyncDirection: 0
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
@@ -503,10 +514,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e87a7636d634bd54290ac78d1378ea84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  showSyncDirection: 0
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
   target: {fileID: 8022781346050191497}
+  followMode: 0
   offset: {x: -15, y: 15, z: -15}
   rotationOffsetY: 45
   initialDirection: 0

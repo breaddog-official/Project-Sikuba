@@ -352,6 +352,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35e4dff3ba286b04ab4aa52d2dbad871, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  showSyncDirection: 0
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
@@ -442,6 +443,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b20dc110904e47f8a154cdcf6433eae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  showSyncDirection: 0
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
@@ -492,6 +494,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d6dfbc3fc59ff745903f17c688fddc7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  showSyncDirection: 0
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
@@ -799,6 +802,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a7954093970b9d45bb15168bb7bc7eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  showSyncDirection: 0
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
@@ -886,71 +890,6 @@ MonoBehaviour:
   debugLog: 0
   statisticsGUI: 0
   statisticsLog: 0
---- !u!1 &187887619
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 187887621}
-  - component: {fileID: 187887620}
-  m_Layer: 0
-  m_Name: Reflection Probe
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!215 &187887620
-ReflectionProbe:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 187887619}
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Type: 0
-  m_Mode: 0
-  m_RefreshMode: 1
-  m_TimeSlicingMode: 0
-  m_Resolution: 64
-  m_UpdateFrequency: 0
-  m_BoxSize: {x: 14, y: 6, z: 15}
-  m_BoxOffset: {x: 0, y: 0, z: 0}
-  m_NearClip: 0.3
-  m_FarClip: 1000
-  m_ShadowDistance: 100
-  m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.3137255, g: 0.45882353, b: 0.68235296, a: 0}
-  m_CullingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IntensityMultiplier: 1
-  m_BlendDistance: 1
-  m_HDR: 1
-  m_BoxProjection: 1
-  m_RenderDynamicObjects: 0
-  m_UseOcclusionCulling: 1
-  m_Importance: 1
-  m_CustomBakedTexture: {fileID: 0}
---- !u!4 &187887621
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 187887619}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.5, y: 103.5, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &216993432
 GameObject:
   m_ObjectHideFlags: 0
@@ -1272,6 +1211,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bafd5b10a854a1748a695f40805d707c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  showSyncDirection: 0
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
@@ -2880,6 +2820,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bafd5b10a854a1748a695f40805d707c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  showSyncDirection: 0
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
@@ -5654,4 +5595,3 @@ SceneRoots:
   - {fileID: 1975448977}
   - {fileID: 967462163}
   - {fileID: 135425060}
-  - {fileID: 187887621}
