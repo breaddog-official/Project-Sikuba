@@ -16,11 +16,11 @@ namespace Scripts.Network
         [SerializeField] private float maxDistance = 25f;
         [SerializeField] private float projectMaxDistance = 3f;
         [SerializeField] private LayerMask raycastLayerMask;
+        [SerializeField] private bool drawGizmos;
+        [Space, Min(1)]
+        [SerializeField] private uint rebuildEveryFrames = 2;
+        private uint currentRebuildFrame;
 
-        [SerializeField, Space, Tooltip("Rebuild all every 'rebuildInterval' seconds.")]
-        private float rebuildInterval = 1;
-
-        double lastRebuildTime;
 
         public Behaviour Behaviour => this;
 
@@ -33,7 +33,7 @@ namespace Scripts.Network
         [ServerCallback]
         public override void ResetState()
         {
-            lastRebuildTime = 0D;
+            currentRebuildFrame = 0;
         }
 
 
@@ -57,11 +57,11 @@ namespace Scripts.Network
                 if (OnCheckObserver(identity, conn))
                 {
                     newObservers.Add(conn);
-                }   
+                }
             }
         }
-    
-        
+
+
 
         public bool Predict(Transform observer, Transform gameObject)
         {
@@ -82,7 +82,7 @@ namespace Scripts.Network
             for (int i = 0; i < raysCount; i++)
             {
                 Vector3 eulers = Quaternion.LookRotation(directionToObject).eulerAngles;
-                Vector3 direction = Quaternion.Euler(eulers.x,  eulers.y + (i % 2 == 0 ? raysSpace : -raysSpace) * i, eulers.z) * Vector3.forward;
+                Vector3 direction = Quaternion.Euler(eulers.x, eulers.y + (i % 2 == 0 ? raysSpace : -raysSpace) * i, eulers.z) * Vector3.forward;
 
                 if (!Physics.Raycast(observer.position, direction, distance, raycastLayerMask))
                 {
@@ -102,17 +102,20 @@ namespace Scripts.Network
             Vector3 project = Vector3.Project(directionToObject, directionToWall.Value);
             Vector3 worldProject = observer.position + project;
 
-            gizmosObserver = observer;
-            gizmosGameObject = gameObject;
-            gizmosWorldProject = worldProject;
-            gizmosDirectionToObject = directionToObject;
-            gizmosDirectionToWall = directionToWall;
+            if (drawGizmos)
+            {
+                gizmosObserver = observer;
+                gizmosGameObject = gameObject;
+                gizmosWorldProject = worldProject;
+                gizmosDirectionToObject = directionToObject;
+                gizmosDirectionToWall = directionToWall;
+            }
 
             return Vector3.Distance(worldProject, gameObject.position) < projectMaxDistance;
         }
 
 
-        
+
         Transform gizmosObserver;
         Transform gizmosGameObject;
         Vector3? gizmosWorldProject;
@@ -120,8 +123,11 @@ namespace Scripts.Network
         Vector3? gizmosDirectionToWall;
         protected virtual void OnDrawGizmosSelected()
         {
-            if (gizmosObserver == null || gizmosGameObject == null || 
-                    !gizmosWorldProject.HasValue || !gizmosDirectionToObject.HasValue || !gizmosDirectionToWall.HasValue)
+            if (!drawGizmos)
+                return;
+
+            if (gizmosObserver == null || gizmosGameObject == null ||
+                !gizmosWorldProject.HasValue || !gizmosDirectionToObject.HasValue || !gizmosDirectionToWall.HasValue)
                 return;
 
             Gizmos.color = Color.yellow;
@@ -136,11 +142,11 @@ namespace Scripts.Network
         [ServerCallback]
         public void UpdateCached()
         {
-            // rebuild all spawned NetworkIdentity's observers every interval
-            if (NetworkTime.localTime >= lastRebuildTime + rebuildInterval)
+            // rebuild all spawned NetworkIdentity's observers every 'rebuildEveryFrames'
+            if (++currentRebuildFrame == rebuildEveryFrames)
             {
+                currentRebuildFrame = 0;
                 RebuildAll();
-                lastRebuildTime = NetworkTime.localTime;
             }
         }
     }

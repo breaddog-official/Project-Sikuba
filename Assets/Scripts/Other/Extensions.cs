@@ -9,6 +9,7 @@ using Scripts.Gameplay.Entities;
 using Mirror;
 using System.Threading;
 using Cinemachine.Utility;
+using static UnityEngine.EventSystems.EventTrigger;
 
 namespace Scripts.Extensions
 {
@@ -346,6 +347,36 @@ namespace Scripts.Extensions
                     abillity.enabled = true;
             }
         }
+
+        #endregion
+
+        #region Teleportate
+
+        /// <summary>
+        /// Teleportates gameobject via Rigidbody or Transform
+        /// </summary>
+        [Server]
+        public static void Teleportate(this GameObject gameObject, Vector3 position, Quaternion rotation)
+        {
+            // Try get predicted rigidbody and move them
+            if (gameObject.TryGetComponent<PredictedRigidbody>(out var predictedRb))
+                predictedRb.predictedRigidbody.Move(position, rotation);
+
+            // Try get rigidbody and move them
+            else if (gameObject.TryGetComponent<Rigidbody>(out var rb))
+                rb.Move(position, rotation);
+
+            // Otherwise, move via transform
+            else
+                gameObject.transform.SetPositionAndRotation(position, rotation);
+        }
+
+        /// <summary>
+        /// Teleportates gameobject via Rigidbody or Transform. If ignoreRotation is true, gameObject will not be rotated
+        /// </summary>
+        [Server]
+        public static void Teleportate(this GameObject gameObject, Transform point, bool ignoreRotation = false)
+            => gameObject.Teleportate(point.position, ignoreRotation ? gameObject.transform.rotation : point.rotation);
 
         #endregion
     }

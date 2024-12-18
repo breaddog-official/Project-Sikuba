@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Mirror
 {
-    public class SyncSet<T> : SyncObject, ISet<T>
+    public class SyncSet<T> : SyncObject, ISet<T>, IReadOnlyCollection<T>
     {
         /// <summary>This is called after the item is added. T is the new item.</summary>
         public Action<T> OnAdd;

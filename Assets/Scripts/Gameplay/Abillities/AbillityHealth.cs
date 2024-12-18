@@ -3,6 +3,7 @@ using UnityEngine;
 using Scripts.Gameplay.Entities;
 using Scripts.Extensions;
 using System.Threading;
+using Scripts.Gameplay.Fractions;
 
 namespace Scripts.Gameplay.Abillities
 {
@@ -11,8 +12,6 @@ namespace Scripts.Gameplay.Abillities
         [Header("Health")]
         [SerializeField, Min(0f)] private float maxHealth = 100f;
         [SerializeField, Min(0f)] private float initialHealth = 100f;
-        [Header("Dead")]
-        [SerializeField] private float deadStunCooldown;
         [Header("Effectors")]
         [SerializeField] private Effector hurtEffector;
         [SerializeField] private Effector healEffector;
@@ -23,16 +22,12 @@ namespace Scripts.Gameplay.Abillities
         public float Health { get; protected set; }
 
         AbillityDataFraction abillityFraction;
-        PredictedRigidbody rb;
-
-        CancellationTokenSource cancellationTokenSource;
 
 
         public override bool Initialize()
         {
             base.Initialize();
 
-            rb = GetComponent<PredictedRigidbody>();
             abillityFraction = Entity.FindAbillity<AbillityDataFraction>();
 
             OnRespawn();
@@ -49,7 +44,7 @@ namespace Scripts.Gameplay.Abillities
             Health -= modifiedDamage;
 
             if (Health <= 0)
-                Dead();
+                Death();
 
             else if (hurtEffector != null)
                 hurtEffector.Play();
@@ -67,12 +62,6 @@ namespace Scripts.Gameplay.Abillities
                 healEffector.Play();
         }
 
-        [ServerCallback]
-        protected virtual void OnDestroy()
-        {
-            cancellationTokenSource.ResetToken();
-        }
-
 
 
         protected virtual float ModifyDamage(float damage)
@@ -88,20 +77,13 @@ namespace Scripts.Gameplay.Abillities
 
 
         [Server]
-        protected virtual void Dead()
+        protected virtual void Death()
         {
             if (deadEffector != null)
                 deadEffector.Play();
 
-            Transform spawnPoint = abillityFraction.Get().GetSpawnPoint();
-
-            rb.predictedRigidbody.MovePosition(spawnPoint.position);
-            rb.predictedRigidbody.MoveRotation(spawnPoint.rotation);
-
-            cancellationTokenSource.ResetToken();
-            cancellationTokenSource = new();
-
-            Entity.Stun(deadStunCooldown, cancellationTokenSource.Token).Forget();
+            if (abillityFraction.Get() is FractionDeathmatch fraction)
+                fraction.HandleDeath(Entity);
 
             OnRespawn();
         }

@@ -1,7 +1,6 @@
 using Mirror;
 using UnityEngine;
 using System.Collections.Generic;
-using Scripts.Extensions;
 using System;
 using Scripts.Gameplay.Entities;
 using Scripts.Gameplay.Abillities;
@@ -10,11 +9,10 @@ namespace Scripts.Gameplay.Fractions
 {
     public class Fraction : NetworkBehaviour
     {
-        [field: SerializeField] public string Name { get; private set; }
+        [field: SerializeField] public string Name { get; protected set; }
         [Space]
-        [SerializeField] private FractionStatus defaultFractionStatus = FractionStatus.Neutral;
-        [SerializeField] private FractionStatus fractionStatusForMembers = FractionStatus.Ally;
-        [SerializeField] private Transform[] spawnPoints;
+        [SerializeField] protected FractionStatus defaultFractionStatus = FractionStatus.Neutral;
+        [SerializeField] protected FractionStatus fractionStatusForMembers = FractionStatus.Ally;
         [Space]
         [SerializeField] private Color mainColor;
         [SerializeField] private Color additiveColor;
@@ -25,18 +23,10 @@ namespace Scripts.Gameplay.Fractions
         [SerializeField] private Color reverseColor;
         [SerializeField] private Color reverseAdditiveColor;
 
-        private Dictionary<Fraction, FractionStatus> statusDictionary;
-        private HashSet<Entity> members;
-
-        private uint currentSpawnPoint;
+        protected readonly Dictionary<Fraction, FractionStatus> statusDictionary = new();
+        protected readonly SyncHashSet<Entity> members = new();
 
 
-
-        private void Awake()
-        {
-            statusDictionary = new(4);
-            members = new(16); 
-        }
 
 
         [Server]
@@ -110,10 +100,10 @@ namespace Scripts.Gameplay.Fractions
         }
 
         [Server]
-        public void Join(Entity entity)
+        public virtual bool Join(Entity entity)
         {
             if (CanJoin(entity) == false)
-                return;
+                return false;
 
             if (entity.TryFindAbillity<AbillityDataFraction>(out var fraction))
                 fraction.Set(this);
@@ -121,21 +111,14 @@ namespace Scripts.Gameplay.Fractions
             members.Add(entity);
 
 
-            // ToDo: move it to realization
-            Transform spawnPoint = GetSpawnPoint();
-
-            if (entity.TryGetComponent<Rigidbody>(out var rb))
-                rb.Move(spawnPoint.position, spawnPoint.rotation);
-
-            else
-                entity.transform.SetPositionAndRotation(spawnPoint.position, spawnPoint.rotation);
+            return true;
         }
 
         [Server]
-        public void Leave(Entity entity)
+        public virtual bool Leave(Entity entity)
         {
             if (CanLeave(entity) == false)
-                return;
+                return false;
 
             if (entity.TryFindAbillity<AbillityDataFraction>(out var fraction))
                 fraction.Void();
@@ -143,21 +126,12 @@ namespace Scripts.Gameplay.Fractions
             members.Remove(entity);
 
 
-            // ToDo: Teleportate to lobby
+            return true;
         }
 
 
 
-        public Transform GetSpawnPoint()
-        {
-            if (spawnPoints == null || spawnPoints.Length == 0)
-                return this.transform;
 
-            Transform spawnPoint = spawnPoints[currentSpawnPoint];
-            currentSpawnPoint.IncreaseInBounds(spawnPoints);
-
-            return spawnPoint;
-        }
 
         public virtual Color GetColor(FractionColor fractionColor)
         {
@@ -184,5 +158,8 @@ namespace Scripts.Gameplay.Fractions
         {
             return true;
         }
+
+
+        public virtual IReadOnlyCollection<Entity> GetMembers() => members;
     }
 }

@@ -49,7 +49,6 @@ namespace Scripts.Gameplay.Abillities
 
             MonoCacher.Registrate(this);
 
-            SetFollow(target);
             ApplyDirection();
 
             return true;
@@ -57,16 +56,16 @@ namespace Scripts.Gameplay.Abillities
 
         public override void OnStartLocalPlayer()
         {
-            if (followMode == FollowMode.Player)
+            if (followMode == FollowMode.Manual)
                 return;
-            
+
             SetFollow(target);
         }
 
         [ClientCallback]
         protected override void OnEnable()
         {
-            if (followMode == FollowMode.Player && !isLocalPlayer)
+            if ((followMode == FollowMode.Player && !isLocalPlayer) || followMode == FollowMode.Manual)
                 return;
 
             SetFollow(target);
@@ -75,7 +74,7 @@ namespace Scripts.Gameplay.Abillities
         [ClientCallback]
         protected override void OnDisable()
         {
-            if (followMode == FollowMode.Player && !isLocalPlayer)
+            if ((followMode == FollowMode.Player && !isLocalPlayer) || followMode == FollowMode.Manual)
                 return;
 
             SetFollow(null);
