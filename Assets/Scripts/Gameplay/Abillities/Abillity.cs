@@ -3,7 +3,7 @@ using Scripts.Gameplay.Entities;
 
 namespace Scripts.Gameplay.Abillities
 {
-    public abstract class Abillity : NetworkBehaviour, IInitializable
+    public abstract class Abillity : NetworkBehaviour, IInitializable, IResetable
     {
         public bool IsInitialized { get; protected set; }
 
@@ -20,6 +20,10 @@ namespace Scripts.Gameplay.Abillities
         {
             Entity = entity;
             return Initialize();
+        }
+
+        public virtual void ResetState()
+        {
         }
 
 

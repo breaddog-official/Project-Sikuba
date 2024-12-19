@@ -98,6 +98,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b20dc110904e47f8a154cdcf6433eae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  showSyncSettings: 0
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
@@ -181,6 +182,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7a6157c941f6964ab90c6ce1c011af3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  showSyncSettings: 0
   syncDirection: 0
   syncMode: 0
   syncInterval: 0

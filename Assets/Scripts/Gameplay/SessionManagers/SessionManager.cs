@@ -12,11 +12,19 @@ namespace Scripts.SessionManagers
         public event Action OnSendRequestToSpawn;
         public event Action OnRecieveRequestToSpawn;
 
+        /// <summary>
+        /// Like Start, but only when start or connect to server. 
+        /// </summary>
+        public event Action OnStartMultiplayer;
+
 
 
         public override void OnStartServer()
         {
             NetworkServer.ReplaceHandler<AddPlayerMessage>(RecieveRequestToSpawn);
+
+            if (!isClient)
+                OnStartMultiplayer?.Invoke();
         }
 
         /// <summary>
@@ -65,5 +73,11 @@ namespace Scripts.SessionManagers
         protected abstract GameObject SpawnPlayerBeforeStart();
 
         protected abstract void ConfigurePlayerBeforeStart(GameObject player);
+
+
+        public override void OnStartClient()
+        {
+            OnStartMultiplayer?.Invoke();
+        }
     }
 }

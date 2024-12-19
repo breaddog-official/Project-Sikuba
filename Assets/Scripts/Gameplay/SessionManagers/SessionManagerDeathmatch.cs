@@ -6,6 +6,7 @@ using Scripts.Gameplay.Fractions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NaughtyAttributes;
 
 namespace Scripts.SessionManagers
 {
@@ -33,10 +34,18 @@ namespace Scripts.SessionManagers
         [SerializeField] private MatchEndMode matchEndMode;
         [SerializeField] private bool autoWinLast;
 
-        protected readonly SyncHashSet<FractionDeathmatch> fractions = new();
-        protected readonly SyncDictionary<FractionDeathmatch, FractionState> fractionStates = new();
+        [field: SyncVar]
+        public bool IsMatch { get; protected set; }
+
+        protected readonly SyncDictionary<uint, FractionState> fractions = new();
+
+        public event Action OnStartMatch;
+        public event Action OnStopMatch;
+
 
         private uint currentSpawnPoint;
+        [SyncVar] private double matchStartTime;
+        [SyncVar] private double matchStopTime;
 
 
 
@@ -69,37 +78,56 @@ namespace Scripts.SessionManagers
 
 
 
-
+        [Server]
         public virtual void StartMatch()
         {
-            SetAll(FractionState.NotStated);
+            fractions.SetAll(FractionState.NotStated);
 
             foreach (var fraction in fractions)
             {
-                fraction.StartMatch();
+                if (fraction.Key.TryFindByID(out FractionDeathmatch fractionDeathmatch))
+                    fractionDeathmatch.StartMatch();
             }
 
+            matchStartTime = NetworkTime.time;
+
+            OnStartMatchRpc();
+
+
+
+            IsMatch = true;
             print("SessionManager started match");
         }
 
+        [Server]
         public virtual void StopMatch()
         {
             foreach (var fraction in fractions)
             {
-                fraction.StopMatch();
+                if (fraction.Key.TryFindByID(out FractionDeathmatch fractionDeathmatch))
+                    fractionDeathmatch.StopMatch();
             }
 
+            matchStopTime = NetworkTime.time;
+
+            OnStopMatchRpc();
+
+
+
+            IsMatch = false;
             print("SessionManager stoped match");
         }
+
+        [ClientRpc] private void OnStartMatchRpc() => OnStartMatch?.Invoke();
+        [ClientRpc] private void OnStopMatchRpc() => OnStopMatch?.Invoke();
 
 
         [Server]
         public virtual void AddFraction(FractionDeathmatch fraction)
         {
-            if (fractions.Contains(fraction) == false)
+            if (fractions.Keys.Contains(fraction.netId) == false)
             {
-                fractions.Add(fraction);
-                fractionStates.Add(fraction, FractionState.NotStated);
+                fractions.Add(fraction.netId, FractionState.NotStated);
             }
         }
 
@@ -109,29 +137,17 @@ namespace Scripts.SessionManagers
         [Server]
         public virtual void SetWin(FractionDeathmatch fraction)
         {
-            fractionStates[fraction] = FractionState.Winner;
-
+            fractions[fraction.netId] = FractionState.Winner;
+            print($"{fraction} is win");
             CheckMatchResults();
         }
 
         [Server]
         public virtual void SetLose(FractionDeathmatch fraction)
         {
-            fractionStates[fraction] = FractionState.Loser;
-
+            fractions[fraction.netId] = FractionState.Loser;
+            print($"{fraction} is lose");
             CheckMatchResults();
-        }
-
-        [Server]
-        public virtual void SetAll(FractionState state, params Fraction[] except)
-        {
-            foreach (var fraction in fractionStates)
-            {
-                if (except.Contains(fraction.Key))
-                    continue;
-
-                fractionStates[fraction.Key] = state;
-            }
         }
 
 
@@ -141,14 +157,15 @@ namespace Scripts.SessionManagers
             // Counter fractions states is not NotStated
             uint stated = 0;
 
-            foreach (var fractionState in fractionStates)
+
+            foreach (var fraction in fractions.ToArray())
             {
-                switch (fractionState.Value)
+                switch (fraction.Value)
                 {
                     case FractionState.Winner when matchEndMode == MatchEndMode.OneWinAllLose:
 
-                        // Set all lose except current fractionState
-                        SetAll(FractionState.Loser, except: fractionState.Key);
+                        // Set all lose except current fraction
+                        fractions.SetAll(FractionState.Loser, except: fraction.Key);
 
                         StopMatch();
                         return;
@@ -159,10 +176,10 @@ namespace Scripts.SessionManagers
                         stated++;
                         break;
 
-                    case FractionState.NotStated when stated == fractionStates.Count - 1 && autoWinLast:
+                    case FractionState.NotStated when stated == fractions.Count - 1 && autoWinLast:
 
                         // Because autoWinLast is true, and this is last fraction not stated, marks him a winner
-                        fractionStates[fractionState.Key] = FractionState.Winner;
+                        fractions[fraction.Key] = FractionState.Winner;
 
                         // Set because not NotStated
                         stated++;
@@ -171,14 +188,15 @@ namespace Scripts.SessionManagers
             }
 
             // If all stated, we can stop match
-            if (stated == fractionStates.Count)
+            if (stated == fractions.Count)
             {
                 StopMatch();
             }
         }
 
 
-        public IReadOnlyCollection<FractionDeathmatch> GetFractions() => fractions;
-        public IReadOnlyDictionary<FractionDeathmatch, FractionState> GetFractionStates() => fractionStates;
+        public IReadOnlyDictionary<uint, FractionState> GetFractions() => fractions;
+
+        public double GetMatchTime() => matchStopTime - matchStartTime;
     }
 }

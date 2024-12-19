@@ -5,6 +5,9 @@ using Scripts.SessionManagers;
 using Mirror;
 using NaughtyAttributes;
 using Scripts.Gameplay.Abillities;
+using System.Linq;
+using System.Collections.Generic;
+using Unity.VisualScripting;
 
 namespace Scripts.Gameplay.Fractions
 {
@@ -13,17 +16,34 @@ namespace Scripts.Gameplay.Fractions
         [Header("Deathmatch")]
         [SerializeField] private SessionManagerDeathmatch sessionManager;
         [SerializeField] private Transform[] spawnPoints;
-        [Space]
+        [Header("Gameplay")]
+        [SerializeField] protected bool loseIfAllDead;
+        [Header("Respawn")]
         [SerializeField] private bool dontRespawn;
         [HideIf(nameof(dontRespawn))]
         [SerializeField] private bool stunOnRespawn;
         [ShowIf(nameof(stunOnRespawn)), Min(0f)]
         [SerializeField] private float stunCooldown;
+        [Header("Spawn")]
+        [SerializeField] protected AllowJoin allowJoin;
 
-        [field: SyncVar]
-        public uint Deaths { get; protected set; }
+        public readonly SyncHashSet<Entity> Alives = new();
+
 
         private uint currentSpawnPoint;
+
+        protected enum TeleportateWhere
+        {
+            Lobby,
+            Spawn
+        }
+
+        protected enum AllowJoin
+        {
+            Always,
+            BeforeMatchStarted,
+            BeforeMatchStartedAndOneTime
+        }
 
 
         [ServerCallback]
@@ -35,32 +55,47 @@ namespace Scripts.Gameplay.Fractions
         [Server]
         public virtual void StartMatch()
         {
-            Deaths = 0;
+            Alives.Clear();
+            Alives.AddRange(members);
 
             foreach (var member in members)
             {
-                member.gameObject.Teleportate(GetSpawnPoint());
+                Teleportate(member, TeleportateWhere.Spawn);
             }
+            print($"{Name} fraction started match");
         }
 
         [Server]
         public virtual void StopMatch()
         {
-            foreach (var member in members)
+            foreach (var member in members.ToArray())
             {
-                member.gameObject.Teleportate(sessionManager.GetSpawnPoint());
+                if (member == null)
+                    continue;
+
+                member.ResetState();
+                Teleportate(member, TeleportateWhere.Lobby);
             }
+            print($"{Name} fraction stoped match");
         }
 
         public override bool Join(Entity entity)
         {
+            // If can't join, return
             if (base.Join(entity) == false)
                 return false;
 
+            // Add to alive entities
+            if (sessionManager.IsMatch)
+                Alives.Add(entity);
 
-            Transform spawnPoint = GetSpawnPoint();
+            // Reset all abillities
+            entity.ResetState();
 
-            entity.gameObject.Teleportate(spawnPoint);
+            if (entity.TryFindAbillity<AbillityDataFraction>(out var fraction))
+            {
+                fraction.Set(this);
+            }
 
 
             return true;
@@ -68,18 +103,39 @@ namespace Scripts.Gameplay.Fractions
 
         public override bool Leave(Entity entity)
         {
+            // If can't leave, return
             if (base.Leave(entity) == false)
                 return false;
 
+            // Remove from alive entities
+            if (sessionManager.IsMatch)
+                Alives.Remove(entity);
 
-            Transform spawnPoint = sessionManager.GetSpawnPoint();
+            // Reset all abillities
+            entity.ResetState();
 
-            entity.gameObject.Teleportate(spawnPoint);
+            // Teleportate to lobby
+            Teleportate(entity, TeleportateWhere.Lobby);
+
+
+            RenewFractionState();
 
 
             return true;
         }
 
+
+        protected override bool CanJoin(Entity entity)
+        {
+            return base.CanJoin(entity) && allowJoin switch
+            {
+                AllowJoin.Always => true,
+                AllowJoin.BeforeMatchStarted when !sessionManager.IsMatch => true,
+                AllowJoin.BeforeMatchStartedAndOneTime when !sessionManager.IsMatch
+                            && entity.TryFindAbillity<AbillityDataFraction>(out var fraction) && !fraction.Has() => true,
+                _ => false
+            };
+        }
 
 
         public Transform GetSpawnPoint()
@@ -97,26 +153,40 @@ namespace Scripts.Gameplay.Fractions
         [Server]
         public virtual void HandleDeath(Entity entity)
         {
-            if (entity.TryFindAbillity<AbillityItemSocket>(out var socket))
-                socket.DropItem();
+            // Reset state of entity and all it abillities
+            entity.ResetState();
 
-            Teleportate(entity);
+            // Remove from Alives if entity will not respawn
+            if (dontRespawn)
+                Alives.Remove(entity);
 
+            Teleportate(entity, TeleportateWhere.Spawn);
+
+            // Stun
             if (stunOnRespawn && !dontRespawn)
                 entity.Stun(stunCooldown).Forget();
 
-            Deaths++;
+            RenewFractionState();
+        }
 
-            if (dontRespawn && members.Count == Deaths)
+        protected virtual void Teleportate(Entity entity, TeleportateWhere where)
+        {
+            // If dontRespawn is true, teleportates to lobby
+            entity.gameObject.Teleportate(where switch
+            {
+                TeleportateWhere.Spawn when !sessionManager.IsMatch => GetSpawnPoint(),    // Spawn, when match is not begin
+                TeleportateWhere.Spawn when dontRespawn => sessionManager.GetSpawnPoint(), // Lobby, when want to spawn, but 'dontSpawn'
+                TeleportateWhere.Lobby or _ => sessionManager.GetSpawnPoint()              // Lobby
+            });
+        }
+
+        protected virtual void RenewFractionState()
+        {
+            // If all fraction dead, fraction is lose
+            if (sessionManager.IsMatch && loseIfAllDead && Alives.Count == 0)
             {
                 sessionManager.SetLose(this);
             }
-        }
-
-        protected virtual void Teleportate(Entity entity)
-        {
-            // If dontRespawn is true, teleportates to lobby
-            entity.gameObject.Teleportate(dontRespawn ? sessionManager.GetSpawnPoint() : GetSpawnPoint());
         }
     }
 }

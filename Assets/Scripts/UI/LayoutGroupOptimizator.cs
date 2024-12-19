@@ -1,3 +1,5 @@
+using NaughtyAttributes;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,41 +8,45 @@ namespace Scripts.UI
     [AddComponentMenu("Layout Group Optimizator")]
     public class LayoutGroupOptimizator : MonoBehaviour
     {
+        [Flags]
         public enum EnableMode
         {
-            Manual,
-            OnEnable,
-            OnAwake,
-            Update,
+            Manual = 0,
+            OnEnable = 1 << 0,
+            OnStart = 1 << 1,
+            Update = 1 << 2,
         }
 
-        [SerializeField] private EnableMode enableMode;
+        [SerializeField, EnumFlags] private EnableMode enableMode;
 
         private LayoutGroup layoutGroup;
         private uint updatesBeforeDisable;
 
-        private void Awake()
+        private void Start()
         {
             if (layoutGroup == null && !TryGetComponent(out layoutGroup))
                 return;
+            
 
-            if (enableMode == EnableMode.Manual)
-            {
-                layoutGroup.enabled = false;
-            }
-            else if (enableMode == EnableMode.OnAwake)
+            if (HasFlag(EnableMode.OnStart))
             {
                 UpdateGroup();
             }
-            else if (enableMode == EnableMode.Update)
+
+            if (HasFlag(EnableMode.Update))
             {
                 layoutGroup.enabled = true;
+            }
+
+            if (HasFlag(EnableMode.Manual))
+            {
+                layoutGroup.enabled = false;
             }
         }
 
         private void OnEnable()
         {
-            if (enableMode == EnableMode.OnEnable)
+            if (HasFlag(EnableMode.OnEnable))
             {
                 UpdateGroup();
             }
@@ -51,7 +57,7 @@ namespace Scripts.UI
             if (layoutGroup == null)
                 return;
 
-            layoutGroup.enabled = enableMode == EnableMode.Update || updatesBeforeDisable > 0;
+            layoutGroup.enabled = HasFlag(EnableMode.Update) || updatesBeforeDisable > 0;
 
             if (updatesBeforeDisable > 0)
                 updatesBeforeDisable--;
@@ -66,5 +72,8 @@ namespace Scripts.UI
             updatesBeforeDisable++;
             layoutGroup.enabled = true;
         }
+
+
+        private bool HasFlag(EnableMode flag) => (enableMode & flag) == flag;
     }
 }

@@ -3,7 +3,6 @@ using UnityEngine;
 using System.Collections.Generic;
 using System;
 using Scripts.Gameplay.Entities;
-using Scripts.Gameplay.Abillities;
 
 namespace Scripts.Gameplay.Fractions
 {
@@ -28,7 +27,7 @@ namespace Scripts.Gameplay.Fractions
 
 
 
-
+        #region FractionStatus
         [Server]
         public FractionStatus GetFractionStatus(Fraction fraction)
         {
@@ -64,9 +63,10 @@ namespace Scripts.Gameplay.Fractions
             else
                 statusDictionary.Add(fraction, status);
         }
+        #endregion
 
 
-
+        #region Requests To Join or Leave
         [Command(requiresAuthority = false)]
         public void RequestToJoin(NetworkConnectionToClient sender = null)
         {
@@ -98,15 +98,14 @@ namespace Scripts.Gameplay.Fractions
 
             Leave(entity);
         }
+        #endregion
 
+        #region Join or Leave
         [Server]
         public virtual bool Join(Entity entity)
         {
             if (CanJoin(entity) == false)
                 return false;
-
-            if (entity.TryFindAbillity<AbillityDataFraction>(out var fraction))
-                fraction.Set(this);
 
             members.Add(entity);
 
@@ -120,19 +119,27 @@ namespace Scripts.Gameplay.Fractions
             if (CanLeave(entity) == false)
                 return false;
 
-            if (entity.TryFindAbillity<AbillityDataFraction>(out var fraction))
-                fraction.Void();
-
             members.Remove(entity);
 
 
             return true;
         }
+        #endregion
+
+        #region Can Join or Leave
+        protected virtual bool CanJoin(Entity entity)
+        {
+            return !members.Contains(entity);
+        }
+
+        protected virtual bool CanLeave(Entity entity)
+        {
+            return members.Contains(entity);
+        }
+        #endregion
 
 
-
-
-
+        #region Gets
         public virtual Color GetColor(FractionColor fractionColor)
         {
             return fractionColor switch
@@ -148,18 +155,7 @@ namespace Scripts.Gameplay.Fractions
         }
 
 
-
-        protected virtual bool CanJoin(Entity entity)
-        {
-            return true;
-        }
-
-        protected virtual bool CanLeave(Entity entity)
-        {
-            return true;
-        }
-
-
         public virtual IReadOnlyCollection<Entity> GetMembers() => members;
+        #endregion
     }
 }

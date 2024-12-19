@@ -90,10 +90,15 @@ namespace Scripts.Gameplay.Abillities
 
         protected virtual void OnRespawn()
         {
-            Health = initialHealth;
-
             if (respawnEffector != null)
                 respawnEffector.Play();
+        }
+
+        public override void ResetState()
+        {
+            base.ResetState();
+
+            Health = initialHealth;
         }
 
 
@@ -107,6 +112,12 @@ namespace Scripts.Gameplay.Abillities
                 abillityFraction = Entity.FindAbillity<AbillityDataFraction>();
 
             return abillityFraction;
+        }
+
+
+        public override void OnStopServer()
+        {
+            Death();
         }
     }
 }

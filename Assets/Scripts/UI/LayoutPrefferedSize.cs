@@ -12,8 +12,13 @@ namespace Scripts.UI
         [SerializeField] private bool overrideX;
         [SerializeField] private bool overrideY;
 
+        private LayoutGroupOptimizator optimizator;
+
+
         private void Start()
         {
+            optimizator = GetComponent<LayoutGroupOptimizator>();
+
             if (rectTransform == null)
                 rectTransform = GetComponent<RectTransform>();
 
@@ -21,7 +26,7 @@ namespace Scripts.UI
                 group = GetComponent<LayoutGroup>();
         }
 
-        private void LateUpdate()
+        private void Update()
         {
             if (rectTransform == null || group == null || !group.enabled)
                 return;
@@ -29,10 +34,18 @@ namespace Scripts.UI
             if (!overrideX && !overrideY)
                 return;
 
-            float x = overrideX ? group.preferredWidth : rectTransform.sizeDelta.x;
-            float y = overrideY ? group.preferredHeight : rectTransform.sizeDelta.y;
+            Vector2 changedSizeDelta = new();
+            changedSizeDelta.x = overrideX ? group.preferredWidth : rectTransform.sizeDelta.x;
+            changedSizeDelta.y = overrideY ? group.preferredHeight : rectTransform.sizeDelta.y;
 
-            rectTransform.sizeDelta = new(x, y);
+            // If has not changes, return
+            if (rectTransform.sizeDelta.Equals(changedSizeDelta))
+                return;
+
+            if (optimizator != null && Application.isPlaying)
+                optimizator.UpdateGroup();
+
+            rectTransform.sizeDelta = changedSizeDelta;
         }
     }
 }

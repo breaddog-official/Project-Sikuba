@@ -50,5 +50,13 @@ namespace Scripts.Gameplay.Abillities
 
 
         public virtual bool HasItem() => EquippedItem != null;
+
+
+        public override void ResetState()
+        {
+            base.ResetState();
+
+            DropItem();
+        }
     }
 }

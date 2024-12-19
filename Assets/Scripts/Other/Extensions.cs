@@ -49,7 +49,7 @@ namespace Scripts.Extensions
         {
             index++;
 
-            if (index >= bounds - (dontCollideBounds ? 1 : 0))
+            if (index > bounds - (dontCollideBounds ? 1 : 0))
                 index = 0;
         }
 
@@ -60,7 +60,7 @@ namespace Scripts.Extensions
         {
             index++;
 
-            if (index >= bounds - (dontCollideBounds ? 1 : 0))
+            if (index > bounds - (dontCollideBounds ? 1 : 0))
                 index = 0;
         }
         #endregion
@@ -139,6 +139,25 @@ namespace Scripts.Extensions
                 }
             }
             return null;
+        }
+
+        #endregion
+
+        #region SetAll
+
+        /// <summary>
+        /// Sets value to all elements in dictionary
+        /// </summary>
+        public static void SetAll<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TValue value, params TKey[] except)
+        {
+            foreach (var pair in dictionary.ToArray())
+            {
+                if (except.Contains(pair.Key))
+                    continue;
+
+                lock (dictionary)
+                dictionary[pair.Key] = value;
+            }
         }
 
         #endregion
@@ -377,6 +396,19 @@ namespace Scripts.Extensions
         [Server]
         public static void Teleportate(this GameObject gameObject, Transform point, bool ignoreRotation = false)
             => gameObject.Teleportate(point.position, ignoreRotation ? gameObject.transform.rotation : point.rotation);
+
+        #endregion
+
+        #region FindByUid
+
+        /// <summary>
+        /// Tryes find identity and component by id
+        /// </summary>
+        [Server]
+        public static bool TryFindByID<TComponent>(this uint ID, out TComponent component) where TComponent : Component
+        {
+            return NetworkClient.spawned.GetValueOrDefault(ID).TryGetComponent(out component);
+        }
 
         #endregion
     }

@@ -11,7 +11,7 @@ namespace Scripts.Gameplay.Entities
     /// <summary>
     /// Class for managing controlles and updating abillities
     /// </summary>
-    public class Entity : NetworkBehaviour, IInitializable
+    public class Entity : NetworkBehaviour, IInitializable, IResetable
     {
         #region Fields && Properties
 
@@ -66,6 +66,14 @@ namespace Scripts.Gameplay.Entities
             return true;
         }
 
+        public virtual void ResetState()
+        {
+            // Reset all abillities
+            foreach (Abillity abillity in abillities)
+            {
+                abillity.ResetState();
+            }
+        }
 
         #region Controller
 
