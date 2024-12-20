@@ -94,10 +94,11 @@ namespace Scripts.Gameplay.Fractions
 
             if (entity.TryFindAbillity<AbillityDataFraction>(out var fraction))
             {
+                fraction.Void();
                 fraction.Set(this);
             }
 
-
+            print($"{Name} fraction, members: {members.Count}");
             return true;
         }
 
@@ -115,12 +116,12 @@ namespace Scripts.Gameplay.Fractions
             entity.ResetState();
 
             // Teleportate to lobby
-            Teleportate(entity, TeleportateWhere.Lobby);
-
+            if (sessionManager.IsMatch)
+                Teleportate(entity, TeleportateWhere.Lobby);
 
             RenewFractionState();
 
-
+            print($"{Name} fraction, members: {members.Count}");
             return true;
         }
 

@@ -1,9 +1,11 @@
+using Cysharp.Threading.Tasks;
 using Scripts.Extensions;
 using Scripts.Gameplay.Fractions;
 using Scripts.SessionManagers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using TMPro;
 using UnityEngine;
 
@@ -12,28 +14,31 @@ namespace Scripts.UI
     public class EndGameScoreUI : MonoBehaviour
     {
         [SerializeField] protected SessionManagerDeathmatch sessionManager;
+        [SerializeField] protected float calculateRate;
         [Space]
         [SerializeField] protected GameObject scoresPanel;
         [SerializeField] protected TMP_Text winFractionsText;
         [SerializeField] protected TMP_Text loseFractionsText;
         [SerializeField] protected TMP_Text timeText;
 
+        private CancellationTokenSource cancellationToken;
+
+
         protected virtual void OnEnable()
         {
-            sessionManager.OnStopMatch += CalculateScore;
+            sessionManager.OnStopMatch += StartRecalculatingScore;
         }
 
         protected virtual void OnDisable()
         {
-            sessionManager.OnStopMatch -= CalculateScore;
+            sessionManager.OnStopMatch -= StartRecalculatingScore;
+            cancellationToken?.ResetToken();
         }
 
 
 
         protected virtual void CalculateScore()
         {
-            scoresPanel.SetActive(true);
-
             string[] winners = GetNamesByState(SessionManagerDeathmatch.FractionState.Winner);
             string[] losers = GetNamesByState(SessionManagerDeathmatch.FractionState.Loser);
             TimeSpan time = TimeSpan.FromSeconds(sessionManager.GetMatchTime());
@@ -48,7 +53,18 @@ namespace Scripts.UI
                 timeText.text = $"{time.Hours}:{time.Minutes}:{time.Seconds}";
         }
 
+        protected void StartRecalculatingScore() => RecalculateScore().Forget();
+        protected async UniTaskVoid RecalculateScore()
+        {
+            scoresPanel.SetActive(true);
+            cancellationToken ??= new CancellationTokenSource();
 
+            while (scoresPanel.activeInHierarchy)
+            {
+                CalculateScore();
+                await UniTask.Delay(calculateRate.ConvertSecondsToMiliseconds(), cancellationToken: cancellationToken.Token);
+            }
+        }
 
 
 

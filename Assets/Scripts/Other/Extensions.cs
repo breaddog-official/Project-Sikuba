@@ -299,7 +299,7 @@ namespace Scripts.Extensions
 
         #endregion
 
-        #region Renew & Reset Token
+        #region Reset Token
 
         /// <summary>
         /// Cancels and disposes a token
@@ -404,10 +404,10 @@ namespace Scripts.Extensions
         /// <summary>
         /// Tryes find identity and component by id
         /// </summary>
-        [Server]
         public static bool TryFindByID<TComponent>(this uint ID, out TComponent component) where TComponent : Component
         {
-            return NetworkClient.spawned.GetValueOrDefault(ID).TryGetComponent(out component);
+            component = null;
+            return NetworkClient.spawned.TryGetValue(ID, out var identity) && identity.TryGetComponent(out component);
         }
 
         #endregion

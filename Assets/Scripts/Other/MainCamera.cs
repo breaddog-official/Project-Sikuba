@@ -10,12 +10,14 @@ public class MainCamera : MonoBehaviour
 
     public static MainCamera Instance { get; private set; }
 
-    
+    public Transform CachedTranform { get; private set; }
+
 
     private void Awake()
     {
         Instance = this;
         Camera = GetComponent<Camera>();
         CameraTransposer = VirtualCamera.GetCinemachineComponent<CinemachineTransposer>();
+        CachedTranform = transform;
     }
 }

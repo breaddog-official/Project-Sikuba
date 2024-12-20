@@ -15,7 +15,7 @@ namespace Scripts.Gameplay.Entities
     {
         #region Fields && Properties
 
-        [SerializeField] private bool initializeIfLocalPlayer = true;
+        [SerializeField] private bool initializeForAllObservers = true;
 
 
         private Controller controller;
@@ -26,15 +26,17 @@ namespace Scripts.Gameplay.Entities
 
         public bool IsInitialized { get; private set; }
 
+        public event Action OnInitialized;
+
         public Controller Controller => controller;
 
         public IReadOnlyCollection<Abillity> Abillities => abillities;
 
         #endregion
 
-        public override void OnStartLocalPlayer()
+        public override void OnStartClient()
         {
-            if (initializeIfLocalPlayer)
+            if (initializeForAllObservers)
                 Initialize();
         }
 
@@ -62,6 +64,8 @@ namespace Scripts.Gameplay.Entities
             // Set initial controller if exists
             if (TryGetComponent<Controller>(out var initialController))
                 SetController(initialController);
+
+            OnInitialized?.Invoke();
 
             return true;
         }
