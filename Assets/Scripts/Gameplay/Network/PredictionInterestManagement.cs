@@ -28,16 +28,18 @@ namespace Scripts.Network
         [Header("Prediction")]
         [SerializeField] private int raysCount = 64;
         [SerializeField] private float raysSpace = 0.25f;
-        [SerializeField] private float maxPredictionAngle = 90f;
+        [SerializeField] private float maxPredictionDistance = 3f;
         [SerializeField] private LayerMask raycastLayerMask;
         [SerializeField] private bool drawGizmos;
         [Space, Min(1)]
         [SerializeField] private uint rebuildEveryFrames = 2;
 
+        private const float GIZMOS_LENGTH = 5.0f;
+
         private uint currentRebuildFrame;
-        private Vector3 gizmosIdentity;
-        private Vector3 gizmosDirectionToSecond;
-        private Vector3 gizmosDirectionToWall;
+        private Vector3 gizmosIdentity = Vector3.zero;
+        private Vector3 gizmosDirectionToSecond = Vector3.forward * GIZMOS_LENGTH;
+        private Vector3 gizmosDirectionToWall = Vector3.right * GIZMOS_LENGTH;
 
         private readonly Dictionary<NetworkIdentity, AbillityDataFraction> dataFractions = new();
 
@@ -128,8 +130,14 @@ namespace Scripts.Network
                 return false;
 
             // Check linecast
-            if (behaviour.HasFlag(VisibleBehaviour.Linecast) && VisibleByLinecast(identityTransform, observerTranform))
-                return true;
+            if (behaviour.HasFlag(VisibleBehaviour.Linecast))
+            {
+                if (VisibleByLinecast(identityTransform, observerTranform))
+                    return true;
+                // If not visible by linecast and we will not predict, return false
+                else if (!behaviour.HasFlag(VisibleBehaviour.Prediction))
+                    return false;
+            }
 
             // Check prediction
             if (behaviour.HasFlag(VisibleBehaviour.Prediction) && !VisibleByPrediction(identityTransform, observerTranform))
@@ -196,7 +204,7 @@ namespace Scripts.Network
                 gizmosDirectionToWall = directionToWall.Value;
             }
 
-            return Vector3.Angle(directionToSecond, directionToWall.Value) > maxPredictionAngle;
+            return Vector3.Distance(directionToSecond, directionToWall.Value) > maxPredictionDistance;
         }
 
         #endregion
