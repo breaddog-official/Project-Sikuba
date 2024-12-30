@@ -2,37 +2,67 @@ using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
 using Scripts.MonoCache;
-using System.Linq;
 using Scripts.Gameplay.Abillities;
+using NaughtyAttributes;
+using System;
 
 namespace Scripts.Network
 {
     [AddComponentMenu("Network/ Interest Management/ Prediction/Prediction Interest Management")]
     public class PredictionInterestManagement : InterestManagement, IMonoCacheUpdate
     {
+        [Flags]
+        enum VisibleBehaviour
+        {
+            None = 0,
+            Distance = 1 << 0,
+            Linecast = 1 << 1,
+            Prediction = 1 << 2,
+        }
+
         [Min(0f)]
         [Header("Interest Management")]
         [SerializeField] private float maxDistance = 25f;
-        [SerializeField] private bool dontPredictSameFraction = true;
+        [SerializeField, EnumFlags] private VisibleBehaviour defaultBehaviour;
+        [SerializeField, EnumFlags] private VisibleBehaviour sameFractionBehaviour;
         [Header("Prediction")]
         [SerializeField] private int raysCount = 64;
         [SerializeField] private float raysSpace = 0.25f;
-        [SerializeField] private float maxAngle = 90f;
-        [SerializeField] private float projectMaxDistance = 3f;
+        [SerializeField] private float maxPredictionAngle = 90f;
         [SerializeField] private LayerMask raycastLayerMask;
         [SerializeField] private bool drawGizmos;
         [Space, Min(1)]
         [SerializeField] private uint rebuildEveryFrames = 2;
+
         private uint currentRebuildFrame;
+        private Vector3 gizmosIdentity;
+        private Vector3 gizmosDirectionToSecond;
+        private Vector3 gizmosDirectionToWall;
 
         private readonly Dictionary<NetworkIdentity, AbillityDataFraction> dataFractions = new();
 
+
+
         public Behaviour Behaviour => this;
+
+
+
 
 
         protected virtual void Start()
         {
             MonoCacher.Registrate(this);
+        }
+
+        [ServerCallback]
+        public void UpdateCached()
+        {
+            // rebuild all spawned NetworkIdentity's observers every 'rebuildEveryFrames'
+            if (++currentRebuildFrame == rebuildEveryFrames)
+            {
+                currentRebuildFrame = 0;
+                RebuildAll();
+            }
         }
 
         [ServerCallback]
@@ -48,7 +78,7 @@ namespace Scripts.Network
             // authenticated and joined world with a player?
             if (newObserver != null && newObserver.isAuthenticated && newObserver.identity != null)
             {
-                return Predict(newObserver.identity, identity);
+                return IsVisible(newObserver.identity, identity);
             }
             else
             {
@@ -70,7 +100,7 @@ namespace Scripts.Network
 
         public override void OnSpawned(NetworkIdentity identity)
         {
-            if (dontPredictSameFraction && identity.TryGetComponent<AbillityDataFraction>(out var dataFraction))
+            if (identity.TryGetComponent<AbillityDataFraction>(out var dataFraction))
             {
                 dataFractions.Add(identity, dataFraction);
             }
@@ -78,45 +108,77 @@ namespace Scripts.Network
 
         public override void OnDestroyed(NetworkIdentity identity)
         {
-            if (dontPredictSameFraction)
-                dataFractions.Remove(identity);
+            dataFractions.Remove(identity);
         }
 
 
 
-        public bool Predict(NetworkIdentity identity, NetworkIdentity observer)
+        public bool IsVisible(NetworkIdentity identity, NetworkIdentity observer)
         {
-            Transform observerTranform = observer.transform;
             Transform identityTransform = identity.transform;
+            Transform observerTranform = observer.transform;
+
+            VisibleBehaviour behaviour = defaultBehaviour;
+
+            if (behaviour != sameFractionBehaviour && IsSameFraction(identity, observer))
+                behaviour = sameFractionBehaviour;
 
             // Check distance
-            float distance = Vector3.Distance(observerTranform.position, identityTransform.position);
-            if (distance > maxDistance)
+            if (behaviour.HasFlag(VisibleBehaviour.Distance) && !VisibleByDistance(identityTransform, observerTranform))
                 return false;
 
-            if (dontPredictSameFraction && dataFractions.TryGetValue(observer, out var identityData) && 
-                                           dataFractions.TryGetValue(identity, out var observerData))
+            // Check linecast
+            if (behaviour.HasFlag(VisibleBehaviour.Linecast) && VisibleByLinecast(identityTransform, observerTranform))
+                return true;
+
+            // Check prediction
+            if (behaviour.HasFlag(VisibleBehaviour.Prediction) && !VisibleByPrediction(identityTransform, observerTranform))
+                return false;
+
+            return true;
+        }
+
+
+        #region Checks
+
+        public bool IsSameFraction(NetworkIdentity identity, NetworkIdentity observer)
+        {
+            if (dataFractions.TryGetValue(observer, out var identityData) &&
+                dataFractions.TryGetValue(identity, out var observerData))
             {
                 if (identityData.Get() == observerData.Get())
                     return true;
             }
+            return false;
+        }
 
-            // Prediction start
-            bool linecast = Physics.Linecast(observerTranform.position, identityTransform.position, out RaycastHit raycastObject, raycastLayerMask);
+        public bool VisibleByDistance(Transform first, Transform second)
+        {
+            print("distance");
+            return Vector3.Distance(first.position, second.position) > maxDistance;
+        }
 
-            // Check linecast
-            if (!linecast)
-                return true;
+        public bool VisibleByLinecast(Transform first, Transform second)
+        {
+            print("linecast");
+            return !Physics.Linecast(first.position, second.position, raycastLayerMask);
+        }
 
-            Vector3 directionToObject = identityTransform.position - observerTranform.position;
+        public bool VisibleByPrediction(Transform first, Transform second)
+        {
+            print("prediction");
+            Vector3 directionToSecond = second.position - first.position;
             Vector3? directionToWall = null;
+
+            // Same as Vector3.Distance
+            float distance = directionToSecond.magnitude;
 
             for (int i = 0; i < raysCount; i++)
             {
-                Vector3 eulers = Quaternion.LookRotation(directionToObject).eulerAngles;
+                Vector3 eulers = Quaternion.LookRotation(directionToSecond).eulerAngles;
                 Vector3 direction = Quaternion.Euler(eulers.x, eulers.y + (i % 2 == 0 ? raysSpace : -raysSpace) * i, eulers.z) * Vector3.forward;
 
-                if (!Physics.Raycast(observerTranform.position, direction, distance, raycastLayerMask))
+                if (!Physics.Raycast(first.position, direction, distance, raycastLayerMask))
                 {
                     directionToWall = direction;
                     break;
@@ -126,60 +188,35 @@ namespace Scripts.Network
             if (!directionToWall.HasValue)
                 return false;
 
-            // Check angle
-            if (Vector3.Angle(directionToObject, directionToWall.Value) > maxAngle)
-                return false;
-
-
-            Vector3 project = Vector3.Project(directionToObject, directionToWall.Value);
-            Vector3 worldProject = observerTranform.position + project;
 
             if (drawGizmos)
             {
-                gizmosObserver = observerTranform;
-                gizmosGameObject = identityTransform;
-                gizmosWorldProject = worldProject;
-                gizmosDirectionToObject = directionToObject;
-                gizmosDirectionToWall = directionToWall;
+                gizmosIdentity = first.position;
+                gizmosDirectionToSecond = directionToSecond;
+                gizmosDirectionToWall = directionToWall.Value;
             }
 
-            return Vector3.Distance(worldProject, identityTransform.position) < projectMaxDistance;
+            return Vector3.Angle(directionToSecond, directionToWall.Value) > maxPredictionAngle;
         }
 
+        #endregion
 
+        #region Debug
 
-        Transform gizmosObserver;
-        Transform gizmosGameObject;
-        Vector3? gizmosWorldProject;
-        Vector3? gizmosDirectionToObject;
-        Vector3? gizmosDirectionToWall;
+        
         protected virtual void OnDrawGizmosSelected()
         {
             if (!drawGizmos)
                 return;
 
-            if (gizmosObserver == null || gizmosGameObject == null ||
-                !gizmosWorldProject.HasValue || !gizmosDirectionToObject.HasValue || !gizmosDirectionToWall.HasValue)
-                return;
-
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawLine(gizmosObserver.position, gizmosWorldProject.Value);
             Gizmos.color = Color.blue;
-            Gizmos.DrawRay(gizmosObserver.position, gizmosDirectionToObject.Value);
+            Gizmos.DrawRay(gizmosIdentity, gizmosDirectionToSecond);
             Gizmos.color = Color.magenta;
-            Gizmos.DrawRay(gizmosObserver.position, gizmosDirectionToWall.Value);
+            Gizmos.DrawRay(gizmosIdentity, gizmosDirectionToWall);
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawLine(gizmosDirectionToSecond, gizmosDirectionToWall);
         }
 
-
-        [ServerCallback]
-        public void UpdateCached()
-        {
-            // rebuild all spawned NetworkIdentity's observers every 'rebuildEveryFrames'
-            if (++currentRebuildFrame == rebuildEveryFrames)
-            {
-                currentRebuildFrame = 0;
-                RebuildAll();
-            }
-        }
+        #endregion
     }
 }

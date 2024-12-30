@@ -56,6 +56,9 @@ namespace Scripts.Gameplay.Abillities
             base.DropItem();
 
             // Realization
+            if (LastEquippedItem == null)
+                return;
+
             if (LastEquippedItem.TryGetComponent(out Joint joint))
             {
                 joint.connectedBody = null;

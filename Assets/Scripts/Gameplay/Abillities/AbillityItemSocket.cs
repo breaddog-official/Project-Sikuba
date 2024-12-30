@@ -39,10 +39,14 @@ namespace Scripts.Gameplay.Abillities
             if (EquippedItem == null)
                 return;
 
-            EquippedItem.netIdentity.RemoveClientAuthority();
-
             EquippedItem.SetOwner(null);
             EquippedItem.OnDequip();
+
+            // After on dequip item may be destroyed
+            if (EquippedItem == null)
+                return;
+
+            EquippedItem.netIdentity.RemoveClientAuthority();
 
             LastEquippedItem = EquippedItem;
             EquippedItem = null;

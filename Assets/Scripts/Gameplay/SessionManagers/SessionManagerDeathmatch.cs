@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NaughtyAttributes;
+using Unity.VisualScripting;
 
 namespace Scripts.SessionManagers
 {
@@ -28,11 +29,21 @@ namespace Scripts.SessionManagers
             OneWinAllLose
         }
 
+        public enum LastFractionBehaviour
+        {
+            Nothing,
+
+            [Tooltip("When the last NotStated fraction remains, it automatically becomes the Winner.")]
+            AutoWin,
+            [Tooltip("When the last NotStated fraction remains, it automatically becomes the Loser.")]
+            AutoLose
+        }
+
         [SerializeField] private GameObject playerPrefab;
         [SerializeField] private Transform[] spawnPoints;
         [Header("Gameplay")]
         [SerializeField] private MatchEndMode matchEndMode;
-        [SerializeField] private bool autoWinLast;
+        [SerializeField] private LastFractionBehaviour lastFractionBehaviour;
 
         [field: SyncVar]
         public bool IsMatch { get; protected set; }
@@ -41,6 +52,8 @@ namespace Scripts.SessionManagers
 
         public event Action OnStartMatch;
         public event Action OnStopMatch;
+
+        protected HashSet<GameObject> spawnedInSession;
 
 
         private uint currentSpawnPoint;
@@ -82,6 +95,17 @@ namespace Scripts.SessionManagers
         public virtual void StartMatch()
         {
             fractions.SetAll(FractionState.NotStated);
+            spawnedInSession ??= new(512);
+
+            foreach (var identity in spawnedInSession)
+            {
+                if (identity == null)
+                    continue;
+
+                NetworkServer.Destroy(identity);
+            }
+
+            spawnedInSession.Clear();
 
             foreach (var fraction in fractions)
             {
@@ -96,7 +120,7 @@ namespace Scripts.SessionManagers
 
 
             IsMatch = true;
-            print("SessionManager started match");
+            print("Start match");
         }
 
         [Server]
@@ -115,7 +139,7 @@ namespace Scripts.SessionManagers
 
 
             IsMatch = false;
-            print("SessionManager stoped match");
+            print("Stop match");
         }
 
         [ClientRpc] private void OnStartMatchRpc() => OnStartMatch?.Invoke();
@@ -129,6 +153,12 @@ namespace Scripts.SessionManagers
             {
                 fractions.Add(fraction.netId, FractionState.NotStated);
             }
+        }
+
+        [Server]
+        public virtual void AddToSpawned(GameObject gameObject)
+        {
+            spawnedInSession.Add(gameObject);
         }
 
 
@@ -156,8 +186,11 @@ namespace Scripts.SessionManagers
         {
             // Counter fractions states is not NotStated
             uint stated = 0;
+            // Cache not stated fractions
+            var notStatedFractions = new HashSet<KeyValuePair<uint, FractionState>>();
 
 
+            // First we process all stated fractions
             foreach (var fraction in fractions.ToArray())
             {
                 switch (fraction.Value)
@@ -176,14 +209,29 @@ namespace Scripts.SessionManagers
                         stated++;
                         break;
 
-                    case FractionState.NotStated when stated == fractions.Count - 1 && autoWinLast:
+                    case FractionState.NotStated:
 
-                        // Because autoWinLast is true, and this is last fraction not stated, marks him a winner
-                        fractions[fraction.Key] = FractionState.Winner;
-
-                        // Set because not NotStated
-                        stated++;
+                        // Cache not stated fraction
+                        notStatedFractions.Add(fraction);
                         break;
+                }
+            }
+
+            // After we process all not stated fractions
+            if (lastFractionBehaviour != LastFractionBehaviour.Nothing)
+            {
+                if (notStatedFractions.Count() == 1)
+                {
+                    // Because we have auto behaviour, and this is last fraction not stated, marks him as choosed auto mode
+                    fractions[notStatedFractions.First().Key] = lastFractionBehaviour switch
+                    {
+                        LastFractionBehaviour.AutoWin => FractionState.Winner,
+                        LastFractionBehaviour.AutoLose => FractionState.Loser,
+                        _ => FractionState.NotStated,
+                    };
+
+                    // Set because not NotStated
+                    stated++;
                 }
             }
 

@@ -6,7 +6,7 @@ using Mirror;
 using NaughtyAttributes;
 using Scripts.Gameplay.Abillities;
 using System.Linq;
-using System.Collections.Generic;
+using System;
 using Unity.VisualScripting;
 
 namespace Scripts.Gameplay.Fractions
@@ -28,6 +28,9 @@ namespace Scripts.Gameplay.Fractions
         [SerializeField] protected AllowJoin allowJoin;
 
         public readonly SyncHashSet<Entity> Alives = new();
+
+        public event Action<Entity> OnSpawnEntity;
+        public event Action<Entity> OnDespawnEntity;
 
 
         private uint currentSpawnPoint;
@@ -60,9 +63,17 @@ namespace Scripts.Gameplay.Fractions
 
             foreach (var member in members)
             {
+                try
+                {
+                    OnSpawnEntity?.Invoke(member);
+                }
+                catch (Exception exp)
+                {
+                    Debug.LogException(exp);
+                }
+
                 Teleportate(member, TeleportateWhere.Spawn);
             }
-            print($"{Name} fraction started match");
         }
 
         [Server]
@@ -71,12 +82,23 @@ namespace Scripts.Gameplay.Fractions
             foreach (var member in members.ToArray())
             {
                 if (member == null)
+                {
+                    members.Remove(member);
                     continue;
+                }
+
+                try
+                {
+                    OnDespawnEntity?.Invoke(member);
+                }
+                catch (Exception exp)
+                {
+                    Debug.LogException(exp);
+                }
 
                 member.ResetState();
                 Teleportate(member, TeleportateWhere.Lobby);
             }
-            print($"{Name} fraction stoped match");
         }
 
         public override bool Join(Entity entity)
@@ -98,7 +120,6 @@ namespace Scripts.Gameplay.Fractions
                 fraction.Set(this);
             }
 
-            print($"{Name} fraction, members: {members.Count}");
             return true;
         }
 
@@ -121,7 +142,6 @@ namespace Scripts.Gameplay.Fractions
 
             RenewFractionState();
 
-            print($"{Name} fraction, members: {members.Count}");
             return true;
         }
 

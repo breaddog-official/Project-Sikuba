@@ -28,17 +28,17 @@ namespace Scripts.UI
                 return;
             
 
-            if (HasFlag(EnableMode.OnStart))
+            if (enableMode.HasFlag(EnableMode.OnStart))
             {
                 UpdateGroup();
             }
 
-            if (HasFlag(EnableMode.Update))
+            if (enableMode.HasFlag(EnableMode.Update))
             {
                 layoutGroup.enabled = true;
             }
 
-            if (HasFlag(EnableMode.Manual))
+            if (enableMode.HasFlag(EnableMode.Manual))
             {
                 layoutGroup.enabled = false;
             }
@@ -46,7 +46,7 @@ namespace Scripts.UI
 
         private void OnEnable()
         {
-            if (HasFlag(EnableMode.OnEnable))
+            if (enableMode.HasFlag(EnableMode.OnEnable))
             {
                 UpdateGroup();
             }
@@ -57,7 +57,7 @@ namespace Scripts.UI
             if (layoutGroup == null)
                 return;
 
-            layoutGroup.enabled = HasFlag(EnableMode.Update) || updatesBeforeDisable > 0;
+            layoutGroup.enabled = enableMode.HasFlag(EnableMode.Update) || updatesBeforeDisable > 0;
 
             if (updatesBeforeDisable > 0)
                 updatesBeforeDisable--;
@@ -72,8 +72,5 @@ namespace Scripts.UI
             updatesBeforeDisable++;
             layoutGroup.enabled = true;
         }
-
-
-        private bool HasFlag(EnableMode flag) => (enableMode & flag) == flag;
     }
 }

@@ -266,6 +266,18 @@ namespace Scripts.Extensions
 
         #endregion
 
+        #region HasFlag
+
+        /// <summary>
+        /// Checks, is 'Enum' has 'flag'
+        /// </summary>
+        public static bool HasFlag(this int Enum, int flag)
+        {
+            return (Enum & flag) == flag;
+        }
+
+        #endregion
+
         #region ConvertInput
 
         /// <summary>

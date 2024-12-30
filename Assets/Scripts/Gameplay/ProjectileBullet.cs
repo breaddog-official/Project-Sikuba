@@ -116,12 +116,7 @@ namespace Scripts.Gameplay
             if (destroyEffector != null)
                 destroyEffector.Play();
 
-
-
-            if (NetworkServer.active)
-                NetworkServer.Destroy(gameObject);
-            else
-                Destroy(gameObject);
+            NetworkServer.Destroy(gameObject);
         }
 
 
@@ -151,11 +146,15 @@ namespace Scripts.Gameplay
 
         private void OnDestroy()
         {
-            if (cachedMaterials == null)
+            if (cachedMaterials == null || cachedMaterials.Count == 0)
                 return;
 
             foreach(Material material in cachedMaterials)
             {
+                // If material already destroyed, skip him
+                if (material == null)
+                    continue;
+
                 // Destroy it to prevent a memory leak.
                 Destroy(material);
             }

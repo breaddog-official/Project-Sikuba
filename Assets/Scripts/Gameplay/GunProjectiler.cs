@@ -1,6 +1,8 @@
 using Cysharp.Threading.Tasks;
 using Mirror;
-using Scripts.Gameplay.Entities;
+using Scripts.Gameplay.Abillities;
+using Scripts.SessionManagers;
+using Scripts.Extensions;
 using System.Threading;
 using UnityEngine;
 
@@ -8,18 +10,21 @@ namespace Scripts.Gameplay
 {
     public class GunProjectiler : Item
     {
-        [SerializeField] public bool isAutomaticFire;
-        [SerializeField] public bool isReloadable;
-        [SerializeField] public uint maxAmmo;
+        [SerializeField] protected bool disableOnDequip;
         [Space]
-        [SerializeField] public int cooldown;
-        [SerializeField] public float forceAmount;
-        [SerializeField] public float torqueAmount;
+        [SerializeField] protected bool isAutomaticFire;
+        [SerializeField] protected bool isReloadable;
+        [SerializeField] protected uint maxAmmo;
+        [Space]
+        [SerializeField] protected int cooldown;
+        [SerializeField] protected float forceAmount;
+        [SerializeField] protected float torqueAmount;
         [Space]
         [SerializeField] protected Projectile projectilePrefab;
         [SerializeField] protected Animator animator;
         [SerializeField] protected Transform shootPoint;
         [SerializeField] protected Effector shootEffector;
+        [SerializeField] protected Joint joint;
 
         public uint CurrentAmmo { get; protected set; }
 
@@ -37,28 +42,42 @@ namespace Scripts.Gameplay
         {
             col = GetComponent<Collider>();
             rb = col.attachedRigidbody;
+        }
 
+        public override void OnStartClient()
+        {
             if (!isOwned && Owner != null)
             {
                 col.isTrigger = true;
             }
+
+            if (!NetworkServer.active)
+                Destroy(joint);
         }
 
-        [Command]
+
         public override void StartUsing()
         {
-            FireLoop().Forget();
-
-            print("start firing");
+            if (NetworkServer.active)
+            {
+                FireLoop().Forget();
+            }
+            else
+                StartUsingCmd();
         }
 
-        [Command]
         public override void StopUsing()
         {
-            cancellationToken?.Cancel();
-
-            print("stop firing");
+            if (NetworkServer.active)
+            {
+                cancellationToken?.Cancel();
+            }
+            else
+                StopUsingCmd();
         }
+
+        [Command] private void StartUsingCmd() => StartUsing();
+        [Command] private void StopUsingCmd() => StopUsing();
 
 
         [Server]
@@ -73,7 +92,10 @@ namespace Scripts.Gameplay
             col.isTrigger = false;
             rb.useGravity = true;
 
-            cancellationToken?.Cancel();
+            CancelUsing();
+
+            if (disableOnDequip)
+                gameObject.SetActive(false);
         }
 
 
@@ -90,6 +112,12 @@ namespace Scripts.Gameplay
 
             projectile.Initialize(Owner);
 
+            if (Owner.TryFindAbillity<AbillityDataSessionManager>(out var sessionManager) && sessionManager.Has()
+                                                                    && sessionManager.Get() is SessionManagerDeathmatch deathmatch)
+            {
+                deathmatch.AddToSpawned(projectile.gameObject);
+            }
+                
             if (shootEffector != null)
                 shootEffector.Play();
 
@@ -98,8 +126,7 @@ namespace Scripts.Gameplay
 
         protected async UniTaskVoid FireLoop()
         {
-            cancellationToken?.Cancel();
-            cancellationToken?.Dispose();
+            cancellationToken?.ResetToken();
             cancellationToken = new();
 
             while (IsEnoughAmmo)

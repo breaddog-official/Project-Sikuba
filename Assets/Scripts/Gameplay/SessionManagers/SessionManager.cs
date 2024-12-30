@@ -16,6 +16,7 @@ namespace Scripts.SessionManagers
         /// Like Start, but only when start or connect to server. 
         /// </summary>
         public event Action OnStartMultiplayer;
+        public event Action OnSpawnPlayer;
 
 
 
@@ -23,7 +24,13 @@ namespace Scripts.SessionManagers
         {
             NetworkServer.ReplaceHandler<AddPlayerMessage>(RecieveRequestToSpawn);
 
-            if (!isClient)
+            if (!NetworkClient.active)
+                OnStartMultiplayer?.Invoke();
+        }
+
+        public override void OnStartClient()
+        {
+            if (!NetworkServer.active)
                 OnStartMultiplayer?.Invoke();
         }
 
@@ -65,19 +72,23 @@ namespace Scripts.SessionManagers
 
             // call this to use this gameobject as the primary controller
             NetworkServer.AddPlayerForConnection(conn, player);
+
+
+            // Notify player about its spawn
+            NotifyAboutSpawn(conn);
         }
 
+
+        [TargetRpc]
+        private void NotifyAboutSpawn(NetworkConnectionToClient target)
+        {
+            OnSpawnPlayer?.Invoke();
+        }
 
 
 
         protected abstract GameObject SpawnPlayerBeforeStart();
 
         protected abstract void ConfigurePlayerBeforeStart(GameObject player);
-
-
-        public override void OnStartClient()
-        {
-            OnStartMultiplayer?.Invoke();
-        }
     }
 }

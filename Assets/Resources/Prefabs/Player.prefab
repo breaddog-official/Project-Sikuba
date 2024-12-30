@@ -161,9 +161,9 @@ GameObject:
   - component: {fileID: 2719463511452175475}
   - component: {fileID: 906315464027884080}
   - component: {fileID: 3397365942501102096}
+  - component: {fileID: 6759642062967463256}
   - component: {fileID: 5544142427845735699}
   - component: {fileID: 8006923706214179769}
-  - component: {fileID: 6759642062967463256}
   - component: {fileID: 7070722003600754485}
   - component: {fileID: 9027261851957388999}
   - component: {fileID: 2740786862432328647}
@@ -295,7 +295,7 @@ MonoBehaviour:
   rotationCorrectionThreshold: 5
   oneFrameAhead: 1
   snapThreshold: 2
-  showGhost: 1
+  showGhost: 0
   ghostVelocityThreshold: 0.1
   localGhostMaterial: {fileID: 2100000, guid: 411a48b4a197d4924bec3e3809bc9320, type: 2}
   remoteGhostMaterial: {fileID: 2100000, guid: 04f0b2088c857414393bab3b80356776, type: 2}
@@ -321,6 +321,18 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0
   initializeForAllObservers: 1
+--- !u!114 &6759642062967463256
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2573031094699484338}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9bdd9d5e29b642c478ce0163dadc502b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &5544142427845735699
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -353,18 +365,6 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
---- !u!114 &6759642062967463256
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2573031094699484338}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9bdd9d5e29b642c478ce0163dadc502b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &7070722003600754485
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -522,7 +522,7 @@ MonoBehaviour:
   syncInterval: 0
   target: {fileID: 8022781346050191497}
   followMode: 0
-  offset: {x: -15, y: 15, z: -15}
+  offset: {x: -30, y: 30, z: -30}
   rotationOffsetY: 45
   initialDirection: 0
   directionsCount: 4
@@ -568,6 +568,7 @@ MonoBehaviour:
   <MinSymbols>k__BackingField: 1
   <MaxSymbols>k__BackingField: 12
   <DisallowAllWhiteSpace>k__BackingField: 0
+  <CanChangeNicknameMultipleTimes>k__BackingField: 0
 --- !u!1 &3555780261707948678
 GameObject:
   m_ObjectHideFlags: 0
