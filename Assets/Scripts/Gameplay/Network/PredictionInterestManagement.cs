@@ -40,6 +40,7 @@ namespace Scripts.Network
         private Vector3 gizmosIdentity = Vector3.zero;
         private Vector3 gizmosDirectionToSecond = Vector3.forward * GIZMOS_LENGTH;
         private Vector3 gizmosDirectionToWall = Vector3.right * GIZMOS_LENGTH;
+        private List<Vector3> gizmosDirections = new();
 
         private readonly Dictionary<NetworkIdentity, AbillityDataFraction> dataFractions = new();
 
@@ -163,7 +164,7 @@ namespace Scripts.Network
         public bool VisibleByDistance(Transform first, Transform second)
         {
             print("distance");
-            return Vector3.Distance(first.position, second.position) > maxDistance;
+            return Vector3.Distance(first.position, second.position) < maxDistance;
         }
 
         public bool VisibleByLinecast(Transform first, Transform second)
@@ -181,10 +182,16 @@ namespace Scripts.Network
             // Same as Vector3.Distance
             float distance = directionToSecond.magnitude;
 
+            if (drawGizmos)
+                gizmosDirections.Clear();
+
+            Vector3 eulers = Quaternion.LookRotation(directionToSecond).eulerAngles;
             for (int i = 0; i < raysCount; i++)
             {
-                Vector3 eulers = Quaternion.LookRotation(directionToSecond).eulerAngles;
                 Vector3 direction = Quaternion.Euler(eulers.x, eulers.y + (i % 2 == 0 ? raysSpace : -raysSpace) * i, eulers.z) * Vector3.forward;
+
+                if (drawGizmos)
+                    gizmosDirections.Add(direction);
 
                 if (!Physics.Raycast(first.position, direction, distance, raycastLayerMask))
                 {
@@ -196,6 +203,8 @@ namespace Scripts.Network
             if (!directionToWall.HasValue)
                 return false;
 
+            Vector3 project = Vector3.Project(directionToWall.Value, directionToSecond);
+
 
             if (drawGizmos)
             {
@@ -204,25 +213,32 @@ namespace Scripts.Network
                 gizmosDirectionToWall = directionToWall.Value;
             }
 
-            return Vector3.Distance(directionToSecond, directionToWall.Value) > maxPredictionDistance;
+            return Vector3.Distance(directionToSecond, project) < maxPredictionDistance;
         }
 
         #endregion
 
         #region Debug
 
-        
         protected virtual void OnDrawGizmosSelected()
         {
             if (!drawGizmos)
                 return;
+
+            Vector3 project = Vector3.Project(gizmosDirectionToWall, gizmosDirectionToSecond);
 
             Gizmos.color = Color.blue;
             Gizmos.DrawRay(gizmosIdentity, gizmosDirectionToSecond);
             Gizmos.color = Color.magenta;
             Gizmos.DrawRay(gizmosIdentity, gizmosDirectionToWall);
             Gizmos.color = Color.yellow;
-            Gizmos.DrawLine(gizmosDirectionToSecond, gizmosDirectionToWall);
+            Gizmos.DrawRay(gizmosIdentity + gizmosDirectionToSecond, project);
+
+            Gizmos.color = Color.cyan;
+            foreach (var dir in gizmosDirections)
+            {
+                Gizmos.DrawRay(gizmosIdentity, dir * gizmosDirectionToSecond.magnitude);
+            }
         }
 
         #endregion
