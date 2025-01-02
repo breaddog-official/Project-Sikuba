@@ -114,7 +114,10 @@ namespace Scripts.Gameplay
             lifetimeCancellationToken.Cancel();
 
             if (destroyEffector != null)
+            {
                 destroyEffector.Play();
+            }
+                
 
             NetworkServer.Destroy(gameObject);
         }
@@ -133,11 +136,11 @@ namespace Scripts.Gameplay
                 return false;
 
             // Even if the Entity has no fraction, we can hit it. Fraction is the ability to skip a hurt, not to confirm
-            if (health.GetAbillityFraction().Has() == false)
+            if (!entity.TryFindAbillity<AbillityDataFraction>(out var fractionData) || fractionData.Has() == false)
                 return true;
 
             // If the fraction is not our ally, we can hurt it
-            if (fraction.GetFractionStatus(health.GetAbillityFraction().Get()) != FractionStatus.Ally)
+            if (fractionData.Get().GetFractionStatus(fractionData.Get()) != FractionStatus.Ally)
                 return true;
 
             return false;

@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &1524907477480989643
+--- !u!1 &371239056760903532
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,29 +8,53 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 2572131439541532010}
+  - component: {fileID: 5786391395225698518}
+  - component: {fileID: 5324733725664766011}
   m_Layer: 0
-  m_Name: ShootPoint
+  m_Name: DestroyEffector
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &2572131439541532010
+--- !u!4 &5786391395225698518
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1524907477480989643}
+  m_GameObject: {fileID: 371239056760903532}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.5}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 437479045116350446}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5324733725664766011
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 371239056760903532}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afbcf4d31ca6e3146b1c18fa94223838, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  showSyncSettings: 0
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  particlesPrefabs: 1
+  particles:
+  - {fileID: 74078499623404260, guid: f2d060e67ac202a498c0cddb467c1446, type: 3}
+  audioSourcesPrefabs: 0
+  audioSources: []
+  overrideSpawnPoint: 0
+  spawnPoint: {fileID: 0}
 --- !u!1 &6143790572879001757
 GameObject:
   m_ObjectHideFlags: 0
@@ -66,7 +90,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6453640419368337820}
-  - {fileID: 2572131439541532010}
+  - {fileID: 5786391395225698518}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: -180, z: 0}
 --- !u!114 &7268518314975536819
@@ -192,7 +216,7 @@ MonoBehaviour:
   ignoreHitsWhenDamageable: 0
   fractionColor: 5
   ricochetEffector: {fileID: 0}
-  destroyEffector: {fileID: 0}
+  destroyEffector: {fileID: 5324733725664766011}
 --- !u!1 &8131409997672978754
 GameObject:
   m_ObjectHideFlags: 0
@@ -203,7 +227,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6453640419368337820}
   m_Layer: 0
-  m_Name: GunModel
+  m_Name: ProjectileModel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
