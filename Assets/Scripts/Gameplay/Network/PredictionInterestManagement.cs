@@ -30,6 +30,8 @@ namespace Scripts.Network
         [SerializeField] private float raysSpace = 0.25f;
         [SerializeField] private float maxPredictionDistance = 3f;
         [SerializeField] private LayerMask raycastLayerMask;
+        [Space]
+        [SerializeField] private bool enableLogging;
         [SerializeField] private bool drawGizmos;
         [Space, Min(1)]
         [SerializeField] private uint rebuildEveryFrames = 2;
@@ -40,7 +42,7 @@ namespace Scripts.Network
         private Vector3 gizmosIdentity = Vector3.zero;
         private Vector3 gizmosDirectionToSecond = Vector3.forward * GIZMOS_LENGTH;
         private Vector3 gizmosDirectionToWall = Vector3.right * GIZMOS_LENGTH;
-        private List<Vector3> gizmosDirections = new();
+        private readonly List<Vector3> gizmosDirections = new();
 
         private readonly Dictionary<NetworkIdentity, AbillityDataFraction> dataFractions = new();
 
@@ -163,19 +165,25 @@ namespace Scripts.Network
 
         public bool VisibleByDistance(Transform first, Transform second)
         {
-            print("distance");
+            if (enableLogging)
+                print($"Distance: {first}, {second}");
+
             return Vector3.Distance(first.position, second.position) < maxDistance;
         }
 
         public bool VisibleByLinecast(Transform first, Transform second)
         {
-            print("linecast");
+            if (enableLogging)
+                print($"Listance: {first}, {second}");
+
             return !Physics.Linecast(first.position, second.position, raycastLayerMask);
         }
 
         public bool VisibleByPrediction(Transform first, Transform second)
         {
-            print("prediction");
+            if (enableLogging)
+                print($"Prediction: {first}, {second}");
+
             Vector3 directionToSecond = second.position - first.position;
             Vector3? directionToWall = null;
 

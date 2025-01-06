@@ -9,10 +9,15 @@ using Scripts.Gameplay.Entities;
 using Mirror;
 using System.Threading;
 using Cinemachine.Utility;
-using static UnityEngine.EventSystems.EventTrigger;
 
 namespace Scripts.Extensions
 {
+    public enum FalsePresentation
+    {
+        Zero,
+        MinusOne
+    }
+
     public static class Extensions
     {
         // Global
@@ -29,6 +34,7 @@ namespace Scripts.Extensions
             isInitialized = true;
             return false;
         }
+
         #endregion
 
         #region IncreaseInBounds
@@ -222,7 +228,7 @@ namespace Scripts.Extensions
 
         #endregion
 
-        #region IfNotNull & IfNull
+        #region AddIfNotNull
         /// <summary>
         /// Add value if is not null
         /// </summary>
@@ -340,6 +346,30 @@ namespace Scripts.Extensions
 
         #endregion
 
+        #region Vector bool to integer
+
+        /// <summary>
+        /// Converts bools to ints
+        /// </summary>
+        public static Vector3Int ToInteger(this GenVector3<bool> value, FalsePresentation falsePresent = FalsePresentation.Zero)
+        {
+            return new Vector3Int(ExtendedMath.ToInteger(value.x, falsePresent), 
+                                  ExtendedMath.ToInteger(value.y, falsePresent), 
+                                  ExtendedMath.ToInteger(value.z, falsePresent));
+        }
+
+        /// <summary>
+        /// Converts bools to ints with custom false presentation
+        /// </summary>
+        public static Vector3Int ToInteger(this GenVector3<bool> value, int falsePresent)
+        {
+            return new Vector3Int(ExtendedMath.ToInteger(value.x, falsePresent),
+                                  ExtendedMath.ToInteger(value.y, falsePresent),
+                                  ExtendedMath.ToInteger(value.z, falsePresent));
+        }
+
+        #endregion
+
 
 
         // Gameplay
@@ -414,12 +444,20 @@ namespace Scripts.Extensions
         #region FindByUid
 
         /// <summary>
+        /// Tryes find identity by id
+        /// </summary>
+        public static bool TryFindByID(this uint ID, out NetworkIdentity identity)
+        {
+            return NetworkClient.spawned.TryGetValue(ID, out identity);
+        }
+
+        /// <summary>
         /// Tryes find identity and component by id
         /// </summary>
         public static bool TryFindByID<TComponent>(this uint ID, out TComponent component) where TComponent : Component
         {
             component = null;
-            return NetworkClient.spawned.TryGetValue(ID, out var identity) && identity.TryGetComponent(out component);
+            return TryFindByID(ID, out var identity) && identity.TryGetComponent(out component);
         }
 
         #endregion
@@ -428,6 +466,8 @@ namespace Scripts.Extensions
 
     public static class ExtendedMath
     {
+        #region Max
+
         public static int Max(params int[] values)
         {
             return Enumerable.Max(values);
@@ -437,5 +477,26 @@ namespace Scripts.Extensions
         {
             return Enumerable.Max(values);
         }
+
+        #endregion
+
+        #region ToInteger
+
+        public static int ToInteger(bool value, FalsePresentation falsePresent = FalsePresentation.Zero)
+        {
+            return ToInteger(value, falsePresent switch
+            {
+                FalsePresentation.Zero => 0,
+                FalsePresentation.MinusOne => -1,
+                _ => throw new NotImplementedException()
+            });
+        }
+
+        public static int ToInteger(bool value, int falsePresent)
+        {
+            return value ? 1 : falsePresent;
+        }
+
+        #endregion
     }
 }

@@ -3,6 +3,7 @@ using NaughtyAttributes;
 using Scripts.Extensions;
 using Scripts.Network;
 using UnityEngine;
+using UnityEngine.Windows;
 
 namespace Scripts.Gameplay.Abillities
 {
@@ -52,13 +53,13 @@ namespace Scripts.Gameplay.Abillities
             if (!isServer) ServerApplyRotation(rotationEulers);
         }
 
-        public override void Rotate(Vector3 vector)
+        public override void Rotate(Vector3 input)
         {
             // We don't calculate the input for reducing bandwidth if it is very small
-            if (OptimizationMode != BandwidthOptimizationMode.None && vector.Max() < MinInput)
+            if (OptimizationMode != BandwidthOptimizationMode.None && input.Max() < MinInput)
                 return;
 
-            Quaternion rotation = Quaternion.LookRotation(vector);
+            Quaternion rotation = Quaternion.LookRotation(input);
 
 
             ApplyRotation(rotation.eulerAngles);

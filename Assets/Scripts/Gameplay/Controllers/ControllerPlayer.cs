@@ -95,6 +95,8 @@ namespace Scripts.Gameplay.Controllers
             isSubscribed = true;
 
 
+            InputManager.Controls.Game.Move.started += StartMoveAction;
+            InputManager.Controls.Game.Move.canceled += StopMoveAction;
             InputManager.Controls.Game.Jump.performed += JumpAction;
             InputManager.Controls.Game.Fire.started += StartUsingAction;
             InputManager.Controls.Game.Fire.canceled += StopUsingAction;
@@ -111,6 +113,8 @@ namespace Scripts.Gameplay.Controllers
             isSubscribed = false;
 
 
+            InputManager.Controls.Game.Move.started -= StartMoveAction;
+            InputManager.Controls.Game.Move.canceled -= StopMoveAction;
             InputManager.Controls.Game.Jump.performed -= JumpAction;
             InputManager.Controls.Game.Fire.started -= StartUsingAction;
             InputManager.Controls.Game.Fire.canceled -= StopUsingAction;
@@ -119,6 +123,8 @@ namespace Scripts.Gameplay.Controllers
 
 
 
+
+        #region Actions
 
         private void JumpAction(InputAction.CallbackContext ctx = default)
         {
@@ -141,6 +147,16 @@ namespace Scripts.Gameplay.Controllers
         private void MoveAction(InputAction.CallbackContext ctx = default)
         {
             abillityMove.Move(InputManager.Controls.Game.Move.ReadValue<Vector2>().ConvertInputToVector3());
+        }
+
+        private void StartMoveAction(InputAction.CallbackContext ctx = default)
+        {
+            abillityMove.StartMove();
+        }
+
+        private void StopMoveAction(InputAction.CallbackContext ctx = default)
+        {
+            abillityMove.StopMove();
         }
 
         private void RotateAction(InputAction.CallbackContext ctx = default)
@@ -172,5 +188,7 @@ namespace Scripts.Gameplay.Controllers
             }
                 
         }
+
+        #endregion
     }
 }

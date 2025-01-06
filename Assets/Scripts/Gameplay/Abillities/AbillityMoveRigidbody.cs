@@ -3,7 +3,6 @@ using NaughtyAttributes;
 using Scripts.Extensions;
 using Scripts.Gameplay.Entities;
 using Scripts.MonoCache;
-using Scripts.Network;
 using UnityEngine;
 
 namespace Scripts.Gameplay.Abillities
@@ -20,8 +19,9 @@ namespace Scripts.Gameplay.Abillities
         [field: Dropdown(nameof(GetChannelValues))]
         [field: SerializeField] public int Channel { get; private set; }
         [field: Space]
+        [field: SerializeField] public float Acceleration { get; private set; } = 10.0f;
         [field: SerializeField] public float Speed { get; private set; } = 10.0f;
-        [field: SerializeField] public float MaxSpeed { get; private set; } = 10.0f;
+        [field: SerializeField] public GenVector3<bool> MoveAxis { get; private set; } = new(true, false, true);
         [field: Space]
         [field: SerializeField] public BandwidthOptimizationMode OptimizationMode { get; private set; } = BandwidthOptimizationMode.Normal;
         [field: HideIf(nameof(OptimizationMode), BandwidthOptimizationMode.None)]
@@ -54,8 +54,8 @@ namespace Scripts.Gameplay.Abillities
             if (!isServer && !isOwned && !IsInitialized)
                 return;
 
-            if (rb.predictedRigidbody.velocity.magnitude > MaxSpeed)
-                rb.predictedRigidbody.velocity = rb.predictedRigidbody.velocity.normalized * MaxSpeed;
+            if (rb.predictedRigidbody.velocity.magnitude > Speed)
+                rb.predictedRigidbody.velocity = rb.predictedRigidbody.velocity.normalized * Speed;
         }
 
 
@@ -75,7 +75,7 @@ namespace Scripts.Gameplay.Abillities
             if (!isServer) ServerApplyMovement(relativeInput);
 
 
-            base.Move(input);
+            base.Move(relativeInput);
         }
 
 
@@ -88,7 +88,7 @@ namespace Scripts.Gameplay.Abillities
 
             // We will get a very small increase in performance and it will be more logical to calculate
             // the input anyway for greater prediction accuracy, so this optimization is classified as Aggressive.
-            if (OptimizationMode == BandwidthOptimizationMode.Aggressive && isServer && input.Max() < MinInput)
+            if (OptimizationMode == BandwidthOptimizationMode.Aggressive && NetworkServer.active && input.Max() < MinInput)
                 return;
 
             // Skip move if moving in air disabled
@@ -97,10 +97,10 @@ namespace Scripts.Gameplay.Abillities
 
 
             // Calculate move vector
-            Vector3 calculatedVector = input.normalized * (GetDeltaTime() * Speed * 10.0f);
+            Vector3 calculatedVector = input.normalized * (GetDeltaTime() * Acceleration * 10.0f);
 
-            // We work only with 2 axis
-            calculatedVector.y = 0.0f;
+            // Ignore disabled axis
+            calculatedVector = Vector3.Scale(calculatedVector, MoveAxis.ToInteger());
 
             // Apply multiply if needed
             if (AirMove == AirMoveMode.Multiplied && collisioner.InAir())
