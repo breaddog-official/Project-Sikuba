@@ -30,7 +30,7 @@ namespace Scripts.Gameplay.Abillities
             base.Hurt(damage);
 
             if (hurtEffector != null)
-                hurtEffector.Play();
+                hurtEffector.PlayOnClients();
         }
 
         [Server]
@@ -39,7 +39,7 @@ namespace Scripts.Gameplay.Abillities
             base.Heal(amount);
 
             if (healEffector != null)
-                healEffector.Play();
+                healEffector.PlayOnClients();
         }
 
 
@@ -48,7 +48,7 @@ namespace Scripts.Gameplay.Abillities
         protected override void Death()
         {
             if (deadEffector != null)
-                deadEffector.Play();
+                deadEffector.PlayOnClients();
 
             if (TryGetFraction(out var fraction))
                 fraction.HandleDeath(Entity);
@@ -59,7 +59,7 @@ namespace Scripts.Gameplay.Abillities
         protected override void Respawn()
         {
             if (respawnEffector != null)
-                respawnEffector.Play();
+                respawnEffector.PlayOnClients();
 
             base.Respawn();
         }
@@ -70,7 +70,7 @@ namespace Scripts.Gameplay.Abillities
         private bool TryGetFraction(out FractionDeathmatch fraction)
         {
             fraction = null;
-            if (abillityFraction != null && abillityFraction.Get() is FractionDeathmatch fractionDeathmatch)
+            if (abillityFraction != null && abillityFraction.Has() && abillityFraction.Get() is FractionDeathmatch fractionDeathmatch)
                 fraction = fractionDeathmatch;
 
             return fraction != null;

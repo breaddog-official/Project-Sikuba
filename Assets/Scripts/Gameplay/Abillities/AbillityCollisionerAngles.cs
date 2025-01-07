@@ -1,23 +1,26 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using NaughtyAttributes;
 using UnityEngine;
 
 namespace Scripts.Gameplay.Abillities
 {
     public class AbillityCollisionerAngles : AbillityCollisioner
     {
-        [SerializeField] private float maxGroundAngle;
-
-        //[ShowNonSerializedField]
-        private bool onGround;
-        private HashSet<Collider> grounds;
-
-
-        private void Awake()
+        private enum UpMode
         {
-            grounds = new(4);
+            WorldUp,
+            LocalUp
         }
+
+        [SerializeField] private float maxGroundAngle;
+        [SerializeField] private UpMode upMode;
+
+        [ShowNonSerializedField]
+        private bool onGround;
+        private readonly HashSet<Collider> grounds = new(4);
+
+
 
         private void OnCollisionStay(Collision collision)
         {
@@ -71,7 +74,18 @@ namespace Scripts.Gameplay.Abillities
 
         private bool IsGround(Vector3 vector)
         {
-            return Vector3.Angle(Vector3.up, vector) <= maxGroundAngle;
+            return Vector3.Angle(GetUp(), vector) <= maxGroundAngle;
+        }
+
+
+        private Vector3 GetUp()
+        {
+            return upMode switch
+            {
+                UpMode.WorldUp => Vector3.up,
+                UpMode.LocalUp => transform.up,
+                _ => throw new NotImplementedException()
+            };
         }
     }
 }

@@ -26,9 +26,9 @@ namespace Scripts.Gameplay
 
         protected CancellationTokenSource lifetimeCancellationToken;
 
-        protected Fraction fraction;
+        [field: SyncVar(hook = nameof(ApplyFractionColor))]
+        public Fraction Fraction { get; protected set; }
 
-        [SyncVar(hook = nameof(ApplyFractionColor))]
         protected Color color;
 
         protected HashSet<Material> cachedMaterials;
@@ -41,8 +41,7 @@ namespace Scripts.Gameplay
 
             if (sender.TryFindAbillity<AbillityDataFraction>(out var abillityFraction) && abillityFraction.Has())
             {
-                fraction = abillityFraction.Get();
-                color = fraction.GetColor(fractionColor);
+                Fraction = abillityFraction.Get();
             }
 
             curHits = 0;
@@ -62,15 +61,18 @@ namespace Scripts.Gameplay
             DestroyBullet();
         }
 
-        protected virtual void ApplyFractionColor(Color oldColor, Color newColor)
+        protected virtual void ApplyFractionColor(Fraction oldFraction, Fraction newFraction)
         {
             Renderer[] renderers = GetComponentsInChildren<MeshRenderer>();
             cachedMaterials ??= new(renderers.Length);
 
+            Color color = newFraction.GetColor(fractionColor);
+
+
             foreach (Renderer renderer in renderers)
             {
                 Material material = renderer.material;
-                material.color = newColor;
+                material.color = color;
 
                 // Unity makes a clone of the Material every time Renderer.material is used.
                 // We will Destroy it in OnDestroy to prevent a memory leak.
@@ -78,12 +80,12 @@ namespace Scripts.Gameplay
             }
         }
 
-        [ServerCallback]
         protected virtual void OnCollisionEnter(Collision collision)
         {
+            // We simulate bullet behaviour on clients because we need to know - show ricochet or dead particle
             if (curHits < maxHits)
             {
-                if (CanHurt(collision.gameObject, out AbillityHealth health))
+                if (NetworkServer.active && CanHurt(collision.gameObject, out AbillityHealth health))
                 {
                     health.Hurt(damage);
 
@@ -109,15 +111,10 @@ namespace Scripts.Gameplay
             }
         }
 
+        [ServerCallback]
         protected virtual void DestroyBullet()
         {
-            lifetimeCancellationToken.Cancel();
-
-            if (destroyEffector != null)
-            {
-                destroyEffector.Play();
-            }
-                
+            lifetimeCancellationToken.Cancel();  
 
             NetworkServer.Destroy(gameObject);
         }
@@ -160,6 +157,11 @@ namespace Scripts.Gameplay
 
                 // Destroy it to prevent a memory leak.
                 Destroy(material);
+            }
+
+            if (destroyEffector != null && NetworkClient.active)
+            {
+                destroyEffector.Play();
             }
         }
     }
