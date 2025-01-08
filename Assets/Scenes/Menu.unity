@@ -4920,6 +4920,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 1
+      - m_Target: {fileID: 1855991039}
+        m_TargetAssemblyTypeName: Scripts.Settings.UI.SettingModularUI, Assembly-CSharp
+        m_MethodName: SetFloat
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1027321801
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8190,6 +8202,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1855991038}
+  - component: {fileID: 1855991039}
   m_Layer: 5
   m_Name: SoundsVolume
   m_TagString: Untagged
@@ -8218,6 +8231,25 @@ RectTransform:
   m_AnchoredPosition: {x: 400, y: -100}
   m_SizeDelta: {x: 680, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1855991039
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1855991037}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24492cd9eb1530d48a0cd01765e15a93, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <Name>k__BackingField: soundsVolume
+  setName: Select setting
+  settingType: 1
+  toggle: {fileID: 0}
+  slider: {fileID: 1027321800}
+  dropdown: {fileID: 0}
+  inputField: {fileID: 0}
 --- !u!1 &1935075671
 GameObject:
   m_ObjectHideFlags: 0

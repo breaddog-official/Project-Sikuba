@@ -9,14 +9,14 @@ namespace Scripts.Settings
         /// <summary>
         /// Old settings and new settings
         /// </summary>
-        public static event Action<Settings, Settings> OnSettingsChanged;
+        public static event Action OnSettingsChanged;
 
 
 
         public static void SetSettings(Settings settings)
         {
-            OnSettingsChanged?.Invoke(settings, Settings);
             Settings = settings;
+            OnSettingsChanged?.Invoke();
         }
 
 
@@ -27,6 +27,7 @@ namespace Scripts.Settings
         public static void SetSetting(string name, object value)
         {
             Settings?.SetValue(name, value);
+            OnSettingsChanged?.Invoke();
         }
 
         /// <summary>
