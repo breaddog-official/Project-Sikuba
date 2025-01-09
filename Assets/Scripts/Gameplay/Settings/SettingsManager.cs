@@ -7,7 +7,7 @@ namespace Scripts.Settings
         public static Settings Settings { get; private set; }
 
         /// <summary>
-        /// Old settings and new settings
+        /// Calls on settings object changed
         /// </summary>
         public static event Action OnSettingsChanged;
 
