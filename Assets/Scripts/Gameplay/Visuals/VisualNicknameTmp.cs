@@ -24,7 +24,7 @@ namespace Scripts.Gameplay.Visuals
         {
             if (rotateToCamera)
             {
-                cachedTransform.LookAt(MainCamera.Instance.CachedTranform);
+                cachedTransform.rotation = Quaternion.LookRotation(cachedTransform.position + MainCamera.Instance.CameraTransposer.m_FollowOffset - cachedTransform.position);
             }
         }
 

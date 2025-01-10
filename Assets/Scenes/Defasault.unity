@@ -2848,7 +2848,7 @@ MonoBehaviour:
     FieldOfView: 18
     OrthographicSize: 8
     NearClipPlane: 0.1
-    FarClipPlane: 100
+    FarClipPlane: 300
     Dutch: 0
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
@@ -4693,7 +4693,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.1
-  far clip plane: 100
+  far clip plane: 300
   field of view: 18
   orthographic: 1
   orthographic size: 8
@@ -5266,6 +5266,7 @@ MonoBehaviour:
   raycastLayerMask:
     serializedVersion: 2
     m_Bits: 64
+  enableLogging: 0
   drawGizmos: 1
   rebuildEveryFrames: 3
 --- !u!1001 &1774064190

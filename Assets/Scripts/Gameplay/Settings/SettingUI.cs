@@ -17,6 +17,7 @@ namespace Scripts.Settings.UI
         protected virtual void OnEnable()
         {
             SettingsManager.OnSettingsChanged += UpdateValue;
+            UpdateValue();
         }
 
         protected virtual void OnDisable()

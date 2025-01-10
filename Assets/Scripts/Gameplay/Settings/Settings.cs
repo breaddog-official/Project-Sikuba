@@ -19,7 +19,7 @@ namespace Scripts.Settings
 
         public enum ParticlesMode
         {
-            Disable,
+            Disabled,
             [Tooltip("Without lithing. Low cost shaders")]
             Simple,
             Normal

@@ -308,7 +308,7 @@ MonoBehaviour:
   isReloadable: 0
   maxAmmo: 30
   cooldown: 250
-  forceAmount: 1500
+  forceAmount: 300
   torqueAmount: 15
   projectilePrefab: {fileID: 8774783620413609479, guid: 4c1fe1bcc363f7c4d9bc603160fcd988, type: 3}
   animator: {fileID: 0}

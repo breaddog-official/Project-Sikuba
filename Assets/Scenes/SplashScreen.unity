@@ -316,38 +316,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!1 &986717331
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 986717332}
-  m_Layer: 0
-  m_Name: Initializators
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &986717332
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 986717331}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1315904692}
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1060160225
 GameObject:
   m_ObjectHideFlags: 0
@@ -448,12 +416,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1315904691}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 986717332}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1315904693
 MonoBehaviour:
@@ -469,8 +437,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   saveOnChange: 1
   dontDestroyOnLoad: 1
-  serializer: {fileID: 0}
-  scriptableObjectSettings: 0
+  serializer: {fileID: 11400000, guid: f55eb8dbd62b5734b9b4a5674b89bef6, type: 2}
+  autoSetDefaultSettings: 1
+  scriptableObjectSettings: 1
   defaultSettings:
     soundsVolume: 0
     musicVolume: 0
@@ -483,7 +452,7 @@ MonoBehaviour:
     antiAliasing: 0
     texturesResolution: 0
     debugCode: 
-  defaultSettingsSO: {fileID: 0}
+  defaultSettingsSO: {fileID: 11400000, guid: 36a0e6ab7d4125945ac593803469ad0d, type: 2}
 --- !u!1 &1724071498
 GameObject:
   m_ObjectHideFlags: 0
@@ -551,4 +520,4 @@ SceneRoots:
   - {fileID: 93463387}
   - {fileID: 1724071501}
   - {fileID: 410390772}
-  - {fileID: 986717332}
+  - {fileID: 1315904692}

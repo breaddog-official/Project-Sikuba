@@ -139,7 +139,7 @@ namespace Scripts.Gameplay.Abillities
 
 
 
-            float time = 1f / directionsCount * currentDirection;
+            /*float time = 1f / directionsCount * currentDirection;
             float tau = 2 * Mathf.PI;
 
             float xLerp = Mathf.Lerp(0.0f, tau, time);
@@ -150,9 +150,9 @@ namespace Scripts.Gameplay.Abillities
             float targetVectorX = offset.x * xSin;
             float targetVectorZ = offset.z * zSin;
 
-            //print($"Sin X: {xSin}  Sin Z: {zSin} \nX: {targetVectorX}  Z: {targetVectorZ}");
+            print($"Sin X: {xSin}  Sin Z: {zSin} \nX: {targetVectorX}  Z: {targetVectorZ}");
 
-            //targetOffset.Set(targetVectorX, targetOffset.y, targetVectorZ);
+            targetOffset.Set(targetVectorX, targetOffset.y, targetVectorZ);*/
 
             switch (currentDirection)
             {

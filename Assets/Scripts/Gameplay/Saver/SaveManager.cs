@@ -9,7 +9,7 @@ namespace Scripts.SaveManagement
     {
         #region Save
 
-        public static bool Save(string value, string path)
+        public static bool Save(in string value, string path)
         {
             try
             {
@@ -65,6 +65,15 @@ namespace Scripts.SaveManagement
                 value = string.Empty;
                 return false;
             }
+        }
+
+        #endregion
+
+        #region Exists
+
+        public static bool Exists(string path)
+        {
+            return File.Exists(path);
         }
 
         #endregion

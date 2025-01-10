@@ -368,7 +368,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6143790572879001757}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 0.1
   m_Drag: 0
   m_AngularDrag: 0.5
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -426,7 +426,7 @@ MonoBehaviour:
   syncInterval: 0
   damage: 15
   lifetime: 3
-  maxHits: 3
+  maxHits: 1
   ignoreHitsWhenDamageable: 0
   fractionColor: 5
   ricochetEffector: {fileID: 8791301275687261061}

@@ -1,4 +1,4 @@
-using Cysharp.Threading.Tasks;
+using System;
 using NaughtyAttributes;
 using Scripts.SaveManagement;
 using System.IO;
@@ -14,28 +14,41 @@ namespace Scripts.Settings
         [SerializeField] private Serializer serializer;
 
         [Space]
+        [SerializeField] private bool autoSetDefaultSettings;
+
+        [ShowIf(nameof(autoSetDefaultSettings))]
         [SerializeField] private bool scriptableObjectSettings;
 
-        [HideIf(nameof(scriptableObjectSettings))]
+        [HideIf(EConditionOperator.Or, nameof(scriptableObjectSettings), nameof(DontSetDefaultSettings))]
         [SerializeField] private Settings defaultSettings;
 
-        [ShowIf(nameof(scriptableObjectSettings))]
+        [ShowIf(EConditionOperator.And, nameof(scriptableObjectSettings), nameof(autoSetDefaultSettings))]
         [SerializeField] private SettingsSO defaultSettingsSO;
 
-        public string SavePath => Path.Combine(Application.persistentDataPath, "Configs", "Settings.json");
+
+        public string SavePath => Path.Combine(Application.persistentDataPath, "Configs", "Settings.nahuy");
 
         private Settings DefaultSettings => scriptableObjectSettings ? defaultSettingsSO.Settings : defaultSettings;
 
+        private bool DontSetDefaultSettings => !autoSetDefaultSettings;
 
 
         private void Awake()
         {
             if (dontDestroyOnLoad)
                 DontDestroyOnLoad(gameObject);
-
+            print(SavePath);
             if (SettingsManager.Settings == null)
             {
-                LoadSettings();
+                if (SaveManager.Exists(SavePath))
+                {
+                    LoadSettings();
+                }
+                else if (autoSetDefaultSettings && DefaultSettings != null)
+                {
+                    SettingsManager.SetSettings(DefaultSettings);
+                    SaveSettings();
+                }
             }
         }
 
