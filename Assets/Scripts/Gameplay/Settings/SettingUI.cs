@@ -1,81 +1,62 @@
 using NaughtyAttributes;
-using System.Collections.Generic;
-using System.Linq;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Scripts.Settings.UI
 {
-    public abstract class SettingUI : MonoBehaviour
+    public sealed class SettingUI : SettingHandler
     {
-        [field: SerializeField] 
-        public virtual string Name { get; protected set; }
-
-        public virtual object Value => SettingsManager.GetSetting(Name);
-
-
-
-        protected virtual void OnEnable()
+        enum SettingType
         {
-            SettingsManager.OnSettingsChanged += UpdateValue;
-            UpdateValue();
+            Toggle,
+            Slider,
+            Dropdown,
+            InputField
         }
 
-        protected virtual void OnDisable()
+        [Space]
+        [SerializeField] private SettingType settingType;
+
+        [ShowIf(nameof(settingType), SettingType.Toggle)]
+        [SerializeField] private Toggle toggle;
+
+        [ShowIf(nameof(settingType), SettingType.Slider)]
+        [SerializeField] private Slider slider;
+
+        [ShowIf(nameof(settingType), SettingType.Dropdown)]
+        [SerializeField] private TMP_Dropdown dropdown;
+
+        [ShowIf(nameof(settingType), SettingType.InputField)]
+        [SerializeField] private TMP_InputField inputField;
+
+
+        protected override void UpdateValue()
         {
-            SettingsManager.OnSettingsChanged -= UpdateValue;
+            switch (settingType)
+            {
+                case SettingType.Toggle:
+                    toggle.isOn = (bool)Setting;
+                    break;
+
+                case SettingType.Slider:
+                    slider.value = (float)Setting;
+                    break;
+
+                case SettingType.Dropdown:
+                    dropdown.value = (int)Setting;
+                    break;
+
+                case SettingType.InputField:
+                    inputField.text = (string)Setting;
+                    break;
+            }
         }
 
 
-
-        protected virtual void SetValue(object value)
-        {
-            SettingsManager.SetSetting(Name, value);
-        }
-
-
-        protected abstract void UpdateValue();
-
-        #region Editor
-#if UNITY_EDITOR
-
-        [field: Dropdown(nameof(GetSettingsNamesEditor)), OnValueChanged(nameof(SetSettingEditor))]
-        public string setName;
-
-        public const string default_dropdown_item = "Select setting";
-
-
-        public List<string> GetSettingsNamesEditor()
-        {
-            List<string> strings = typeof(Settings).GetFields(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public)
-                                               .Select(f => f.Name)
-                                               .ToList();
-            strings.Insert(0, default_dropdown_item);
-            return strings;
-        }
-
-        public void SetSettingEditor()
-        {
-            if (setName == default_dropdown_item)
-                return;
-
-            Name = setName;
-            setName = default_dropdown_item;
-        }
-
-#endif
-        #endregion
-    }
-
-    /// <summary>
-    /// Generic version of <see cref="SettingUI"/>
-    /// </summary>
-    public abstract class SettingUI<T> : SettingUI
-    {
-        public new T Value => SettingsManager.GetSetting<T>(Name);
-
-        public virtual void SetValue(T value)
-        {
-            base.SetValue(value);
-        }
+        public void SetInt(int value) => SetSetting(value);
+        public void SetFloat(float value) => SetSetting(value);
+        public void SetString(string value) => SetSetting(value);
+        public void SetBool(bool value) => SetSetting(value);
     }
 }
