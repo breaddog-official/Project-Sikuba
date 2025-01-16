@@ -39,12 +39,12 @@ namespace Scripts.Gameplay.Abillities
 
             if (collisioner.InAir())
             {
-                lastDrag ??= rb.predictedRigidbody.drag;
-                rb.predictedRigidbody.drag = 0.0f;
+                lastDrag ??= rb.predictedRigidbody.linearDamping;
+                rb.predictedRigidbody.linearDamping = 0.0f;
             }
             else
             {
-                rb.predictedRigidbody.drag = lastDrag ?? rb.predictedRigidbody.drag;
+                rb.predictedRigidbody.linearDamping = lastDrag ?? rb.predictedRigidbody.linearDamping;
                 lastDrag = null;
             }
         }

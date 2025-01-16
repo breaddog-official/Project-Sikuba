@@ -48,7 +48,7 @@ namespace Scripts.Gameplay
 
             if (TryGetComponent<Rigidbody>(out var rb))
             { 
-                rb.velocity = Vector3.zero;
+                rb.linearVelocity = Vector3.zero;
             }
 
             Lifetime().Forget();

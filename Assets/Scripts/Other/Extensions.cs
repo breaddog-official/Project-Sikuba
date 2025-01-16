@@ -8,7 +8,7 @@ using Cysharp.Threading.Tasks;
 using Scripts.Gameplay.Entities;
 using Mirror;
 using System.Threading;
-using Cinemachine.Utility;
+using Unity.Cinemachine;
 
 namespace Scripts.Extensions
 {

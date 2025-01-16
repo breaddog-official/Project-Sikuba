@@ -54,8 +54,8 @@ namespace Scripts.Gameplay.Abillities
             if (!isServer && !isOwned && !IsInitialized)
                 return;
 
-            if (rb.predictedRigidbody.velocity.magnitude > Speed)
-                rb.predictedRigidbody.velocity = rb.predictedRigidbody.velocity.normalized * Speed;
+            if (rb.predictedRigidbody.linearVelocity.magnitude > Speed)
+                rb.predictedRigidbody.linearVelocity = rb.predictedRigidbody.linearVelocity.normalized * Speed;
         }
 
 

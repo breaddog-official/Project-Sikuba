@@ -1,4 +1,4 @@
-using Cinemachine;
+using Unity.Cinemachine;
 using Mirror;
 using Scripts.MonoCache;
 using NaughtyAttributes;
@@ -42,8 +42,8 @@ namespace Scripts.Gameplay.Abillities
         {
             base.Initialize();
 
-            targetOffset = MainCamera.Instance.CameraTransposer.m_FollowOffset;
-            targetRotation = MainCamera.Instance.VirtualCamera.transform.rotation;
+            targetOffset = MainCamera.Instance.CameraFollow.FollowOffset;
+            targetRotation = MainCamera.Instance.CameraCinemachine.transform.rotation;
 
             currentDirection = initialDirection;
 
@@ -90,9 +90,9 @@ namespace Scripts.Gameplay.Abillities
 
         public virtual void SetFollow(Transform follow)
         {
-            if (MainCamera.Instance != null && MainCamera.Instance.VirtualCamera != null)
+            if (MainCamera.Instance != null && MainCamera.Instance.CameraCinemachine != null)
             {
-                MainCamera.Instance.VirtualCamera.Follow = follow;
+                MainCamera.Instance.CameraCinemachine.Follow = follow;
             }
         }
 
@@ -118,8 +118,8 @@ namespace Scripts.Gameplay.Abillities
 
         protected virtual void ApplyDirection()
         {
-            CinemachineTransposer transposer = MainCamera.Instance.CameraTransposer;
-            Transform cameraTransform = MainCamera.Instance.VirtualCamera.transform;
+            CinemachineFollow transposer = MainCamera.Instance.CameraFollow;
+            Transform cameraTransform = MainCamera.Instance.CameraCinemachine.transform;
             Vector3 cameraRotationEulers = cameraTransform.rotation.eulerAngles;
 
             if (transposer == null || cameraTransform == null)
@@ -180,13 +180,13 @@ namespace Scripts.Gameplay.Abillities
             if (followMode == FollowMode.Player && !isLocalPlayer)
                 return;
 
-            CinemachineTransposer transposer = MainCamera.Instance.CameraTransposer;
-            Transform cameraTransform = MainCamera.Instance.VirtualCamera.transform;
+            CinemachineFollow transposer = MainCamera.Instance.CameraFollow;
+            Transform cameraTransform = MainCamera.Instance.CameraCinemachine.transform;
 
             if (transposer == null || cameraTransform == null)
                 return;
 
-            transposer.m_FollowOffset = Vector3.Lerp(transposer.m_FollowOffset, targetOffset, followSpeed * deltaTime);
+            transposer.FollowOffset = Vector3.Lerp(transposer.FollowOffset, targetOffset, followSpeed * deltaTime);
             cameraTransform.rotation = Quaternion.Lerp(cameraTransform.rotation, targetRotation, rotateSpeed * deltaTime);
         }
     }
