@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Scripts.Settings.UI
+namespace Scripts.Settings
 {
     public sealed class SettingUI : SettingHandler
     {

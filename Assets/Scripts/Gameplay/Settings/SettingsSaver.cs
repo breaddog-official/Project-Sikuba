@@ -1,4 +1,3 @@
-using System;
 using NaughtyAttributes;
 using Scripts.SaveManagement;
 using System.IO;
@@ -6,10 +5,9 @@ using UnityEngine;
 
 namespace Scripts.Settings
 {
-    public class SettingsSaver : MonoBehaviour
+    public class SettingsSaver : SettingObserver
     {
         [SerializeField] private bool saveOnChange = true;
-        [SerializeField] private bool dontDestroyOnLoad;
         [Space]
         [SerializeField] private Serializer serializer;
 
@@ -17,7 +15,7 @@ namespace Scripts.Settings
         [SerializeField] private bool autoSetDefaultSettings;
 
         [ShowIf(nameof(autoSetDefaultSettings))]
-        [SerializeField] private bool scriptableObjectSettings;
+        [SerializeField] private bool scriptableObjectSettings = true;
 
         [HideIf(EConditionOperator.Or, nameof(scriptableObjectSettings), nameof(DontSetDefaultSettings))]
         [SerializeField] private Settings defaultSettings;
@@ -28,16 +26,15 @@ namespace Scripts.Settings
 
         public string SavePath => Path.Combine(Application.persistentDataPath, "Configs", "Settings.nahuy");
 
-        private Settings DefaultSettings => scriptableObjectSettings ? defaultSettingsSO.Settings : defaultSettings;
+        private Settings DefaultSettings => scriptableObjectSettings ? defaultSettingsSO : defaultSettings;
 
         private bool DontSetDefaultSettings => !autoSetDefaultSettings;
 
 
-        private void Awake()
+        protected override void Awake()
         {
-            if (dontDestroyOnLoad)
-                DontDestroyOnLoad(gameObject);
-            print(SavePath);
+            base.Awake();
+
             if (SettingsManager.Settings == null)
             {
                 if (SaveManager.Exists(SavePath))
@@ -52,19 +49,11 @@ namespace Scripts.Settings
             }
         }
 
-
-
-        private void OnEnable()
+        protected override void UpdateValue()
         {
             if (saveOnChange)
-                SettingsManager.OnSettingsChanged += SaveSettings;
+                SaveSettings();
         }
-
-        private void OnDisable()
-        {
-            SettingsManager.OnSettingsChanged -= SaveSettings;
-        }
-
 
 
         public async void SaveSettings()

@@ -1,4 +1,5 @@
 using NaughtyAttributes;
+using Scripts.Gameplay.ColorHandlers;
 using Scripts.Gameplay.Fractions;
 using UnityEngine;
 
@@ -8,6 +9,7 @@ namespace Scripts.Gameplay
     {
         [Space]
         [SerializeField] private ProjectileBullet bullet;
+        [Space]
         [SerializeField] private bool changeParticleColor;
         [ShowIf(nameof(changeParticleColor))]
         [SerializeField] private FractionColor fractionColor;
@@ -17,10 +19,9 @@ namespace Scripts.Gameplay
         {
             base.PlayParticle(particle);
 
-            if (changeParticleColor && bullet.Fraction != null)
+            if (changeParticleColor && bullet.Fraction != null && particle.TryGetComponent(out ColorHandler colorHandler))
             {
-                var main = particle.main;
-                main.startColor = new(bullet.Fraction.GetColor(fractionColor));
+                colorHandler.SetColor(bullet.Fraction.GetColor(fractionColor));
             }
         }
     }

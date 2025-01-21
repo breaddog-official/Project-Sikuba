@@ -26,7 +26,7 @@ namespace Scripts.MonoCache
         /// <summary>
         /// Initial capacity of every cache
         /// </summary>
-        private const int CACHE_CAPACITY = 128; // ~1 kb
+        private const int CACHE_CAPACITY = 32;
 
 
         public static void Registrate(IMonoCacheListner listner)

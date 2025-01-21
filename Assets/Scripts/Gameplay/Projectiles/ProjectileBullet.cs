@@ -4,7 +4,9 @@ using Scripts.Extensions;
 using Scripts.Gameplay.Abillities;
 using Scripts.Gameplay.Entities;
 using Scripts.Gameplay.Fractions;
+using Scripts.Gameplay.ColorHandlers;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using UnityEngine;
 
@@ -18,6 +20,9 @@ namespace Scripts.Gameplay
         [SerializeField, Min(1)] protected uint maxHits = 1;
         [SerializeField] protected bool ignoreHitsWhenDamageable;
         [Space]
+        [SerializeField] protected bool enableMaterialsCaching;
+        [SerializeField] protected ColorHandler[] colorHandlers;
+        [Space]
         [SerializeField] private FractionColor fractionColor;
         [SerializeField] private Effector ricochetEffector;
         [SerializeField] private Effector destroyEffector;
@@ -29,9 +34,7 @@ namespace Scripts.Gameplay
         [field: SyncVar(hook = nameof(ApplyFractionColor))]
         public Fraction Fraction { get; protected set; }
 
-        protected Color color;
-
-        protected HashSet<Material> cachedMaterials;
+        protected readonly static Dictionary<Color, Material> cachedMaterials = new();
 
 
         public override void Initialize(Entity sender)
@@ -63,20 +66,35 @@ namespace Scripts.Gameplay
 
         protected virtual void ApplyFractionColor(Fraction oldFraction, Fraction newFraction)
         {
-            Renderer[] renderers = GetComponentsInChildren<MeshRenderer>();
-            cachedMaterials ??= new(renderers.Length);
-
             Color color = newFraction.GetColor(fractionColor);
+            Material cachedMat = cachedMaterials.GetValueOrDefault(color);
 
 
-            foreach (Renderer renderer in renderers)
+            foreach (ColorHandler handler in colorHandlers)
             {
-                Material material = renderer.material;
-                material.color = color;
+                // If handler is renderer, we need to optimize him
+                if (handler is ColorHandlerRenderer renderer)
+                {
+                    if (enableMaterialsCaching && (cachedMat != null || cachedMaterials.TryGetValue(color, out cachedMat)))
+                    {
+                        renderer.SetMaterial(cachedMat);
+                    }
+                    else
+                    {
+                        // Creating new material
+                        Material material = renderer.GetMaterial();
+                        material.color = color;
 
-                // Unity makes a clone of the Material every time Renderer.material is used.
-                // We will Destroy it in OnDestroy to prevent a memory leak.
-                cachedMaterials.Add(material);
+                        // Unity makes a clone of the Material every time Renderer.material is used.
+                        // We will Destroy it in OnDestroy to prevent a memory leak.
+                        if (enableMaterialsCaching)
+                            cachedMaterials.Add(color, material);
+                    }
+                }
+                else
+                {
+                    handler.SetColor(color);
+                }
             }
         }
 
@@ -144,12 +162,12 @@ namespace Scripts.Gameplay
         }
 
 
-        private void OnDestroy()
+        private static void OnLevelWasLoaded(int level)
         {
-            if (cachedMaterials == null || cachedMaterials.Count == 0)
+            if (cachedMaterials.Count == 0)
                 return;
 
-            foreach(Material material in cachedMaterials)
+            foreach (Material material in cachedMaterials.Values)
             {
                 // If material already destroyed, skip him
                 if (material == null)
@@ -159,6 +177,11 @@ namespace Scripts.Gameplay
                 Destroy(material);
             }
 
+            cachedMaterials.Clear();
+        }
+
+        private void OnDestroy()
+        {
             if (destroyEffector != null && NetworkClient.active)
             {
                 destroyEffector.Play();

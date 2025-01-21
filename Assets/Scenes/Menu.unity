@@ -4537,7 +4537,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sleepDetection: 1
-  sleepTimeoutInSeconds: 30
+  sleepTimeoutInSeconds: 300
   port: 7777
   DualMode: 1
   NoDelay: 1
@@ -4607,7 +4607,7 @@ MonoBehaviour:
   networkAddress: localhost
   maxConnections: 64
   disconnectInactiveConnections: 1
-  disconnectInactiveTimeout: 60
+  disconnectInactiveTimeout: 180
   authenticator: {fileID: 0}
   playerPrefab: {fileID: 2573031094699484338, guid: d693c400609b24542aabe5251ab2b8a6, type: 3}
   autoCreatePlayer: 0
@@ -7681,6 +7681,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24492cd9eb1530d48a0cd01765e15a93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dontDestroyOnLoad: 0
   <Name>k__BackingField: musicVolume
   setName: Select setting
   settingType: 1
@@ -8957,6 +8958,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24492cd9eb1530d48a0cd01765e15a93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dontDestroyOnLoad: 0
   <Name>k__BackingField: soundsVolume
   setName: Select setting
   settingType: 1

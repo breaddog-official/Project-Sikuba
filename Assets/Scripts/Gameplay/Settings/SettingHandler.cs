@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace Scripts.Settings.UI
+namespace Scripts.Settings
 {
-    public abstract class SettingHandler : MonoBehaviour
+    public abstract class SettingHandler : SettingObserver
     {
         [field: SerializeField] 
         public virtual string Name { get; protected set; }
@@ -13,27 +13,10 @@ namespace Scripts.Settings.UI
         public virtual object Setting => SettingsManager.GetSetting(Name);
 
 
-
-        protected virtual void OnEnable()
-        {
-            SettingsManager.OnSettingsChanged += UpdateValue;
-            UpdateValue();
-        }
-
-        protected virtual void OnDisable()
-        {
-            SettingsManager.OnSettingsChanged -= UpdateValue;
-        }
-
-
-
         protected virtual void SetSetting(object value)
         {
             SettingsManager.SetSetting(Name, value);
         }
-
-
-        protected abstract void UpdateValue();
 
         #region Editor
 #if UNITY_EDITOR

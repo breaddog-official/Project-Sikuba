@@ -69,7 +69,7 @@ namespace Scripts.Gameplay.Visuals
             // Same as TransformDirection
             Vector3 worldVector = entityTransform.rotation * moveVector;
 
-            print($"MoveVector: {moveVector} \nWorldVector: {worldVector}");
+            //print($"MoveVector: {moveVector} \nWorldVector: {worldVector}");
             worldVector = Vector3.Scale(worldVector, inclineAxis.ToInteger(FalsePresentation.Zero));
             worldVector = Vector3.Scale(worldVector, invertAxis.ToInteger(FalsePresentation.MinusOne));
             worldVector *= inclineAngle;

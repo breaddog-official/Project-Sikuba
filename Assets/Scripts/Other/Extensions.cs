@@ -370,6 +370,25 @@ namespace Scripts.Extensions
 
         #endregion
 
+        #region Support paths
+
+        /// <summary>
+        /// Is platform supporting dataPath?
+        /// </summary>
+        public static bool SupportDataPath(this RuntimePlatform value)
+        {
+            return value is not (RuntimePlatform.IPhonePlayer or RuntimePlatform.Android or RuntimePlatform.WSAPlayerARM or RuntimePlatform.WSAPlayerX64 or RuntimePlatform.WSAPlayerX86);
+        }
+
+        /// <summary>
+        /// Is platform supporting dataPath?
+        /// </summary>
+        public static bool SupportPersistentDataPath(this RuntimePlatform value)
+        {
+            return value is not (RuntimePlatform.tvOS or RuntimePlatform.WebGLPlayer or RuntimePlatform.WindowsEditor or RuntimePlatform.OSXEditor or RuntimePlatform.LinuxEditor);
+        }
+
+        #endregion
 
 
         // Gameplay

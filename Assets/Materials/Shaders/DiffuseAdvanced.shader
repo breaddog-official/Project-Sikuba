@@ -27,5 +27,5 @@ void surf (Input IN, inout SurfaceOutput o) {
 ENDCG
 }
 
-Fallback "Legacy Shaders/VertexLit"
+Fallback "Legacy Shaders/Diffuse"
 }

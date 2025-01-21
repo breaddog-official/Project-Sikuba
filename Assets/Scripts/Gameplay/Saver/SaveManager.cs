@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using Scripts.Extensions;
 using System;
 using System.IO;
 using UnityEngine;
@@ -7,13 +8,41 @@ namespace Scripts.SaveManagement
 {
     public static class SaveManager
     {
+        #region Constants
+
+        /// <summary>
+        /// Persistent path for player's data
+        /// </summary>
+        
+        // Application.productName needed for platforms like UWP, because their persistentDataPath only has a company in path
+
+        public static string PlayerDataPath => Path.Combine(Application.persistentDataPath, $"{Application.productName}PlayerData");
+
+        /// <summary>
+        /// Path for configs that are updated with the game
+        /// </summary>
+        public static string ConfigsPath => Path.Combine(Application.dataPath, "Configs");
+
+
+        public static bool SupportIO => !Application.platform.SupportDataPath() && !Application.platform.SupportPersistentDataPath();
+
+        #endregion
+
+
         #region Save
 
         public static bool Save(in string value, string path)
         {
             try
             {
-                File.WriteAllText(path, value);
+                if (SupportIO)
+                {
+                    File.WriteAllText(path, value);
+                }
+                else
+                {
+                    PlayerPrefs.SetString(path.GetHashCode().ToString(), value);
+                }
                 return true;
             }
             catch (Exception exp)
@@ -27,7 +56,14 @@ namespace Scripts.SaveManagement
         {
             try
             {
-                await File.WriteAllTextAsync(path, value);
+                if (SupportIO)
+                {
+                    await File.WriteAllTextAsync(path, value);
+                }
+                else
+                {
+                    PlayerPrefs.SetString(path.GetHashCode().ToString(), value);
+                }
                 return true;
             }
             catch (Exception exp)
@@ -43,27 +79,49 @@ namespace Scripts.SaveManagement
 
         public static string Load(string path)
         {
-            return File.ReadAllText(path);
+            if (SupportIO)
+            {
+                return File.ReadAllText(path);
+            }
+            else
+            {
+                return PlayerPrefs.GetString(path.GetHashCode().ToString());
+            }
         }
 
         public static async UniTask<string> LoadAsync(string path)
         {
-            return await File.ReadAllTextAsync(path);
+            if (SupportIO)
+            {
+                return await File.ReadAllTextAsync(path);
+            }
+            else
+            {
+                return PlayerPrefs.GetString(path.GetHashCode().ToString());
+            }
         }
 
         public static bool TryLoad(string path, out string value)
         {
-            try
+            if (SupportIO)
             {
-                value = Load(path);
-                return true;
-            }
-            catch (Exception exp)
-            {
-                Debug.LogException(exp);
+                try
+                {
+                    value = Load(path);
+                    return true;
+                }
+                catch (Exception exp)
+                {
+                    Debug.LogException(exp);
 
-                value = string.Empty;
-                return false;
+                    value = string.Empty;
+                    return false;
+                }
+            }
+            else
+            {
+                value = PlayerPrefs.GetString(path.GetHashCode().ToString(), null);
+                return value != null;
             }
         }
 
@@ -73,7 +131,14 @@ namespace Scripts.SaveManagement
 
         public static bool Exists(string path)
         {
-            return File.Exists(path);
+            if (SupportIO)
+            {
+                return File.Exists(path);
+            }
+            else
+            {
+                return PlayerPrefs.HasKey(path.GetHashCode().ToString());
+            }
         }
 
         #endregion

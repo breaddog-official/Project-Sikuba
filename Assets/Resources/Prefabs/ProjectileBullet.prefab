@@ -427,8 +427,11 @@ MonoBehaviour:
   syncInterval: 0
   damage: 15
   lifetime: 3
-  maxHits: 3
+  maxHits: 15
   ignoreHitsWhenDamageable: 0
+  enableMaterialsCaching: 1
+  colorHandlers:
+  - {fileID: 5437390417038518903}
   fractionColor: 5
   ricochetEffector: {fileID: 8791301275687261061}
   destroyEffector: {fileID: 7338170451072801497}
@@ -476,6 +479,7 @@ GameObject:
   - component: {fileID: 2052258466455024961}
   - component: {fileID: 6701813754135165712}
   - component: {fileID: 4756926474076350096}
+  - component: {fileID: 5437390417038518903}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -551,6 +555,20 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &5437390417038518903
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8427142174825267069}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8d6abe3fc039a641b5db9592803dc5e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  overrideRenderer: 0
+  overridedRenderer: {fileID: 0}
 --- !u!1001 &3048855611559661784
 PrefabInstance:
   m_ObjectHideFlags: 0
