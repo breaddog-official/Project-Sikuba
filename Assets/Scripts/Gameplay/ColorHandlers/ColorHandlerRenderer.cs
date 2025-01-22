@@ -16,10 +16,16 @@ namespace Scripts.Gameplay.ColorHandlers
 
 
 
+        /// <inheritdoc cref="SetColorCopyMaterial"/>
+        public override void SetColor(Color color)
+        {
+            SetColorCopyMaterial(color);
+        }
+
         /// <summary>
         /// Sets color to shared material. Not recomended
         /// </summary>
-        public override void SetColor(Color color)
+        public void SetColorShared(Color color)
         {
             if (Renderer == null)
                 throw new ArgumentNullException(nameof(Renderer));
