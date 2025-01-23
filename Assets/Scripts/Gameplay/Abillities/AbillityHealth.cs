@@ -17,7 +17,8 @@ namespace Scripts.Gameplay.Abillities
 
         public override bool Initialize()
         {
-            base.Initialize();
+            if (!base.Initialize())
+                return false;
 
             Respawn();
 

@@ -6,7 +6,6 @@ using Scripts.Gameplay.Entities;
 using Scripts.Gameplay.Fractions;
 using Scripts.Gameplay.ColorHandlers;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using UnityEngine;
 
@@ -98,12 +97,13 @@ namespace Scripts.Gameplay
             }
         }
 
+        [ServerCallback]
         protected virtual void OnCollisionEnter(Collision collision)
         {
-            // We simulate bullet behaviour on clients because we need to know - show ricochet or dead particle
+            print(collision.gameObject.name);
             if (curHits < maxHits)
             {
-                if (NetworkServer.active && CanHurt(collision.gameObject, out AbillityHealth health))
+                if (CanHurt(collision.gameObject, out AbillityHealth health))
                 {
                     health.Hurt(damage);
 

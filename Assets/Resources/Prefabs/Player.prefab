@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6407073815468829908}
-  - component: {fileID: 1526601937349847864}
+  - component: {fileID: 9204509915820233640}
   m_Layer: 0
   m_Name: RespawnEffector
   m_TagString: Untagged
@@ -33,7 +33,7 @@ Transform:
   - {fileID: 9021306960305022608}
   m_Father: {fileID: 4341699868354025253}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1526601937349847864
+--- !u!114 &9204509915820233640
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -42,18 +42,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 205471252080265607}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a1f3d2df8d315f4a9a1bb5c504f0a0f, type: 3}
+  m_Script: {fileID: 11500000, guid: bfdd4fb430742ab47bfcdbffc606d87b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   showSyncSettings: 0
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
-  particlesPrefabs: 0
-  particles:
-  - {fileID: 9021306960305022623}
-  audioSourcesPrefabs: 0
-  audioSources: []
+  objects:
+  - effect: {fileID: 9021306960305022623}
+    spawnMode: 0
   overrideSpawnPoint: 0
   spawnPoint: {fileID: 0}
 --- !u!1 &1002135426754654937
@@ -129,7 +127,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5921831399655703575}
-  - component: {fileID: 3387114692985232209}
+  - component: {fileID: 1818098910717772995}
   m_Layer: 0
   m_Name: HurtEffector
   m_TagString: Untagged
@@ -153,7 +151,7 @@ Transform:
   - {fileID: 4836339734464392125}
   m_Father: {fileID: 4341699868354025253}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3387114692985232209
+--- !u!114 &1818098910717772995
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -162,18 +160,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 2457784774062548644}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a1f3d2df8d315f4a9a1bb5c504f0a0f, type: 3}
+  m_Script: {fileID: 11500000, guid: bfdd4fb430742ab47bfcdbffc606d87b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   showSyncSettings: 0
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
-  particlesPrefabs: 0
-  particles:
-  - {fileID: 4836339734464392114}
-  audioSourcesPrefabs: 0
-  audioSources: []
+  objects:
+  - effect: {fileID: 4836339734464392114}
+    spawnMode: 0
   overrideSpawnPoint: 0
   spawnPoint: {fileID: 0}
 --- !u!1 &2512669881736241264
@@ -528,6 +524,7 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0
   maxGroundAngle: 15
+  upMode: 0
 --- !u!114 &2615508827734132044
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -581,10 +578,10 @@ MonoBehaviour:
   syncInterval: 0
   maxHealth: 100
   initialHealth: 100
-  hurtEffector: {fileID: 3387114692985232209}
-  healEffector: {fileID: 1105883551885985568}
-  respawnEffector: {fileID: 1526601937349847864}
-  deadEffector: {fileID: 7286899639005018782}
+  hurtEffector: {fileID: 1818098910717772995}
+  healEffector: {fileID: 7007029026103299091}
+  respawnEffector: {fileID: 9204509915820233640}
+  deadEffector: {fileID: 3930464527862308863}
 --- !u!114 &1255407192817135307
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -718,7 +715,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8993644989202268917}
-  - component: {fileID: 7286899639005018782}
+  - component: {fileID: 3930464527862308863}
   m_Layer: 0
   m_Name: DeadEffector
   m_TagString: Untagged
@@ -741,7 +738,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4341699868354025253}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7286899639005018782
+--- !u!114 &3930464527862308863
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -750,18 +747,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 3734465544996281841}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a1f3d2df8d315f4a9a1bb5c504f0a0f, type: 3}
+  m_Script: {fileID: 11500000, guid: bfdd4fb430742ab47bfcdbffc606d87b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   showSyncSettings: 0
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
-  particlesPrefabs: 1
-  particles:
-  - {fileID: 74078499623404260, guid: f2d060e67ac202a498c0cddb467c1446, type: 3}
-  audioSourcesPrefabs: 0
-  audioSources: []
+  objects:
+  - effect: {fileID: 74078499623404260, guid: f2d060e67ac202a498c0cddb467c1446, type: 3}
+    spawnMode: 2
   overrideSpawnPoint: 0
   spawnPoint: {fileID: 0}
 --- !u!1 &4436563245517616853
@@ -780,7 +775,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8808040706662621288
 Transform:
   m_ObjectHideFlags: 0
@@ -830,7 +825,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6462917363940233921}
-  - component: {fileID: 1105883551885985568}
+  - component: {fileID: 7007029026103299091}
   m_Layer: 0
   m_Name: HealEffector
   m_TagString: Untagged
@@ -854,7 +849,7 @@ Transform:
   - {fileID: 2789922648626322692}
   m_Father: {fileID: 4341699868354025253}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1105883551885985568
+--- !u!114 &7007029026103299091
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -863,18 +858,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 5124755360881277458}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a1f3d2df8d315f4a9a1bb5c504f0a0f, type: 3}
+  m_Script: {fileID: 11500000, guid: bfdd4fb430742ab47bfcdbffc606d87b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   showSyncSettings: 0
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
-  particlesPrefabs: 0
-  particles:
-  - {fileID: 2789922648626322699}
-  audioSourcesPrefabs: 0
-  audioSources: []
+  objects:
+  - effect: {fileID: 2789922648626322699}
+    spawnMode: 0
   overrideSpawnPoint: 0
   spawnPoint: {fileID: 0}
 --- !u!1 &5154292165956599025
@@ -979,6 +972,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -1067,15 +1063,17 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_TextWrappingMode: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
+  m_ActiveFontFeatures: 6e72656b
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 0
+  m_EmojiFallbackSupport: 1
   m_parseCtrlCharacters: 1
   m_isOrthographic: 0
   m_isCullingEnabled: 0

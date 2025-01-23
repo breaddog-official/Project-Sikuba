@@ -21,6 +21,6 @@ public class ParticleDestroyer : MonoBehaviour
         }
 
         else
-            throw new ArgumentNullException("particleSystem");
+            throw new ArgumentNullException(nameof(particleSystem));
     }
 }

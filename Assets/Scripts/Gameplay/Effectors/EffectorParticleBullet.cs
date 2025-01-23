@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Scripts.Gameplay
 {
-    public class EffectorBullet : EffectorExtension
+    public class EffectorParticleBullet : EffectorParticle
     {
         [Space]
         [SerializeField] private ProjectileBullet bullet;
@@ -15,9 +15,9 @@ namespace Scripts.Gameplay
         [SerializeField] private FractionColor fractionColor;
 
 
-        protected override void PlayParticle(ParticleSystem particle)
+        protected override void ExecuteEffect(ParticleSystem particle)
         {
-            base.PlayParticle(particle);
+            base.ExecuteEffect(particle);
 
             if (changeParticleColor && bullet.Fraction != null && particle.TryGetComponent(out ColorHandler colorHandler))
             {

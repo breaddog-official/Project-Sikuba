@@ -71,10 +71,10 @@ namespace Scripts.SessionManagers
 
         protected override void ConfigurePlayerBeforeStart(GameObject player)
         {
-            if (player.TryGetComponent<Entity>(out var entity))
-            {
-                entity.Initialize();
-            }
+            //if (player.TryGetComponent<Entity>(out var entity))
+            //{
+            //    entity.Initialize();
+            //}
         }
 
 

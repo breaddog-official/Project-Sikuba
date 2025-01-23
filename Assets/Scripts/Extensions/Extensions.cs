@@ -460,6 +460,22 @@ namespace Scripts.Extensions
 
         #endregion
 
+        #region DontDestroyOnLoad
+
+        /// <summary>
+        /// Sets object DontDestryOnLoad and if needs, moves to the root directory
+        /// </summary>
+        public static void DontDestroyOnLoad(this GameObject gameObject)
+        {
+            // Try get predicted rigidbody and move them
+            if (gameObject.transform.parent != null)
+                gameObject.transform.parent = null;
+
+            UnityEngine.Object.DontDestroyOnLoad(gameObject);
+        }
+
+        #endregion
+
         #region FindByUid
 
         /// <summary>

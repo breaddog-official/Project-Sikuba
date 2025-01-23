@@ -1,11 +1,14 @@
 using Mirror;
+using Scripts.Extensions;
 using Scripts.Gameplay.Entities;
 
 namespace Scripts.Gameplay.Abillities
 {
     public abstract class Abillity : NetworkBehaviour, IInitializable, IResetable
     {
-        public bool IsInitialized { get; protected set; }
+        protected bool isInitialized;
+
+        public bool IsInitialized => isInitialized;
 
         public Entity Entity { get; protected set; }
 
@@ -14,7 +17,13 @@ namespace Scripts.Gameplay.Abillities
         /// </summary>
         public virtual bool Available() => isActiveAndEnabled;
 
-        public virtual bool Initialize() => IsInitialized = true;
+        public virtual bool Initialize()
+        {
+            if (isInitialized.CheckInitialization())
+                return false;
+
+            return IsInitialized;
+        }
 
         public virtual bool Initialize(Entity entity)
         {

@@ -40,7 +40,8 @@ namespace Scripts.Gameplay.Abillities
 
         public override bool Initialize()
         {
-            base.Initialize();
+            if (!base.Initialize())
+                return false;
 
             targetOffset = MainCamera.Instance.CameraFollow.FollowOffset;
             targetRotation = MainCamera.Instance.CameraCinemachine.transform.rotation;

@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5786391395225698518}
-  - component: {fileID: 7338170451072801497}
+  - component: {fileID: 8855829185980166673}
   m_Layer: 0
   m_Name: DestroyEffector
   m_TagString: Untagged
@@ -32,7 +32,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 437479045116350446}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7338170451072801497
+--- !u!114 &8855829185980166673
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,23 +41,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 371239056760903532}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d05b15e2c13f2344997cc96f51b2a09d, type: 3}
+  m_Script: {fileID: 11500000, guid: c0a7b626ddcbc1b44872904c5df6d44a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   showSyncSettings: 0
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
-  particlesPrefabs: 1
-  particles:
-  - {fileID: 74078499623404260, guid: f2d060e67ac202a498c0cddb467c1446, type: 3}
-  audioSourcesPrefabs: 0
-  audioSources: []
+  objects:
+  - effect: {fileID: 74078499623404260, guid: 21e11759a0b2ec340a222d6226cecfcc, type: 3}
+    spawnMode: 2
   overrideSpawnPoint: 0
   spawnPoint: {fileID: 0}
   bullet: {fileID: 8774783620413609479}
   changeParticleColor: 1
-  fractionColor: 0
+  fractionColor: 4
 --- !u!1 &2451144176221997051
 GameObject:
   m_ObjectHideFlags: 0
@@ -67,7 +65,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 236793681673450120}
-  - component: {fileID: 8791301275687261061}
+  - component: {fileID: 7699735661447633553}
   m_Layer: 0
   m_Name: RicochetEffector
   m_TagString: Untagged
@@ -91,7 +89,7 @@ Transform:
   - {fileID: 3118909896946635315}
   m_Father: {fileID: 437479045116350446}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8791301275687261061
+--- !u!114 &7699735661447633553
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -100,18 +98,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 2451144176221997051}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d05b15e2c13f2344997cc96f51b2a09d, type: 3}
+  m_Script: {fileID: 11500000, guid: c0a7b626ddcbc1b44872904c5df6d44a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   showSyncSettings: 0
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
-  particlesPrefabs: 0
-  particles:
-  - {fileID: 3118909896946635324}
-  audioSourcesPrefabs: 0
-  audioSources: []
+  objects:
+  - effect: {fileID: 3118909896946635324}
+    spawnMode: 0
   overrideSpawnPoint: 0
   spawnPoint: {fileID: 0}
   bullet: {fileID: 8774783620413609479}
@@ -404,7 +400,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 16
-  m_CollisionDetection: 3
+  m_CollisionDetection: 1
 --- !u!65 &4603105641576719586
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -444,7 +440,7 @@ MonoBehaviour:
   syncInterval: 0
   damage: 15
   lifetime: 3
-  maxHits: 15
+  maxHits: 2
   ignoreHitsWhenDamageable: 0
   enableMaterialsCaching: 1
   colorHandlers:
@@ -452,8 +448,8 @@ MonoBehaviour:
   - {fileID: 1700829065341707630}
   - {fileID: 193613313443149782}
   fractionColor: 5
-  ricochetEffector: {fileID: 8791301275687261061}
-  destroyEffector: {fileID: 7338170451072801497}
+  ricochetEffector: {fileID: 7699735661447633553}
+  destroyEffector: {fileID: 8855829185980166673}
 --- !u!1 &6497580181487569385
 GameObject:
   m_ObjectHideFlags: 0
@@ -464,7 +460,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6128948555362074291}
   - component: {fileID: 3079468055772730206}
-  - component: {fileID: 3235709892246002998}
   - component: {fileID: 1700829065341707630}
   m_Layer: 0
   m_Name: Point Light
@@ -553,29 +548,6 @@ Light:
   m_LightUnit: 1
   m_LuxAtDistance: 1
   m_EnableSpotReflector: 1
---- !u!114 &3235709892246002998
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6497580181487569385}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Version: 3
-  m_UsePipelineSettings: 1
-  m_AdditionalLightsShadowResolutionTier: 1
-  m_LightLayerMask: 1
-  m_RenderingLayers: 1
-  m_CustomShadowLayers: 0
-  m_ShadowLayerMask: 1
-  m_ShadowRenderingLayers: 1
-  m_LightCookieSize: {x: 1, y: 1}
-  m_LightCookieOffset: {x: 0, y: 0}
-  m_SoftShadowQuality: 0
 --- !u!114 &1700829065341707630
 MonoBehaviour:
   m_ObjectHideFlags: 0

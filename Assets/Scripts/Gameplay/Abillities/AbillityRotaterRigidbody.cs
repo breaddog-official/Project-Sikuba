@@ -27,10 +27,13 @@ namespace Scripts.Gameplay.Abillities
 
         public override bool Initialize()
         {
+            if (!base.Initialize())
+                return false;
+
             rb = GetComponent<Rigidbody>();
             tf = transform;
 
-            return base.Initialize();
+            return true;
         }
 
 

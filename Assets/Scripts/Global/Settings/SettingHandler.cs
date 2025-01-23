@@ -7,16 +7,10 @@ namespace Scripts.Settings
 {
     public abstract class SettingHandler : SettingObserver
     {
-        [field: SerializeField] 
+        [field: SerializeField]
         public virtual string Name { get; protected set; }
 
         public virtual object Setting => SettingsManager.GetSetting(Name);
-
-
-        protected virtual void SetSetting(object value)
-        {
-            SettingsManager.SetSetting(Name, value);
-        }
 
         #region Editor
 #if UNITY_EDITOR
@@ -47,6 +41,11 @@ namespace Scripts.Settings
 
 #endif
         #endregion
+
+        protected virtual void SetSetting(object value)
+        {
+            SettingsManager.SetSetting(Name, value);
+        }
     }
 
     /// <summary>
@@ -56,9 +55,9 @@ namespace Scripts.Settings
     {
         public new T Setting => SettingsManager.GetSetting<T>(Name);
 
-        public virtual void SetValue(T value)
+        protected virtual void SetSetting(T value)
         {
-            base.SetSetting(value);
+            SettingsManager.SetSetting(Name, value);
         }
     }
 }

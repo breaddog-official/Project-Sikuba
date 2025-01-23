@@ -1,15 +1,28 @@
+using Mirror;
 using NaughtyAttributes;
+using System;
 using UnityEngine;
 
 namespace Scripts.Gameplay
 {
-    public class EffectorExtension : Effector
+    /// <summary>
+    /// Effector extension for spawnable or simple effects like particle or sound
+    /// </summary>
+    public abstract class EffectorExtension<T> : Effector where T : Component
     {
-        [SerializeField] protected bool particlesPrefabs;
-        [SerializeField] protected ParticleSystem[] particles;
-        [Space]
-        [SerializeField] protected bool audioSourcesPrefabs;
-        [SerializeField] protected AudioSource[] audioSources;
+        public enum SpawnMode
+        {
+            [Tooltip("Dont spawn or instantiate object")]
+            AlreadyInScene,
+
+            [Tooltip("Instantiate object on local machine")]
+            Local,
+
+            [Tooltip("Instantiate object on local machine and spawn it on all observers (server only)")]
+            Server
+        }
+
+        [SerializeField] protected Effect[] objects;
         [Space]
         [SerializeField] protected bool overrideSpawnPoint;
         [ShowIf(nameof(overrideSpawnPoint))]
@@ -26,45 +39,39 @@ namespace Scripts.Gameplay
 
         protected override void PlayEffect()
         {
-            if (particles != null)
+            if (objects != null)
             {
-                foreach (var particle in particles)
+                foreach (var obj in objects)
                 {
-                    if (particlesPrefabs)
-                    {
-                        PlayParticle(Instantiate(particle, SpawnPoint.position, SpawnPoint.rotation));
-                    }
-                    else
-                        PlayParticle(particle);
-                }
-            }
-
-            if (audioSources != null)
-            {
-                foreach (var source in audioSources)
-                {
-                    if (audioSourcesPrefabs)
-                    {
-                        PlaySource(Instantiate(source, SpawnPoint.position, SpawnPoint.rotation));
-                    }
-                    else
-                        PlaySource(source);
+                    ExecuteEffect(SpawnOrGet(obj));
                 }
             }
         }
 
 
-        protected virtual void PlayParticle(ParticleSystem particle)
+        protected abstract void ExecuteEffect(T obj);
+
+
+        protected virtual T SpawnOrGet(Effect effect)
         {
-            particle.Play();
+            var spawned = effect.spawnMode == SpawnMode.AlreadyInScene ? effect.effect : Instantiate(effect.effect, SpawnPoint.position, SpawnPoint.rotation);
+
+            if (effect.spawnMode == SpawnMode.Server)
+                NetworkServer.Spawn(spawned.gameObject);
+
+            return spawned;
         }
 
-        protected virtual void PlaySource(AudioSource source)
-        {
-            source.Play();
-        }
 
 
         protected virtual Transform SpawnPoint => overrideSpawnPoint ? spawnPoint : cachedTransform;
+
+
+        [Serializable]
+        protected struct Effect
+        {
+            public T effect;
+            public SpawnMode spawnMode;
+        }
     }
 }
