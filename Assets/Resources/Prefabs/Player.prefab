@@ -601,12 +601,12 @@ MonoBehaviour:
   target: {fileID: 8022781346050191497}
   followMode: 0
   enableNearCameraFading: 1
-  offset: {x: -30, y: 30, z: -30}
+  offset: {x: -50, y: 50, z: -50}
   rotationOffsetY: 45
   initialDirection: 0
   directionsCount: 4
-  followSpeed: 4
-  rotateSpeed: 4
+  followSpeed: 3
+  rotateSpeed: 3
 --- !u!114 &8523767152386757534
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -12,8 +12,8 @@ namespace Scripts.Gameplay.NearCamera
         [Range(0f, 1f)]
         [ShowIf(nameof(haveMultipleShaders))]
         [SerializeField] protected float opaqueLevel = 0.97f;
-        [ShowIf(nameof(haveMultipleShaders))]
-        [SerializeField] protected bool opaqueIsShared;
+        //[ShowIf(nameof(haveMultipleShaders))]
+        //[SerializeField] protected bool opaqueIsShared;
         [ShowIf(EConditionOperator.And, nameof(haveMultipleShaders), nameof(NonOpaqueIsShared))]
         [SerializeField] protected Shader opaqueShader;
         [ShowIf(nameof(haveMultipleShaders))]
@@ -50,9 +50,9 @@ namespace Scripts.Gameplay.NearCamera
                     }
                     else
                     {
-                        if (opaqueIsShared)
-                            colorHandlerRenderer.SetMaterial(sharedMaterial);
-                        else
+                        //if (opaqueIsShared)
+                        //    colorHandlerRenderer.SetMaterial(sharedMaterial);
+                        //else
                             cachedMaterial.shader = opaqueShader;
                     }
                 }
@@ -68,6 +68,6 @@ namespace Scripts.Gameplay.NearCamera
         }
 
 
-        protected bool NonOpaqueIsShared => !opaqueIsShared;
+        protected bool NonOpaqueIsShared => true;//!opaqueIsShared;
     }
 }
