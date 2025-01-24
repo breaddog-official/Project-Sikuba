@@ -13,4 +13,11 @@ namespace Scripts.Gameplay
         [Tooltip("Applying bandwidth optimizations, but if client ignores it, we do it itself. In this mode we will a little increase the server's performance and a little reduce the accuracy of calculations.")]
         Aggressive
     }
+
+    public enum Channels
+    {
+        Reliable = Mirror.Channels.Reliable,
+        Unreliable = Mirror.Channels.Unreliable,
+        UnreliableSequenced = 2
+    }
 }

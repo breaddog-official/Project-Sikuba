@@ -3,7 +3,7 @@ using Scripts.Extensions;
 using System.Threading;
 using UnityEngine;
 
-namespace Scripts.Gameplay.NearCamera
+namespace Scripts.Gameplay.CameraManagement
 {
     public abstract class Fader : MonoBehaviour
     {

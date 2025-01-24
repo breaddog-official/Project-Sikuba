@@ -100,7 +100,6 @@ namespace Scripts.Gameplay.Controllers
             InputManager.Controls.Game.Jump.performed += JumpAction;
             InputManager.Controls.Game.Fire.started += StartUsingAction;
             InputManager.Controls.Game.Fire.canceled += StopUsingAction;
-            InputManager.Controls.Game.Turn.performed += CameraTurnAction;
         }
 
         [ClientCallback]
@@ -118,7 +117,6 @@ namespace Scripts.Gameplay.Controllers
             InputManager.Controls.Game.Jump.performed -= JumpAction;
             InputManager.Controls.Game.Fire.started -= StartUsingAction;
             InputManager.Controls.Game.Fire.canceled -= StopUsingAction;
-            InputManager.Controls.Game.Turn.performed -= CameraTurnAction;
         }
 
 
@@ -172,21 +170,6 @@ namespace Scripts.Gameplay.Controllers
             {
                 abillityRotater.RotateToPoint(lookPosition.ReadValue<Vector2>());
             }
-        }
-
-        private void CameraTurnAction(InputAction.CallbackContext ctx = default)
-        {
-            if (abillityCamera.AvailableAndNotNull())
-            {
-                float value = ctx.action.ReadValue<float>();
-
-                if (value < 0)
-                    abillityCamera.TurnLeft();
-
-                else if (value > 0)
-                    abillityCamera.TurnRight();
-            }
-                
         }
 
         #endregion

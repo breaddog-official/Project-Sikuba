@@ -454,13 +454,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 272280377}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.25356737, y: 0.57449895, z: -0.5425036, w: 0.5579825}
+  m_LocalRotation: {x: 0.3772789, y: 0.42244563, z: -0.4650454, w: 0.6803919}
   m_LocalPosition: {x: 0, y: 5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 49152424}
-  m_LocalEulerAnglesHint: {x: 65, y: 60, z: -48}
+  m_LocalEulerAnglesHint: {x: 65, y: 32, z: -48}
 --- !u!108 &272280379
 Light:
   m_ObjectHideFlags: 0
@@ -4589,9 +4589,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1557417543}
   - component: {fileID: 1557417542}
-  - component: {fileID: 1557417541}
-  - component: {fileID: 1557417540}
   - component: {fileID: 1557417539}
+  - component: {fileID: 1557417541}
+  - component: {fileID: 1557417545}
   - component: {fileID: 1557417544}
   m_Layer: 0
   m_Name: Main Camera
@@ -4632,19 +4632,6 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
   CustomBlends: {fileID: 0}
---- !u!114 &1557417540
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1557417538}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2666275d331bf2547804e43f04ef8bd8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  <CameraCinemachine>k__BackingField: {fileID: 1033804653}
 --- !u!81 &1557417541
 AudioListener:
   m_ObjectHideFlags: 0
@@ -4734,6 +4721,27 @@ MonoBehaviour:
   layerMask:
     serializedVersion: 2
     m_Bits: 64
+--- !u!114 &1557417545
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1557417538}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13e7ce75824ba2245aed4034f3cc1a32, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cameraEffects:
+  - {fileID: 1557417544}
+  <CinemachineCamera>k__BackingField: {fileID: 1033804653}
+  offset: {x: -75, y: 75, z: -75}
+  rotationOffsetY: 45
+  initialDirection: 0
+  directionsCount: 1
+  followSpeed: 1
+  rotateSpeed: 1
 --- !u!1001 &1571506832
 PrefabInstance:
   m_ObjectHideFlags: 0

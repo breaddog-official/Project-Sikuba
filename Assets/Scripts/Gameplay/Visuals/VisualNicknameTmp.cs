@@ -1,6 +1,7 @@
 using Scripts.MonoCache;
 using TMPro;
 using UnityEngine;
+using Scripts.Gameplay.CameraManagement;
 
 namespace Scripts.Gameplay.Visuals
 {
@@ -24,7 +25,8 @@ namespace Scripts.Gameplay.Visuals
         {
             if (rotateToCamera)
             {
-                cachedTransform.rotation = Quaternion.LookRotation(cachedTransform.position + MainCamera.Instance.CameraFollow.FollowOffset - cachedTransform.position);
+                Vector3 direction = cachedTransform.position + MainCamera.Instance.CinemachineFollow.FollowOffset - cachedTransform.position;
+                cachedTransform.rotation = Quaternion.LookRotation(direction);
             }
         }
 

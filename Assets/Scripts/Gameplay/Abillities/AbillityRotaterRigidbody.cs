@@ -1,16 +1,14 @@
 ﻿using Mirror;
 using NaughtyAttributes;
 using Scripts.Extensions;
-using Scripts.Network;
+using Scripts.Gameplay.CameraManagement;
 using UnityEngine;
-using UnityEngine.Windows;
 
 namespace Scripts.Gameplay.Abillities
 {
     public class AbillityRotaterRigidbody : AbillityRotater
     {
-        [field: Dropdown(nameof(GetChannelValues))]
-        [field: SerializeField] public int Channel { get; private set; }
+        [field: SerializeField] public Channels Channel { get; private set; }
         [field: Space]
         [field: SerializeField] public float RotationSpeed { get; private set; } = 10;
         [field: Space]
@@ -77,23 +75,29 @@ namespace Scripts.Gameplay.Abillities
         {
             switch (Channel)
             {
+                default:
                 case Channels.Reliable:
                     CmdApplyRotationReliable(rotationEulers);
                     break;
 
-                default:
-                case 2:
+                case Channels.Unreliable:
                     CmdApplyRotationUnreliable(rotationEulers);
+                    break;
+
+                case Channels.UnreliableSequenced:
+                    CmdApplyRotationUnreliableSequenced(rotationEulers);
                     break;
             }
         }
 
         [Command(channel = 0)]
         private void CmdApplyRotationReliable(Vector3 rotationEulers) => ApplyRotation(rotationEulers);
-
-        // Channel 2 is usually UnreliableSequenced, instead simple Unreliable
-        [Command(channel = 2)]
+        
+        [Command(channel = 1)]
         private void CmdApplyRotationUnreliable(Vector3 rotationEulers) => ApplyRotation(rotationEulers);
+
+        [Command(channel = 2)]
+        private void CmdApplyRotationUnreliableSequenced(Vector3 rotationEulers) => ApplyRotation(rotationEulers);
 
 
         private void ApplyRotation(Vector3 rotationEulers)
@@ -167,17 +171,6 @@ namespace Scripts.Gameplay.Abillities
         private float GetDeltaTime()
         {
             return IsPhysicsRotater() ? Time.fixedDeltaTime : Time.deltaTime;
-        }
-
-
-        protected virtual DropdownList<int> GetChannelValues()
-        {
-            return new()
-            {
-                { "Reliable",   Mirror.Channels.Reliable },
-                { "Unreilable",   Mirror.Channels.Unreliable },
-                { "Unreliable Sequenced",    2 },
-            };
         }
 
         #endregion

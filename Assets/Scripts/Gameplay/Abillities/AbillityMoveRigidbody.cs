@@ -2,6 +2,7 @@ using Mirror;
 using NaughtyAttributes;
 using Scripts.Extensions;
 using Scripts.Gameplay.Entities;
+using Scripts.Gameplay.CameraManagement;
 using Scripts.MonoCache;
 using UnityEngine;
 
@@ -16,8 +17,7 @@ namespace Scripts.Gameplay.Abillities
             None
         }
 
-        [field: Dropdown(nameof(GetChannelValues))]
-        [field: SerializeField] public int Channel { get; private set; }
+        [field: SerializeField] public Channels Channel { get; private set; }
         [field: Space]
         [field: SerializeField] public float Acceleration { get; private set; } = 10.0f;
         [field: SerializeField] public float Speed { get; private set; } = 10.0f;
@@ -118,13 +118,17 @@ namespace Scripts.Gameplay.Abillities
         {
             switch (Channel)
             {
+                default:
                 case Channels.Reliable:
                     CmdApplyMovementReliable(input);
                     break;
 
-                default:
-                case 2:
+                case Channels.Unreliable:
                     CmdApplyMovementUnreliable(input);
+                    break;
+
+                case Channels.UnreliableSequenced:
+                    CmdApplyMovementUnreliableSequenced(input);
                     break;
             }
         }
@@ -132,9 +136,11 @@ namespace Scripts.Gameplay.Abillities
         [Command(channel = 0)]
         private void CmdApplyMovementReliable(Vector3 input) => ApplyMovement(input);
 
-        // Channel 2 is usually UnrealiableSequenced, instead simple Unrealiable
-        [Command(channel = 2)]
+        [Command(channel = 1)]
         private void CmdApplyMovementUnreliable(Vector3 input) => ApplyMovement(input);
+
+        [Command(channel = 2)]
+        private void CmdApplyMovementUnreliableSequenced(Vector3 input) => ApplyMovement(input);
 
 
 
@@ -144,16 +150,6 @@ namespace Scripts.Gameplay.Abillities
         }
 
 
-
-        protected virtual DropdownList<int> GetChannelValues()
-        {
-            return new()
-            {
-                { "Reliable",   Mirror.Channels.Reliable },
-                { "Unreilable",   Mirror.Channels.Unreliable },
-                { "Unreliable Sequenced",    2 },
-            };
-        }
 
         public override bool IsPhysicsMovement() => true;
     }

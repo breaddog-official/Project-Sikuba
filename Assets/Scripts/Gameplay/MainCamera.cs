@@ -1,26 +1,34 @@
-using Scripts.Gameplay.NearCamera;
+using Scripts.Extensions;
 using Unity.Cinemachine;
 using UnityEngine;
 
-public class MainCamera : MonoBehaviour
+namespace Scripts.Gameplay.CameraManagement
 {
-    [field: SerializeField] 
-    public CinemachineCamera CameraCinemachine { get; private set; }
-    public CinemachineFollow CameraFollow { get; private set; }
-    public Camera Camera { get; private set; }
-    public NearCameraFader Fader { get; private set; }
-
-    public static MainCamera Instance { get; private set; }
-
-    public Transform CachedTranform { get; private set; }
-
-
-    private void Awake()
+    public class MainCamera : MonoBehaviour
     {
-        Instance = this;
-        Camera = GetComponent<Camera>();
-        Fader = GetComponent<NearCameraFader>();
-        CameraFollow = CameraCinemachine.GetComponent<CinemachineFollow>();
-        CachedTranform = transform;
+        [SerializeField] protected CameraEffect[] cameraEffects;
+
+        [field: SerializeField]
+        public CinemachineCamera CinemachineCamera { get; private set; }
+        public CinemachineFollow CinemachineFollow { get; private set; }
+        public Camera Camera { get; private set; }
+
+        public static MainCamera Instance { get; private set; }
+
+        public Transform CachedTranform { get; private set; }
+
+
+        private void Awake()
+        {
+            Instance = this;
+            Camera = GetComponent<Camera>();
+            CinemachineFollow = CinemachineCamera.GetComponent<CinemachineFollow>();
+            CachedTranform = transform;
+        }
+
+        public T GetCameraEffect<T>() where T : CameraEffect
+        {
+            return cameraEffects.FindByType<T>();
+        }
     }
 }

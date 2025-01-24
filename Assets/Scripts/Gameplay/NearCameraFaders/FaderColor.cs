@@ -1,7 +1,7 @@
 ﻿using Scripts.Gameplay.ColorHandlers;
 using UnityEngine;
 
-namespace Scripts.Gameplay.NearCamera
+namespace Scripts.Gameplay.CameraManagement
 {
     public class FaderColor : Fader
     {

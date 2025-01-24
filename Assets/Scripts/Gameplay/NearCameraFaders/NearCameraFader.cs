@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace Scripts.Gameplay.NearCamera
+namespace Scripts.Gameplay.CameraManagement
 {
-    public class NearCameraFader : MonoBehaviour, IMonoCacheFixedUpdate
+    public class NearCameraFader : CameraEffect, IMonoCacheFixedUpdate
     {
         [SerializeField] protected LayerMask layerMask;
 

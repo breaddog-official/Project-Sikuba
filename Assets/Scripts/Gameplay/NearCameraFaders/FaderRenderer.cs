@@ -2,7 +2,7 @@
 using UnityEngine;
 using NaughtyAttributes;
 
-namespace Scripts.Gameplay.NearCamera
+namespace Scripts.Gameplay.CameraManagement
 {
     public class FaderRenderer : Fader
     {
