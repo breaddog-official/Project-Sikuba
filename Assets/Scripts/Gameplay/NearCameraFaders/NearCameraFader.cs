@@ -9,7 +9,15 @@ namespace Scripts.Gameplay.NearCamera
     {
         [SerializeField] protected LayerMask layerMask;
 
-        protected readonly Dictionary<Transform, Dictionary<Transform, AlphaFader>> targets = new();
+        /// <summary>
+        /// Dictionary that contains: <br />
+        /// 1. Target transform <br />
+        /// 2. Obstacles Dictionary that contains: <br />
+        /// 2.1. Obstacle transform <br />
+        /// 2.2. Obstacle fader <br />
+        /// </summary>
+        protected readonly Dictionary<Transform, Dictionary<Transform, Fader>> targets = new();
+
 
         public Behaviour Behaviour => this;
 
@@ -21,28 +29,22 @@ namespace Scripts.Gameplay.NearCamera
 
         public void FixedUpdateCached()
         {
-            // Find new overlappers
-            RaycastHit[] hits = null;
-
+            // Foreach all observers (like Players, bullets)
             foreach (var target in targets)
             {
                 Vector3 direction = target.Key.position - transform.position;
 
-                hits = Physics.RaycastAll(transform.position, direction, direction.magnitude, layerMask);
+                RaycastHit[] hits = Physics.RaycastAll(transform.position, direction, direction.magnitude, layerMask);
 
-                gDir = direction;
-                gPos = transform.position;
 
-                print(hits);
-                if (hits == null)
-                    continue;
-
-                IEnumerable<Transform> hitsTransforms = hits.Select(r => r.transform);
+                IEnumerable<Transform> hitsTransforms = hits?.Select(r => r.transform);
 
                 // Remove old overlappers
+
+                // Foreach all overlapping obstacles (like walls)
                 foreach (var obstacle in target.Value.ToArray())
                 {
-                    if (!hitsTransforms.Contains(obstacle.Key))
+                    if (hitsTransforms == null || !hitsTransforms.Contains(obstacle.Key))
                     {
                         target.Value.Remove(obstacle.Key);
                         obstacle.Value.Show();
@@ -50,22 +52,17 @@ namespace Scripts.Gameplay.NearCamera
                 }
 
                 // Find new overlappers
+
+                // Foreach all unregistred obstacles from raycast
                 foreach (var hit in hits)
                 {
-                    if (!target.Value.ContainsKey(hit.transform) && hit.transform.TryGetComponent<AlphaFader>(out var fader))
+                    if (!target.Value.ContainsKey(hit.transform) && hit.transform.TryGetComponent<Fader>(out var fader))
                     {
                         target.Value.Add(hit.transform, fader);
                         fader.Fade();
                     }
                 }
             }
-        }
-        Vector3 gDir;
-        Vector3 gPos;
-        private void OnDrawGizmos()
-        {
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawRay(gPos, gDir);
         }
 
 

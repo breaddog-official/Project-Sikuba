@@ -99,7 +99,7 @@ GameObject:
   - component: {fileID: 834123062001781852}
   - component: {fileID: 8171527502099692395}
   - component: {fileID: 1352797708647294117}
-  - component: {fileID: 549121204956393600}
+  - component: {fileID: 1432521640152720625}
   m_Layer: 6
   m_Name: Wall_Mid_1
   m_TagString: Untagged
@@ -211,7 +211,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &549121204956393600
+--- !u!114 &1432521640152720625
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -220,10 +220,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 7707736973856812309}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4bbf312d8324da54ab5b18028201bc58, type: 3}
+  m_Script: {fileID: 11500000, guid: 0906f0a6b9017f04eb49fb2e599a6119, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   alphaDefault: 1
-  alphaFade: 0.3
-  showSpeed: 1.5
-  fadeSpeed: 1.5
+  alphaFade: 0.4
+  showSpeed: 1
+  fadeSpeed: 1
+  colorHandlerRenderer: {fileID: 8171527502099692395}
+  haveMultipleShaders: 1
+  opaqueShader: {fileID: 4800000, guid: 555791742080912419070b3418b5685a, type: 3}
+  transparentShader: {fileID: 4800000, guid: 83b5f59708fd84e409a4b55554c88913, type: 3}

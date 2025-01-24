@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3828112194050072566}
   - component: {fileID: 4266802850413726}
   - component: {fileID: 823281756333228458}
-  - component: {fileID: 3574646528544040647}
+  - component: {fileID: 8323793066787483358}
   m_Layer: 6
   m_Name: Wall_Small_1
   m_TagString: Untagged
@@ -125,7 +125,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &3574646528544040647
+--- !u!114 &8323793066787483358
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -134,13 +134,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 4822888974065447448}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4bbf312d8324da54ab5b18028201bc58, type: 3}
+  m_Script: {fileID: 11500000, guid: 0906f0a6b9017f04eb49fb2e599a6119, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   alphaDefault: 1
   alphaFade: 0.4
-  showSpeed: 1.5
-  fadeSpeed: 1.5
+  showSpeed: 1
+  fadeSpeed: 1
+  colorHandlerRenderer: {fileID: 4266802850413726}
+  haveMultipleShaders: 1
+  opaqueShader: {fileID: 4800000, guid: 555791742080912419070b3418b5685a, type: 3}
+  transparentShader: {fileID: 4800000, guid: 83b5f59708fd84e409a4b55554c88913, type: 3}
 --- !u!1 &4837319946522200342
 GameObject:
   m_ObjectHideFlags: 0

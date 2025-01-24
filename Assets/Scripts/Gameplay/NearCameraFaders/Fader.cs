@@ -1,12 +1,11 @@
 using Cysharp.Threading.Tasks;
-using Scripts.Gameplay.ColorHandlers;
 using Scripts.Extensions;
 using System.Threading;
 using UnityEngine;
 
 namespace Scripts.Gameplay.NearCamera
 {
-    public class AlphaFader : MonoBehaviour
+    public abstract class Fader : MonoBehaviour
     {
         [SerializeField] protected float alphaDefault = 1f;
         [SerializeField] protected float alphaFade = 0.6f;
@@ -14,20 +13,10 @@ namespace Scripts.Gameplay.NearCamera
         [SerializeField] protected float showSpeed = 1f;
         [SerializeField] protected float fadeSpeed = 1f;
 
-        private ColorHandler colorHandler;
-        private CancellationTokenSource cancellationToken;
+        protected abstract float CurrentAlpha { get; set; }
 
-        private float CurrentAlpha
-        {
-            get => colorHandler.GetColor().a;
-            set => colorHandler.SetColor(new(colorHandler.Color.r, colorHandler.Color.g, colorHandler.Color.b, value));
-        }
+        protected CancellationTokenSource cancellationToken;
 
-
-        private void Awake()
-        {
-            colorHandler = GetComponent<ColorHandler>();
-        }
 
 
         public void Show()
