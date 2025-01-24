@@ -1,6 +1,6 @@
-// Advanced Unity Legacy Shaders/Diffuse 
+// Advanced Unity diffuse shader base on "Legacy Shaders/Diffuse" 
 
-Shader "DiffuseAdvanced" {
+Shader "Sikuba/Diffuse" {
 Properties {
     _Color ("Main Color", Color) = (1,1,1,1)
     _MainTex ("Base (RGB)", 2D) = "white" {}

@@ -600,6 +600,7 @@ MonoBehaviour:
   syncInterval: 0
   target: {fileID: 8022781346050191497}
   followMode: 0
+  enableNearCameraFading: 1
   offset: {x: -30, y: 30, z: -30}
   rotationOffsetY: 45
   initialDirection: 0

@@ -18,6 +18,8 @@ namespace Scripts.Gameplay.Abillities
         [SerializeField] private Transform target;
         [SerializeField] private FollowMode followMode;
         [Space]
+        [SerializeField] private bool enableNearCameraFading;
+        [Space]
         [SerializeField] private Vector3 offset;
         [SerializeField] private float rotationOffsetY = 45f;
         [SerializeField] private uint initialDirection;
@@ -66,6 +68,9 @@ namespace Scripts.Gameplay.Abillities
         [ClientCallback]
         protected override void OnEnable()
         {
+            if (enableNearCameraFading)
+                MainCamera.Instance.Fader.AddTarget(target);
+
             if ((followMode == FollowMode.Player && !isLocalPlayer) || followMode == FollowMode.Manual)
                 return;
 
@@ -75,6 +80,9 @@ namespace Scripts.Gameplay.Abillities
         [ClientCallback]
         protected override void OnDisable()
         {
+            if(enableNearCameraFading)
+                MainCamera.Instance.Fader.RemoveTarget(target);
+
             if ((followMode == FollowMode.Player && !isLocalPlayer) || followMode == FollowMode.Manual)
                 return;
 

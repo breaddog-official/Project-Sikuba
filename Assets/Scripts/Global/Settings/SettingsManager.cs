@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 namespace Scripts.Settings
 {
@@ -7,7 +8,7 @@ namespace Scripts.Settings
         public static Settings Settings { get; private set; }
 
         /// <summary>
-        /// Calls on settings object changed
+        /// Calls when settings was changed
         /// </summary>
         public static event Action OnSettingsChanged;
 

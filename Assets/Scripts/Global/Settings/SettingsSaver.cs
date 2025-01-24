@@ -31,10 +31,8 @@ namespace Scripts.Settings
         private bool DontSetDefaultSettings => !autoSetDefaultSettings;
 
 
-        protected override void Awake()
+        protected void Start()
         {
-            base.Awake();
-
             if (SettingsManager.Settings == null)
             {
                 if (SaveManager.Exists(SavePath))

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using Scripts.Extensions;
 
 namespace Scripts.Settings
 {
@@ -11,14 +12,16 @@ namespace Scripts.Settings
         {
             if (dontDestroyOnLoad)
             {
-                DontDestroyOnLoad(gameObject);
+                gameObject.DontDestroyOnLoad();
             }
         }
 
         protected virtual void OnEnable()
         {
             SettingsManager.OnSettingsChanged += UpdateValue;
-            UpdateValue();
+
+            if (SettingsManager.Settings != null)
+                UpdateValue();
         }
 
         protected virtual void OnDisable()

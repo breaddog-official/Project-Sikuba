@@ -3,15 +3,22 @@ using UnityEngine.Audio;
 
 namespace Scripts.Settings
 {
-    public class SObserverVolume : SettingObserver
+    public class SObserverVolume : SettingHandler<float>
     {
-        [SerializeField] protected string Name;
+        [Space]
         [SerializeField] protected AudioMixerGroup mixer;
         [SerializeField] protected string volumeParameterName;
 
+        private const float MIN_FLOAT = 0.00001f;
+        
+
         protected override void UpdateValue()
         {
-            mixer.audioMixer.SetFloat(volumeParameterName, (float)SettingsManager.GetSetting(Name));
+            float volume = Setting;
+            volume = Mathf.Clamp(volume, MIN_FLOAT, 1f);
+            volume = Mathf.Log(volume) * 20f;
+
+            mixer.audioMixer.SetFloat(volumeParameterName, volume);
         }
     }
 }

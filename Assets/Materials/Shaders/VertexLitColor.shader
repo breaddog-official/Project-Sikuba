@@ -1,4 +1,4 @@
-Shader "Mobile/VertexLit - Single color" {
+Shader "Sikuba/VertexLit - Single color" {
     Properties {
         _Color ("Color", color) = (1,1,1,1)
     }
