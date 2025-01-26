@@ -110,7 +110,7 @@ namespace Scripts.Gameplay.Abillities
 
 
             // Apply movement
-            rb.predictedRigidbody.AddForce(calculatedVector, ForceMode.Impulse);
+            rb.predictedRigidbody.AddForce(calculatedVector, ForceMode.VelocityChange);
         }
 
         [Client]

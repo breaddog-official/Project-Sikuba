@@ -75,7 +75,7 @@ namespace Scripts.Gameplay.Abillities
 
         private void ApplyJump()
         {
-            rb.predictedRigidbody.AddForce(Vector3.up * JumpForce, ForceMode.Impulse);
+            rb.predictedRigidbody.AddForce(Vector3.up * JumpForce, ForceMode.VelocityChange);
         }
 
 

@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using NaughtyAttributes;
+using Scripts.Extensions;
 using UnityEngine;
 
 namespace Scripts.Gameplay.Abillities
@@ -16,7 +19,7 @@ namespace Scripts.Gameplay.Abillities
         [SerializeField] private float maxGroundAngle;
         [SerializeField] private UpMode upMode;
 
-        [ShowNonSerializedField]
+        [field: ShowNonSerializedField]
         private bool onGround;
         private readonly HashSet<Collider> grounds = new(4);
 
@@ -45,7 +48,7 @@ namespace Scripts.Gameplay.Abillities
                 {
                     grounds.Add(contact.otherCollider);
 
-                    onGround = true;
+                    SetOnGround(true);
 
                     return;
                 }
@@ -62,7 +65,7 @@ namespace Scripts.Gameplay.Abillities
             grounds.Remove(collision.collider);
 
             if (grounds.Count == 0)
-                onGround = false;
+                SetOnGround(false);
         }
 
 
@@ -86,6 +89,12 @@ namespace Scripts.Gameplay.Abillities
                 UpMode.LocalUp => transform.up,
                 _ => throw new NotImplementedException()
             };
+        }
+
+        private void SetOnGround(bool value)
+        {
+            onGround = value;
+            ChangeGroundedInvoke();
         }
     }
 }
