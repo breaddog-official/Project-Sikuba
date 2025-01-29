@@ -121,41 +121,38 @@ namespace Scripts.Gameplay.Abillities
         #region Calculations
         private Quaternion CalculateRotationToScreenPoint(Vector2 point)
         {
-            if (ThrowCameraRay(out RaycastHit hit, point))
-            {
-                Vector3 targetVector = CalculateVectorToScreenPoint(point, hit);
-                Quaternion targetRotation = Quaternion.LookRotation(targetVector);
+            Vector3 cameraPoint = ThrowCameraRay(point);
+            Vector3 targetVector = CalculateVectorToScreenPoint(point, cameraPoint);
+            Quaternion targetRotation = Quaternion.LookRotation(targetVector);
 
-                return targetRotation;
-            }
-
-            return tf.rotation;
+            return targetRotation;
         }
 
-        private Vector3 CalculateVectorToScreenPoint(Vector2 point, RaycastHit? hit = null)
+        private Vector3 CalculateVectorToScreenPoint(Vector2 point, Vector3? screenPointInternal = null)
         {
             // Creates non ? struct
-            RaycastHit hitInfo;
+            Vector3 screenPoint;
 
-            if (hit.HasValue)
-                hitInfo = hit.Value;
+            if (screenPointInternal.HasValue)
+                screenPoint = screenPointInternal.Value;
 
-            // If we don't have raycasthit and we can't throw our ray, return
-            else if (ThrowCameraRay(out hitInfo, point) == false)
-                return tf.forward;
+            else
+                screenPoint = ThrowCameraRay(point);
 
             // Otherwise - calculating
-            Vector3 currentLookVector = new Vector3(hitInfo.point.x, tf.position.y, hitInfo.point.z);
+            Vector3 currentLookVector = new Vector3(screenPoint.x, tf.position.y, screenPoint.z);
             Vector3 targetVector = currentLookVector - tf.position;
 
             return targetVector;
         }
 
-        private bool ThrowCameraRay(out RaycastHit hitInfo, Vector2 point)
+        private Vector3 ThrowCameraRay(Vector2 point)
         {
             Ray ray = MainCamera.Instance.Camera.ScreenPointToRay(point);
+            Plane plane = new Plane(transform.up, transform.position);
+            plane.Raycast(ray, out float enter);
 
-            return Physics.Raycast(ray, out hitInfo, MaxRayDistance, ~IgnoreLayers);
+            return ray.GetPoint(enter);
         }
 
         private Quaternion GetSmoothRotation(Quaternion quaternion)

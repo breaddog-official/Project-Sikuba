@@ -12,12 +12,10 @@ namespace Scripts.Gameplay.CameraManagement
         /// <summary>
         /// Dictionary that contains: <br />
         /// 1. Target transform <br />
-        /// 2. Obstacles Dictionary that contains: <br />
-        /// 2.1. Obstacle transform <br />
-        /// 2.2. Obstacle fader <br />
+        /// 2. Obstacles set
         /// </summary>
-        protected readonly Dictionary<Transform, Dictionary<Transform, Fader>> targets = new();
-
+        protected readonly Dictionary<Transform, HashSet<Transform>> targets = new();
+        protected readonly Dictionary<Transform, Fader> fadersCache = new();
 
         public Behaviour Behaviour => this;
 
@@ -44,22 +42,29 @@ namespace Scripts.Gameplay.CameraManagement
                 // Foreach all overlapping obstacles (like walls)
                 foreach (var obstacle in target.Value.ToArray())
                 {
-                    if (hitsTransforms == null || !hitsTransforms.Contains(obstacle.Key))
+                    if (hitsTransforms == null || !hitsTransforms.Contains(obstacle))
                     {
-                        target.Value.Remove(obstacle.Key);
-                        obstacle.Value.Show();
+                        target.Value.Remove(obstacle);
+
+                        if (TryGetFader(obstacle, out var fader))
+                            fader.Show();
                     }
                 }
 
                 // Find new overlappers
 
+                if (hitsTransforms == null)
+                    continue;
+
                 // Foreach all unregistred obstacles from raycast
-                foreach (var hit in hits)
+                foreach (var hitTransform in hitsTransforms)
                 {
-                    if (!target.Value.ContainsKey(hit.transform) && hit.transform.TryGetComponent<Fader>(out var fader))
+                    if (!target.Value.Contains(hitTransform))
                     {
-                        target.Value.Add(hit.transform, fader);
-                        fader.Fade();
+                        target.Value.Add(hitTransform);
+
+                        if (TryGetFader(hitTransform, out var fader))
+                            fader.Fade();
                     }
                 }
             }
@@ -74,6 +79,22 @@ namespace Scripts.Gameplay.CameraManagement
         public void RemoveTarget(Transform target)
         {
             targets.Remove(target);
+        }
+
+
+        private bool TryGetFader(Transform transform, out Fader fader)
+        {
+            if (!fadersCache.TryGetValue(transform, out fader))
+            { 
+                fader = transform.GetComponent<Fader>() ?? transform.GetComponentInParent<Fader>() ?? transform.GetComponentInChildren<Fader>();
+
+                if (fader != null)
+                {
+                    fadersCache.Add(transform, fader);
+                }
+            }
+
+            return fader != null;
         }
     }
 }
