@@ -5,6 +5,7 @@ using Scripts.Extensions;
 using Unity.Cinemachine;
 using UnityEngine.InputSystem;
 using Scripts.Input;
+using TMPro;
 
 namespace Scripts.Gameplay.CameraManagement
 {
@@ -143,7 +144,14 @@ namespace Scripts.Gameplay.CameraManagement
                 return;
 
             transposer.FollowOffset = Vector3.Lerp(transposer.FollowOffset, targetOffset, followSpeed * deltaTime);
-            cameraTransform.rotation = Quaternion.Lerp(cameraTransform.rotation, targetRotation, rotateSpeed * deltaTime);
+            //cameraTransform.rotation = Quaternion.Slerp(cameraTransform.rotation, targetRotation, rotateSpeed * deltaTime);
+
+            if (transposer.FollowTarget)
+            {
+                var lookPos = transposer.FollowTarget.position - cameraTransform.position;
+                var rotation = Quaternion.LookRotation(lookPos);
+                cameraTransform.rotation = Quaternion.Lerp(cameraTransform.rotation, rotation, rotateSpeed * deltaTime);
+            }
         }
 
 
