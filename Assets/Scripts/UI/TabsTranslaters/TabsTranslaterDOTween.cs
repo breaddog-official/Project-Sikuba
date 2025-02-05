@@ -12,25 +12,44 @@ namespace Scripts.UI.Tabs
     public class TabsTranslaterDOTween : TabsTranslater<TabDOTween>
     {
         [SerializeField] private TabDOTween[] tabs;
+        [SerializeField] private bool fadeTogether;
 
         public override async UniTask VisualizeSwitchTabs(TabDOTween oldTab, TabDOTween newTab, CancellationToken token = default)
         {
+            UniTask oldTabFade = UniTask.CompletedTask;
+            UniTask newTabFade = UniTask.CompletedTask;
+
             if (oldTab != null)
             {
-                await oldTab.canvasGroup.DOFade(0.0f, oldTab.fadeDuration)
+                oldTabFade = oldTab.canvasGroup.DOFade(0.0f, oldTab.fadeDuration)
                                     .SetEase(oldTab.ease)
+                                    .OnComplete(() => oldTab.canvasGroup.gameObject.SetActive(false))
                                     .WithCancellation(token);
 
-                oldTab.canvasGroup.gameObject.SetActive(false);
+
+                if (!fadeTogether)
+                {
+                    await oldTabFade;
+                }
             }
 
             if (newTab != null)
             {
                 newTab.canvasGroup.gameObject.SetActive(true);
 
-                await newTab.canvasGroup.DOFade(1.0f, newTab.showDuration)
+                newTabFade = newTab.canvasGroup.DOFade(1.0f, newTab.showDuration)
                                     .SetEase(newTab.ease)
                                     .WithCancellation(token);
+
+                if (!fadeTogether)
+                {
+                    await newTabFade;
+                }
+            }
+
+            if (fadeTogether)
+            {
+                await UniTask.WhenAll(oldTabFade, newTabFade);
             }
         }
 

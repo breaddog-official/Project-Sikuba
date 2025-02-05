@@ -479,11 +479,29 @@ namespace Scripts.Extensions
         #region FindByUid
 
         /// <summary>
+        /// Finds identity by id
+        /// </summary>
+        public static NetworkIdentity FindByID(this uint ID)
+        {
+            return NetworkClient.spawned.GetValueOrDefault(ID);
+        }
+
+        /// <summary>
         /// Tryes find identity by id
         /// </summary>
         public static bool TryFindByID(this uint ID, out NetworkIdentity identity)
         {
             return NetworkClient.spawned.TryGetValue(ID, out identity);
+        }
+
+
+
+        /// <summary>
+        /// Finds identity and component by id
+        /// </summary>
+        public static TComponent FindByID<TComponent>(this uint ID) where TComponent : Component
+        {
+            return FindByID(ID)?.GetComponent<TComponent>();
         }
 
         /// <summary>
