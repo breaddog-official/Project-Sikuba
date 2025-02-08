@@ -3227,25 +3227,26 @@ MonoBehaviour:
   initialTab: {fileID: 466048554}
   tabs:
   - canvasGroup: {fileID: 466048554}
-    fadeDuration: 0.5
+    fadeDuration: 0.25
     showDuration: 1
     ease: 3
   - canvasGroup: {fileID: 334708070}
     fadeDuration: 0.25
-    showDuration: 0.5
+    showDuration: 0.3
     ease: 1
   - canvasGroup: {fileID: 971523275}
     fadeDuration: 0.25
-    showDuration: 0.5
+    showDuration: 0.3
     ease: 1
   - canvasGroup: {fileID: 609073031}
     fadeDuration: 0.25
-    showDuration: 0.5
+    showDuration: 0.3
     ease: 1
   - canvasGroup: {fileID: 937637513}
     fadeDuration: 0.25
-    showDuration: 0.5
+    showDuration: 0.3
     ease: 1
+  fadeTogether: 0
 --- !u!224 &661035004
 RectTransform:
   m_ObjectHideFlags: 0

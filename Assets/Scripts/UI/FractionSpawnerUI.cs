@@ -8,6 +8,7 @@ using Scripts.Gameplay.Fractions;
 using Scripts.SessionManagers;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Scripts.UI
 {
@@ -18,9 +19,7 @@ namespace Scripts.UI
         [Space]
         [SerializeField] private SessionManagerDeathmatch sessionManager;
         [Space]
-        [SerializeField] private bool joinFractionOnClick;
-        [ShowIf(nameof(joinFractionOnClick))]
-        [SerializeField] private FractionSelectorUI fractionSelector;
+        [SerializeField] private UnityEvent<Fraction> onFractionClick;
         [Space]
         [SerializeField] private float updateValuesDelay = 1f;
         [SerializeField] private bool stopUpdateAfterFind;
@@ -78,10 +77,7 @@ namespace Scripts.UI
                         fractionsUi.Add(fraction);
                         spawnedFractionUI.Add(fractionUi);
 
-                        if (joinFractionOnClick)
-                            fractionUi.Initialize(fraction, fractionSelector.JoinTo); 
-                        else
-                            fractionUi.Initialize(fraction);
+                        fractionUi.Initialize(fraction, onFractionClick.Invoke);
                     }
                 }
 

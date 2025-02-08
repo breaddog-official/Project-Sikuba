@@ -1900,15 +1900,15 @@ MonoBehaviour:
   - canvasGroup: {fileID: 8625604852680908687}
     fadeDuration: 1
     showDuration: 1
-    ease: 9
+    ease: 3
   - canvasGroup: {fileID: 8991653048365686102}
     fadeDuration: 1
     showDuration: 1
-    ease: 9
+    ease: 3
   - canvasGroup: {fileID: 1651655401139862691}
     fadeDuration: 1
     showDuration: 1
-    ease: 9
+    ease: 3
   fadeTogether: 1
 --- !u!114 &1843293610262461525
 MonoBehaviour:
@@ -3400,7 +3400,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &3953842932049346583
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3503,19 +3503,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 793139998546832132}
-        m_TargetAssemblyTypeName: Scripts.UI.Tabs.TabsTranslater`1[[Scripts.UI.Tabs.TabsTranslaterDOTween+TabDOTween,
-          Assembly-CSharp
-        m_MethodName: HideTab
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 8153720529793247729}
         m_TargetAssemblyTypeName: Scripts.UI.Tabs.TabsTranslater`1[[Scripts.UI.Tabs.TabsTranslaterDOTween+TabDOTween,
           Assembly-CSharp
@@ -3848,13 +3835,13 @@ MonoBehaviour:
   initialTab: {fileID: 8396519153732649446}
   tabs:
   - canvasGroup: {fileID: 8396519153732649446}
-    fadeDuration: 1
-    showDuration: 1
-    ease: 9
+    fadeDuration: 0.3
+    showDuration: 0.3
+    ease: 1
   - canvasGroup: {fileID: 1363938256314185234}
-    fadeDuration: 1
-    showDuration: 1
-    ease: 9
+    fadeDuration: 0.3
+    showDuration: 0.3
+    ease: 1
   fadeTogether: 1
 --- !u!1 &5096596727140813398
 GameObject:
@@ -4116,8 +4103,34 @@ MonoBehaviour:
   parentSpawn: {fileID: 4301969919069561696}
   fractionPrefab: {fileID: 6745445905216006046, guid: f54e6a93ab3b82549b1c347b5d355fab, type: 3}
   sessionManager: {fileID: 0}
-  joinFractionOnClick: 1
-  fractionSelector: {fileID: 4051875024949751909}
+  onFractionClick:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4051875024949751909}
+        m_TargetAssemblyTypeName: Scripts.UI.FractionSelectorUI, Assembly-CSharp
+        m_MethodName: JoinTo
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 8153720529793247729}
+        m_TargetAssemblyTypeName: Scripts.UI.Tabs.TabsTranslater`1[[Scripts.UI.Tabs.TabsTranslaterDOTween+TabDOTween,
+          Assembly-CSharp
+        m_MethodName: SwitchTab
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 8625604852680908687}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.CanvasGroup, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   updateValuesDelay: 0.1
   stopUpdateAfterFind: 1
 --- !u!1 &5860047462050969102
@@ -5201,7 +5214,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: -140, y: 100}
+  m_AnchoredPosition: {x: 0, y: 100}
   m_SizeDelta: {x: 250, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1223093180158871981
