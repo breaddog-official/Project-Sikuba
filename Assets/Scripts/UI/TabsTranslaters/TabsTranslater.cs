@@ -51,7 +51,8 @@ namespace Scripts.UI.Tabs
             switchingTab = false;
         }
 
-
+        public T GetCurrentTab() => currentTab;
+        public CanvasGroup GetCurrentTabGroup() => currentTab.canvasGroup;
 
 
 

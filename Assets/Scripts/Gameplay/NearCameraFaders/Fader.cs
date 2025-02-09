@@ -24,7 +24,7 @@ namespace Scripts.Gameplay.CameraManagement
             cancellationToken?.ResetToken();
             cancellationToken = new();
 
-            InterpolateTo(alphaDefault).Forget();
+            InterpolateTo(alphaDefault, cancellationToken.Token).Forget();
         }
 
         public void Fade()
@@ -32,22 +32,22 @@ namespace Scripts.Gameplay.CameraManagement
             cancellationToken?.ResetToken();
             cancellationToken = new();
 
-            InterpolateTo(alphaFade).Forget();
+            InterpolateTo(alphaFade, cancellationToken.Token).Forget();
         }
 
 
 
-        private async UniTaskVoid InterpolateTo(float alpha)
+        private async UniTaskVoid InterpolateTo(float alpha, CancellationToken token = default)
         {
             while (CurrentAlpha < alpha)
             {
-                await UniTask.NextFrame(PlayerLoopTiming.Update, cancellationToken.Token);
+                await UniTask.NextFrame(PlayerLoopTiming.Update, token);
                 CurrentAlpha += Time.deltaTime * showSpeed;
             }
 
             while (CurrentAlpha > alpha)
             {
-                await UniTask.NextFrame(PlayerLoopTiming.Update, cancellationToken.Token);
+                await UniTask.NextFrame(PlayerLoopTiming.Update, token);
                 CurrentAlpha -= Time.deltaTime * fadeSpeed;
             }
         }
