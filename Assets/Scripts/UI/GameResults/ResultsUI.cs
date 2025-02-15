@@ -1,9 +1,7 @@
 using Cysharp.Threading.Tasks;
 using Scripts.Extensions;
-using Scripts.Gameplay.Fractions;
 using Scripts.SessionManagers;
 using Scripts.UI.Tabs;
-using System;
 using System.Threading;
 using UnityEngine;
 using UnityEngine.Events;
@@ -13,7 +11,7 @@ namespace Scripts.UI.Results
     public class ResultsUI : MonoBehaviour
     {
         [SerializeField] protected SessionManagerDeathmatch sessionManager;
-        [SerializeField] protected TabsTranslaterDOTween tabsTranslater;
+        [SerializeField] protected TabsTranslater tabsTranslater;
         [SerializeField] protected float drawRate;
         [Space]
         [SerializeField] protected CanvasGroup resultsPanel;
@@ -52,7 +50,7 @@ namespace Scripts.UI.Results
             tabsTranslater.SwitchTab(resultsPanel);
             cancellationToken ??= new CancellationTokenSource();
 
-            while (resultsPanel == tabsTranslater.GetCurrentTabGroup())
+            while (tabsTranslater.GetCurrentTabGroup() == resultsPanel)
             {
                 DrawResults();
                 await UniTask.Delay(drawRate.ConvertSecondsToMiliseconds(), cancellationToken: cancellationToken.Token);

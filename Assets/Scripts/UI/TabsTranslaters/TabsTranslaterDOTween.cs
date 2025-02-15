@@ -5,25 +5,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using UnityEngine;
-using static Scripts.UI.Tabs.TabsTranslaterDOTween;
 
 namespace Scripts.UI.Tabs
 {
-    public class TabsTranslaterDOTween : TabsTranslater<TabDOTween>
+    public class TabsTranslaterDOTween : TabsTranslater
     {
         [SerializeField] private TabDOTween[] tabs;
         [SerializeField] private bool fadeTogether;
 
-        public override async UniTask VisualizeSwitchTabs(TabDOTween oldTab, TabDOTween newTab, CancellationToken token = default)
+        public override async UniTask VisualizeSwitchTabs(Tab oldTab, Tab newTab, CancellationToken token = default)
         {
             UniTask oldTabFade = UniTask.CompletedTask;
             UniTask newTabFade = UniTask.CompletedTask;
 
-            if (oldTab != null)
+            if (oldTab != null && oldTab is TabDOTween doOldTab)
             {
-                oldTabFade = oldTab.canvasGroup.DOFade(0.0f, oldTab.fadeDuration)
-                                    .SetEase(oldTab.ease)
-                                    .OnComplete(() => oldTab.canvasGroup.gameObject.SetActive(false))
+                oldTabFade = oldTab.canvasGroup.DOFade(0.0f, doOldTab.fadeDuration)
+                                    .SetEase(doOldTab.ease)
+                                    .OnComplete(() => doOldTab.canvasGroup.gameObject.SetActive(false))
                                     .WithCancellation(token);
 
 
@@ -33,12 +32,12 @@ namespace Scripts.UI.Tabs
                 }
             }
 
-            if (newTab != null)
+            if (newTab != null && newTab is TabDOTween doNewTab)
             {
-                newTab.canvasGroup.gameObject.SetActive(true);
+                doNewTab.canvasGroup.gameObject.SetActive(true);
 
-                newTabFade = newTab.canvasGroup.DOFade(1.0f, newTab.showDuration)
-                                    .SetEase(newTab.ease)
+                newTabFade = newTab.canvasGroup.DOFade(1.0f, doNewTab.showDuration)
+                                    .SetEase(doNewTab.ease)
                                     .WithCancellation(token);
 
                 if (!fadeTogether)
@@ -53,7 +52,7 @@ namespace Scripts.UI.Tabs
             }
         }
 
-        protected override IReadOnlyCollection<TabDOTween> GetTabs() => tabs;
+        protected override IReadOnlyCollection<Tab> GetTabs() => tabs;
 
         [Serializable]
         public class TabDOTween : Tab

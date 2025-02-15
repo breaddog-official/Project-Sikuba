@@ -8,7 +8,7 @@ using NaughtyAttributes;
 
 namespace Scripts.UI.Tabs
 {
-    public abstract class TabsTranslater<T> : MonoBehaviour where T : Tab
+    public abstract class TabsTranslater : MonoBehaviour
     {
         [SerializeField] private bool showInitialOnStart = true;
         [ShowIf(nameof(CanGetTabsGroups))]
@@ -16,7 +16,7 @@ namespace Scripts.UI.Tabs
 
         private CancellationTokenSource cancallationToken;
         private bool switchingTab;
-        private T currentTab;
+        private Tab currentTab;
 
 
         private void Start()
@@ -29,11 +29,11 @@ namespace Scripts.UI.Tabs
 
         public virtual void SwitchTab(CanvasGroup tabGroup) => SwitchTab(FindTab(tabGroup));
 
-        public virtual void SwitchTab(T tab) => SwitchTab(currentTab, tab);
+        public virtual void SwitchTab(Tab tab) => SwitchTab(currentTab, tab);
         public virtual void ShowTab() => SwitchTab(null, currentTab);
         public virtual void HideTab() => SwitchTab(currentTab, null, false);
 
-        public virtual async void SwitchTab(T from, T to, bool withSetCurrentTab = true)
+        public virtual async void SwitchTab(Tab from, Tab to, bool withSetCurrentTab = true)
         {
             if (switchingTab)
                 return;
@@ -51,7 +51,7 @@ namespace Scripts.UI.Tabs
             switchingTab = false;
         }
 
-        public T GetCurrentTab() => currentTab;
+        public Tab GetCurrentTab() => currentTab;
         public CanvasGroup GetCurrentTabGroup() => currentTab.canvasGroup;
 
 
@@ -62,7 +62,7 @@ namespace Scripts.UI.Tabs
             cancallationToken?.Cancel();
         }
 
-        public virtual T FindTab(CanvasGroup canvasGroup)
+        public virtual Tab FindTab(CanvasGroup canvasGroup)
         {
             return GetTabs().Where(t => t.canvasGroup == canvasGroup).FirstOrDefault();
         }
@@ -73,9 +73,9 @@ namespace Scripts.UI.Tabs
         }
 
 
-        public abstract UniTask VisualizeSwitchTabs(T oldTab, T newTab, CancellationToken token = default);
+        public abstract UniTask VisualizeSwitchTabs(Tab oldTab, Tab newTab, CancellationToken token = default);
 
-        protected abstract IReadOnlyCollection<T> GetTabs();
+        protected abstract IReadOnlyCollection<Tab> GetTabs();
 
         protected virtual CanvasGroup[] GetTabsGroups()
         {
@@ -84,7 +84,7 @@ namespace Scripts.UI.Tabs
 
         protected virtual bool CanGetTabsGroups()
         {
-            IReadOnlyCollection<T> tabs = GetTabs();
+            IReadOnlyCollection<Tab> tabs = GetTabs();
             return tabs != null && tabs.Count > 0;
         }
     }

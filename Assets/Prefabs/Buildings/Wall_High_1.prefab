@@ -262,5 +262,6 @@ MonoBehaviour:
   colorHandlerRenderer: {fileID: 7359946632919990263}
   haveMultipleShaders: 1
   opaqueLevel: 0.97
+  opaqueIsShared: 1
   opaqueShader: {fileID: 4800000, guid: 555791742080912419070b3418b5685a, type: 3}
   transparentShader: {fileID: 4800000, guid: 83b5f59708fd84e409a4b55554c88913, type: 3}

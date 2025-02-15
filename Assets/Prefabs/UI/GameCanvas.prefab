@@ -1295,7 +1295,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &3922623823460560173
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1337,7 +1337,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1872859508221695193}
   m_Enabled: 1
-  m_Alpha: 1
+  m_Alpha: 0
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
@@ -1923,11 +1923,48 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sessionManager: {fileID: 0}
-  calculateRate: 0.5
-  resultsPanel: {fileID: 0}
+  tabsTranslater: {fileID: 8153720529793247729}
+  drawRate: 0.5
+  resultsPanel: {fileID: 8991653048365686102}
   <OnDrawResults>k__BackingField:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1322919979812079770}
+        m_TargetAssemblyTypeName: Scripts.UI.Results.ResultsFractionsTextUI, Assembly-CSharp
+        m_MethodName: DrawFractions
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 3079051792515825033}
+        m_TargetAssemblyTypeName: Scripts.UI.Results.ResultsFractionsTextUI, Assembly-CSharp
+        m_MethodName: DrawFractions
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 9018713372853991259}
+        m_TargetAssemblyTypeName: Scripts.UI.Results.ResultsTimeUI, Assembly-CSharp
+        m_MethodName: DrawTime
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &2280789832392997961
 GameObject:
   m_ObjectHideFlags: 0
@@ -2858,7 +2895,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &413977293037888832
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2951,7 +2988,7 @@ GameObject:
   - component: {fileID: 3169755175353600363}
   - component: {fileID: 4445632355372382106}
   - component: {fileID: 9013799204489121606}
-  - component: {fileID: 2244343740310167496}
+  - component: {fileID: 1322919979812079770}
   m_Layer: 5
   m_Name: Winners
   m_TagString: Untagged
@@ -3018,7 +3055,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &2244343740310167496
+--- !u!114 &1322919979812079770
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3027,12 +3064,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 3347304825189483349}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 047c9a01443296543b06be01101b5d41, type: 3}
+  m_Script: {fileID: 11500000, guid: f903a1923524bb5458cef7401c885cd6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   sessionManager: {fileID: 0}
-  fractionsText: {fileID: 8102404330425797969}
   fractionState: 0
+  fractionsText: {fileID: 8102404330425797969}
 --- !u!1 &3566089114542781488
 GameObject:
   m_ObjectHideFlags: 0
@@ -5552,7 +5589,7 @@ GameObject:
   - component: {fileID: 6424853582553751545}
   - component: {fileID: 2600848825549711301}
   - component: {fileID: 976838362090985423}
-  - component: {fileID: 8288047020410441904}
+  - component: {fileID: 3079051792515825033}
   m_Layer: 5
   m_Name: Losers
   m_TagString: Untagged
@@ -5619,7 +5656,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &8288047020410441904
+--- !u!114 &3079051792515825033
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5628,12 +5665,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 7167664295502347721}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 047c9a01443296543b06be01101b5d41, type: 3}
+  m_Script: {fileID: 11500000, guid: f903a1923524bb5458cef7401c885cd6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   sessionManager: {fileID: 0}
-  fractionsText: {fileID: 7749441959382418316}
   fractionState: 2
+  fractionsText: {fileID: 7749441959382418316}
 --- !u!1 &7282930375994310075
 GameObject:
   m_ObjectHideFlags: 0
@@ -6027,13 +6064,14 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 3566089114542781488}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
+      - m_Target: {fileID: 8153720529793247729}
+        m_TargetAssemblyTypeName: Scripts.UI.Tabs.TabsTranslater`1[[Scripts.UI.Tabs.TabsTranslaterDOTween+TabDOTween,
+          Assembly-CSharp
+        m_MethodName: SwitchTab
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgument: {fileID: 8625604852680908687}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.CanvasGroup, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 

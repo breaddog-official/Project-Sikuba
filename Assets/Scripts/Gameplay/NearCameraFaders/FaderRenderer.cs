@@ -12,8 +12,8 @@ namespace Scripts.Gameplay.CameraManagement
         [Range(0f, 1f)]
         [ShowIf(nameof(haveMultipleShaders))]
         [SerializeField] protected float opaqueLevel = 0.97f;
-        //[ShowIf(nameof(haveMultipleShaders))]
-        //[SerializeField] protected bool opaqueIsShared;
+        [ShowIf(nameof(haveMultipleShaders))]
+        [SerializeField] protected bool opaqueIsShared;
         [ShowIf(EConditionOperator.And, nameof(haveMultipleShaders), nameof(NonOpaqueIsShared))]
         [SerializeField] protected Shader opaqueShader;
         [ShowIf(nameof(haveMultipleShaders))]
@@ -28,9 +28,34 @@ namespace Scripts.Gameplay.CameraManagement
             get => colorHandlerRenderer.GetColor().a;
             set
             {
-                sharedMaterial ??= colorHandlerRenderer.Renderer.sharedMaterial;
                 Color color = new(colorHandlerRenderer.Color.r, colorHandlerRenderer.Color.g, colorHandlerRenderer.Color.b, value);
 
+                if (sharedMaterial == null)
+                    sharedMaterial = colorHandlerRenderer.Renderer.sharedMaterial;
+
+                if (haveMultipleShaders)
+                {
+                    if (value < opaqueLevel)
+                    {
+                        // Transparent
+                        cachedMaterial.shader = transparentShader;
+                    }
+                    else if (CurrentAlpha < opaqueLevel)
+                    {
+                        // Opaque
+                        if (opaqueIsShared)
+                        {
+                            Destroy(colorHandlerRenderer.Renderer.material);
+                            colorHandlerRenderer.Renderer.sharedMaterial = sharedMaterial;
+                            colorHandlerRenderer.Renderer.material = sharedMaterial;
+                        } 
+                        else
+                            cachedMaterial.shader = opaqueShader;
+
+                        return;
+                    }
+                }
+                
                 if (cachedMaterial == null)
                 {
                     cachedMaterial = colorHandlerRenderer.SetColorCopyMaterial(color);
@@ -38,26 +63,7 @@ namespace Scripts.Gameplay.CameraManagement
                 else
                 {
                     cachedMaterial.color = color;
-                    colorHandlerRenderer.SetMaterial(cachedMaterial);
                 }
-
-                if (haveMultipleShaders)
-                {
-                    print(CurrentAlpha);
-                    if (CurrentAlpha < opaqueLevel)
-                    {
-                        cachedMaterial.shader = transparentShader;
-                    }
-                    else
-                    {
-                        //if (opaqueIsShared)
-                        //    colorHandlerRenderer.SetMaterial(sharedMaterial);
-                        //else
-                            cachedMaterial.shader = opaqueShader;
-                    }
-                }
-
-                
             }
         }
 
@@ -68,6 +74,6 @@ namespace Scripts.Gameplay.CameraManagement
         }
 
 
-        protected bool NonOpaqueIsShared => true;//!opaqueIsShared;
+        protected bool NonOpaqueIsShared => !opaqueIsShared;
     }
 }
