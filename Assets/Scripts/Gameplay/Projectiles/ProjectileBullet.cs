@@ -132,7 +132,7 @@ namespace Scripts.Gameplay
         [ServerCallback]
         protected virtual void DestroyBullet()
         {
-            lifetimeCancellationToken.Cancel();  
+            lifetimeCancellationToken?.Cancel();  
 
             NetworkServer.Destroy(gameObject);
         }
@@ -155,7 +155,7 @@ namespace Scripts.Gameplay
                 return true;
 
             // If the fraction is not our ally, we can hurt it
-            if (fractionData.Get().GetFractionStatus(fractionData.Get()) != FractionStatus.Ally)
+            if (Fraction.GetFractionStatus(fractionData.Get()) != FractionStatus.Ally)
                 return true;
 
             return false;
@@ -182,6 +182,8 @@ namespace Scripts.Gameplay
 
         private void OnDestroy()
         {
+            lifetimeCancellationToken?.Cancel();
+
             if (destroyEffector != null && NetworkClient.active)
             {
                 destroyEffector.Play();

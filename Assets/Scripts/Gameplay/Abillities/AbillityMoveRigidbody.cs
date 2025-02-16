@@ -56,7 +56,12 @@ namespace Scripts.Gameplay.Abillities
                 return;
 
             if (rb.predictedRigidbody.linearVelocity.magnitude > Speed)
-                rb.predictedRigidbody.linearVelocity = rb.predictedRigidbody.linearVelocity.normalized * Speed;
+            {
+                var fixedVector = rb.predictedRigidbody.linearVelocity.normalized * Speed;
+                rb.predictedRigidbody.linearVelocity = new Vector3(MoveAxis.x ? fixedVector.x : rb.predictedRigidbody.linearVelocity.x,
+                                                                   MoveAxis.y ? fixedVector.y : rb.predictedRigidbody.linearVelocity.y,
+                                                                   MoveAxis.z ? fixedVector.z : rb.predictedRigidbody.linearVelocity.z);
+            }
         }
 
 

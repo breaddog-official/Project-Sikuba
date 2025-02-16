@@ -9,7 +9,6 @@ namespace Scripts.Gameplay.Abillities
     {
         [field: SerializeField] public float JumpForce { get; private set; } = 25.0f;
         [field: SerializeField] public bool DisableDragInAir { get; private set; }
-        [field: SerializeField] public ForceMode ForceMode { get; private set; } = ForceMode.VelocityChange;
 
         private PredictedRigidbody rb;
         private AbillityCollisioner collisioner;
@@ -76,7 +75,7 @@ namespace Scripts.Gameplay.Abillities
 
         private void ApplyJump()
         {
-            rb.predictedRigidbody.AddForce(Vector3.up * JumpForce, ForceMode);
+            rb.predictedRigidbody.AddForce(Vector3.up * JumpForce, ForceMode.VelocityChange);
         }
 
 

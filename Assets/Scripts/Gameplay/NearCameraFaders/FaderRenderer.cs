@@ -43,11 +43,11 @@ namespace Scripts.Gameplay.CameraManagement
                     else if (CurrentAlpha < opaqueLevel)
                     {
                         // Opaque
-                        if (opaqueIsShared)
+                        if (false)//opaqueIsShared)
                         {
-                            Destroy(colorHandlerRenderer.Renderer.material);
-                            colorHandlerRenderer.Renderer.sharedMaterial = sharedMaterial;
-                            colorHandlerRenderer.Renderer.material = sharedMaterial;
+                            //Destroy(colorHandlerRenderer.Renderer.material);
+                            //colorHandlerRenderer.Renderer.sharedMaterial = sharedMaterial;
+                            //colorHandlerRenderer.Renderer.material = sharedMaterial;
                         } 
                         else
                             cachedMaterial.shader = opaqueShader;

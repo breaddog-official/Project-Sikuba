@@ -1,17 +1,18 @@
 using Mirror;
+using System;
 using UnityEngine;
 
 namespace Scripts.Gameplay.Abillities
 {
     public class AbillityHealth : Abillity
     {
-        [Header("Health")]
-        [SerializeField, Min(0f)] private float maxHealth = 100f;
-        [SerializeField, Min(0f)] private float initialHealth = 100f;
+        [field: Header("Health")]
+        [field: SerializeField, Min(0f)] public float MaxHealth { get; protected set; } = 100f;
+        [field: SerializeField, Min(0f)] public float InitialHealth { get; protected set; } = 100f;
 
         [field: SyncVar]
         public float Health { get; protected set; }
-
+        public event Action<float, float> OnHealthChanged;
 
 
 
@@ -32,7 +33,10 @@ namespace Scripts.Gameplay.Abillities
         {
             float modifiedDamage = ModifyDamage(damage);
 
+            OnHealthChanged?.Invoke(Health, Health - modifiedDamage);
+
             Health -= modifiedDamage;
+
 
             if (Health <= 0)
                 Death();
@@ -42,6 +46,8 @@ namespace Scripts.Gameplay.Abillities
         public virtual void Heal(float amount)
         {
             float modifiedAmount = ModifyHeal(amount);
+
+            OnHealthChanged?.Invoke(Health, Health + modifiedAmount);
 
             Health += modifiedAmount;
         }
@@ -57,7 +63,7 @@ namespace Scripts.Gameplay.Abillities
 
         protected virtual float ModifyHeal(float amount)
         {
-            return Mathf.Clamp(amount, 0f, maxHealth - Health);
+            return Mathf.Clamp(amount, 0f, MaxHealth - Health);
         }
 
 
@@ -80,7 +86,7 @@ namespace Scripts.Gameplay.Abillities
         {
             base.ResetState();
 
-            Health = initialHealth;
+            Health = InitialHealth;
         }
     }
 }
