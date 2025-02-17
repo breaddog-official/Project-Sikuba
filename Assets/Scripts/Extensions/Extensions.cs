@@ -12,12 +12,6 @@ using Unity.Cinemachine;
 
 namespace Scripts.Extensions
 {
-    public enum FalsePresentation
-    {
-        Zero,
-        MinusOne
-    }
-
     public static class Extensions
     {
         // Global
@@ -349,23 +343,13 @@ namespace Scripts.Extensions
         #region Vector bool to integer
 
         /// <summary>
-        /// Converts bools to ints
+        /// Converts bools to floats with custom false and true presentation
         /// </summary>
-        public static Vector3Int ToInteger(this GenVector3<bool> value, FalsePresentation falsePresent = FalsePresentation.Zero)
+        public static Vector3 ToVector(this GenVector3<bool> value, float falsePresent = 0, float truePresent = 1)
         {
-            return new Vector3Int(ExtendedMath.ToInteger(value.x, falsePresent), 
-                                  ExtendedMath.ToInteger(value.y, falsePresent), 
-                                  ExtendedMath.ToInteger(value.z, falsePresent));
-        }
-
-        /// <summary>
-        /// Converts bools to ints with custom false presentation
-        /// </summary>
-        public static Vector3Int ToInteger(this GenVector3<bool> value, int falsePresent)
-        {
-            return new Vector3Int(ExtendedMath.ToInteger(value.x, falsePresent),
-                                  ExtendedMath.ToInteger(value.y, falsePresent),
-                                  ExtendedMath.ToInteger(value.z, falsePresent));
+            return new Vector3(ExtendedMath.ToNumber(value.x, falsePresent, truePresent),
+                               ExtendedMath.ToNumber(value.y, falsePresent, truePresent),
+                               ExtendedMath.ToNumber(value.z, falsePresent, truePresent));
         }
 
         #endregion
@@ -514,6 +498,37 @@ namespace Scripts.Extensions
         }
 
         #endregion
+
+        #region Spawn
+
+        /// <summary>
+        /// Same as NetworkServer.Spawn
+        /// </summary>
+        public static T Spawn<T>(this T component, NetworkConnection ownerConnection = null) where T : Component
+        {
+            NetworkServer.Spawn(component.gameObject, ownerConnection);
+            return component;
+        }
+
+        /// <summary>
+        /// Same as NetworkServer.Spawn
+        /// </summary>
+        public static Component Spawn(this Component component, NetworkConnection ownerConnection = null)
+        {
+            NetworkServer.Spawn(component.gameObject, ownerConnection);
+            return component;
+        }
+
+        /// <summary>
+        /// Same as NetworkServer.Spawn
+        /// </summary>
+        public static GameObject Spawn(this GameObject obj, NetworkConnection ownerConnection = null)
+        {
+            NetworkServer.Spawn(obj, ownerConnection);
+            return obj;
+        }
+
+        #endregion
     }
 
 
@@ -535,19 +550,9 @@ namespace Scripts.Extensions
 
         #region ToInteger
 
-        public static int ToInteger(bool value, FalsePresentation falsePresent = FalsePresentation.Zero)
+        public static float ToNumber(bool value, float falsePresent = 0, float truePresent = 1)
         {
-            return ToInteger(value, falsePresent switch
-            {
-                FalsePresentation.Zero => 0,
-                FalsePresentation.MinusOne => -1,
-                _ => throw new NotImplementedException()
-            });
-        }
-
-        public static int ToInteger(bool value, int falsePresent)
-        {
-            return value ? 1 : falsePresent;
+            return value ? truePresent : falsePresent;
         }
 
         #endregion

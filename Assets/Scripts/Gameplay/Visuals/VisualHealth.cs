@@ -10,16 +10,26 @@ namespace Scripts.Gameplay.Visuals
         [SerializeField] protected GenVector3<bool> axis;
         [SerializeField] protected GenVector3<bool> inverse;
 
+        Vector3 cachedPosition;
+        Vector3 cachedScale;
+
+        
+        protected virtual void Awake()
+        {
+            cachedPosition = healthBar.localPosition;
+            cachedScale = healthBar.localScale;
+        }
 
 
-        protected void OnEnable()
+
+        protected virtual void OnEnable()
         {
             Abillity.OnHealthChanged += UpdateHealth;
         }
 
-        protected void OnDisable()
+        protected virtual void OnDisable()
         {
-            Abillity.OnHealthChanged += UpdateHealth;
+            Abillity.OnHealthChanged -= UpdateHealth;
         }
 
 
@@ -28,14 +38,14 @@ namespace Scripts.Gameplay.Visuals
         {
             float health = newHealth / Abillity.MaxHealth;
             float remainder = 1f - health;
-
-            Vector3 scale = new(health, health, health);
-            scale = Vector3.Scale(scale, axis.ToInteger());
+            
+            Vector3 scale = Vector3.Scale(cachedScale, axis.ToVector(truePresent: health, falsePresent: 1));
 
             Vector3 position = new(remainder, remainder, remainder);
-            position = Vector3.Scale(position, inverse.ToInteger(FalsePresentation.MinusOne));
+            position = Vector3.Scale(position, axis.ToVector(0));
+            position = Vector3.Scale(position, inverse.ToVector(-1));
 
-            healthBar.position = position;
+            healthBar.localPosition = cachedPosition + position;
             healthBar.localScale = scale;
         }
     }

@@ -1,7 +1,9 @@
 using Mirror;
 using NaughtyAttributes;
+using Scripts.Extensions;
 using System;
 using UnityEngine;
+using UnityEngine.SocialPlatforms;
 
 namespace Scripts.Gameplay
 {
@@ -18,7 +20,10 @@ namespace Scripts.Gameplay
             [Tooltip("Instantiate object on local machine")]
             Local,
 
-            [Tooltip("Instantiate object on local machine and spawn it on all observers (server only)")]
+            //[Tooltip("Instantiate object on all clients (server only)")]
+            //LocalRpc,
+
+            [Tooltip("Instantiate object on local machine and spawn it on all clients (server only)")]
             Server
         }
 
@@ -41,9 +46,9 @@ namespace Scripts.Gameplay
         {
             if (objects != null)
             {
-                foreach (var obj in objects)
+                for (int i = 0; i < objects.Length; i++)
                 {
-                    ExecuteEffect(SpawnOrGet(obj));
+                    SpawnAndExecute(i);
                 }
             }
         }
@@ -52,17 +57,61 @@ namespace Scripts.Gameplay
         protected abstract void ExecuteEffect(T obj);
 
 
-        protected virtual T SpawnOrGet(Effect effect)
+        protected virtual void SpawnAndExecute(int effectIndex)
         {
-            var spawned = effect.spawnMode == SpawnMode.AlreadyInScene ? effect.effect : Instantiate(effect.effect, SpawnPoint.position, SpawnPoint.rotation);
+            var effect = objects[effectIndex];
+            T spawnedEffect = null;
 
-            if (effect.spawnMode == SpawnMode.Server)
-                NetworkServer.Spawn(spawned.gameObject);
+            switch (effect.spawnMode)
+            {
+                case SpawnMode.AlreadyInScene:
 
-            return spawned;
+                    spawnedEffect = effect.effect;
+                    break;
+
+
+                case SpawnMode.Local:
+
+                    spawnedEffect = Instantiate(effect.effect, SpawnPoint.position, SpawnPoint.rotation);
+                    break;
+
+
+                /*case SpawnMode.LocalRpc:
+
+                    SpawnAndExecuteRpc(effectIndex);
+                    return;*/
+
+
+                case SpawnMode.Server:
+
+                    if (NetworkServer.active)
+                    {
+                        spawnedEffect = Instantiate(effect.effect, SpawnPoint.position, SpawnPoint.rotation);
+                        NetworkServer.Spawn(spawnedEffect.gameObject);
+
+                        break;
+                    }
+
+                    else
+                    {
+                        return;
+                    }
+            }
+
+            if (spawnedEffect != null)
+            {
+                ExecuteEffect(spawnedEffect);
+            }
         }
 
+        /*[ClientRpc]
+        protected virtual void SpawnAndExecuteRpc(int effectIndex)
+        {
+            var effect = objects[effectIndex];
+            var spawnedEffect = Instantiate(effect.effect, SpawnPoint.position, SpawnPoint.rotation);
 
+            ExecuteEffect(spawnedEffect);
+        }*/
 
         protected virtual Transform SpawnPoint => overrideSpawnPoint ? spawnPoint : cachedTransform;
 

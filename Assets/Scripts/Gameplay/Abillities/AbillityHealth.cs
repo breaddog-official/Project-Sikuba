@@ -10,8 +10,9 @@ namespace Scripts.Gameplay.Abillities
         [field: SerializeField, Min(0f)] public float MaxHealth { get; protected set; } = 100f;
         [field: SerializeField, Min(0f)] public float InitialHealth { get; protected set; } = 100f;
 
-        [field: SyncVar]
+        [field: SyncVar(hook = nameof(UpdateHealthHook))]
         public float Health { get; protected set; }
+
         public event Action<float, float> OnHealthChanged;
 
 
@@ -29,11 +30,18 @@ namespace Scripts.Gameplay.Abillities
 
 
         [Server]
+        protected virtual void SetHealth(float health)
+        {
+            //OnHealthChanged?.Invoke(Health, health);
+            Health = health;
+        }
+
+        [Server]
         public virtual void Hurt(float damage)
         {
             float modifiedDamage = ModifyDamage(damage);
 
-            OnHealthChanged?.Invoke(Health, Health - modifiedDamage);
+            //OnHealthChanged?.Invoke(Health, Health - modifiedDamage);
 
             Health -= modifiedDamage;
 
@@ -47,12 +55,10 @@ namespace Scripts.Gameplay.Abillities
         {
             float modifiedAmount = ModifyHeal(amount);
 
-            OnHealthChanged?.Invoke(Health, Health + modifiedAmount);
+            //OnHealthChanged?.Invoke(Health, Health + modifiedAmount);
 
             Health += modifiedAmount;
         }
-
-
 
 
 
@@ -67,6 +73,13 @@ namespace Scripts.Gameplay.Abillities
         }
 
 
+
+        protected virtual void UpdateHealthHook(float oldHealth, float newHealth)
+        {
+            OnHealthChanged?.Invoke(oldHealth, newHealth);
+        }
+
+        
 
 
 
@@ -86,7 +99,7 @@ namespace Scripts.Gameplay.Abillities
         {
             base.ResetState();
 
-            Health = InitialHealth;
+            SetHealth(InitialHealth);
         }
     }
 }

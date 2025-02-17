@@ -30,7 +30,7 @@ namespace Scripts.Gameplay.Abillities
             base.Hurt(damage);
 
             if (hurtEffector != null)
-                hurtEffector.PlayOnClients();
+                hurtEffector.Play();
         }
 
         [Server]
@@ -39,7 +39,7 @@ namespace Scripts.Gameplay.Abillities
             base.Heal(amount);
 
             if (healEffector != null)
-                healEffector.PlayOnClients();
+                healEffector.Play();
         }
 
 
@@ -48,7 +48,7 @@ namespace Scripts.Gameplay.Abillities
         protected override void Death()
         {
             if (deadEffector != null)
-                deadEffector.PlayOnClients();
+                deadEffector.Play();
 
             if (TryGetFraction(out var fraction))
                 fraction.HandleDeath(Entity);
@@ -59,7 +59,7 @@ namespace Scripts.Gameplay.Abillities
         protected override void Respawn()
         {
             if (respawnEffector != null)
-                respawnEffector.PlayOnClients();
+                respawnEffector.Play();
 
             base.Respawn();
         }

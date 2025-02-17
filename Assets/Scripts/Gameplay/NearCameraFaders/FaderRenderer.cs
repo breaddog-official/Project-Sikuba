@@ -30,6 +30,15 @@ namespace Scripts.Gameplay.CameraManagement
             {
                 Color color = new(colorHandlerRenderer.Color.r, colorHandlerRenderer.Color.g, colorHandlerRenderer.Color.b, value);
 
+                if (cachedMaterial == null)
+                {
+                    cachedMaterial = colorHandlerRenderer.SetColorCopyMaterial(color);
+                }
+                else
+                {
+                    cachedMaterial.color = color;
+                }
+
                 if (sharedMaterial == null)
                     sharedMaterial = colorHandlerRenderer.Renderer.sharedMaterial;
 
@@ -56,14 +65,6 @@ namespace Scripts.Gameplay.CameraManagement
                     }
                 }
                 
-                if (cachedMaterial == null)
-                {
-                    cachedMaterial = colorHandlerRenderer.SetColorCopyMaterial(color);
-                }
-                else
-                {
-                    cachedMaterial.color = color;
-                }
             }
         }
 

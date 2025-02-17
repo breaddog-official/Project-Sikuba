@@ -70,8 +70,8 @@ namespace Scripts.Gameplay.Visuals
             Vector3 worldVector = entityTransform.rotation * moveVector;
 
             //print($"MoveVector: {moveVector} \nWorldVector: {worldVector}");
-            worldVector = Vector3.Scale(worldVector, inclineAxis.ToInteger(FalsePresentation.Zero));
-            worldVector = Vector3.Scale(worldVector, invertAxis.ToInteger(FalsePresentation.MinusOne));
+            worldVector = Vector3.Scale(worldVector, inclineAxis.ToVector(0));
+            worldVector = Vector3.Scale(worldVector, invertAxis.ToVector(-1));
             worldVector *= inclineAngle;
 
             ReplaceFromMatrix(ref worldVector, bone.rotation.eulerAngles, inclineAxis, true);

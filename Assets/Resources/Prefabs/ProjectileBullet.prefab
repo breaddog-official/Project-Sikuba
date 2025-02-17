@@ -50,7 +50,7 @@ MonoBehaviour:
   syncInterval: 0
   objects:
   - effect: {fileID: 74078499623404260, guid: 21e11759a0b2ec340a222d6226cecfcc, type: 3}
-    spawnMode: 2
+    spawnMode: 3
   overrideSpawnPoint: 0
   spawnPoint: {fileID: 0}
   bullet: {fileID: 8774783620413609479}

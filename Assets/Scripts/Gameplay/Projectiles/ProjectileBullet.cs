@@ -100,7 +100,6 @@ namespace Scripts.Gameplay
         [ServerCallback]
         protected virtual void OnCollisionEnter(Collision collision)
         {
-            print(collision.gameObject.name);
             if (curHits < maxHits)
             {
                 if (CanHurt(collision.gameObject, out AbillityHealth health))

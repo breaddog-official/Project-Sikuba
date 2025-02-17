@@ -106,7 +106,7 @@ namespace Scripts.Gameplay.Abillities
             Vector3 calculatedVector = input.normalized * (GetDeltaTime() * Acceleration * 10.0f);
 
             // Ignore disabled axis
-            calculatedVector = Vector3.Scale(calculatedVector, MoveAxis.ToInteger());
+            calculatedVector = Vector3.Scale(calculatedVector, MoveAxis.ToVector());
 
             // Apply multiply if needed
             if (AirMove == AirMoveMode.Multiplied && collisioner.InAir())
