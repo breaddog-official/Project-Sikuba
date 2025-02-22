@@ -129,7 +129,7 @@ namespace Mirror
             if (!showSlider) return;
 
             // only show while server is running. not on client, etc.
-            if (!NetworkServer.active) return;
+            if (!NetworkServer.active && Application.isPlaying) return;
 
             int height = 30;
             int width = 250;

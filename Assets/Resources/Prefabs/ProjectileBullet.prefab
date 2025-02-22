@@ -48,9 +48,10 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
+  playOnClients: 0
   objects:
   - effect: {fileID: 74078499623404260, guid: 21e11759a0b2ec340a222d6226cecfcc, type: 3}
-    spawnMode: 3
+    spawnMode: 2
   overrideSpawnPoint: 0
   spawnPoint: {fileID: 0}
   bullet: {fileID: 8774783620413609479}
@@ -105,6 +106,7 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
+  playOnClients: 1
   objects:
   - effect: {fileID: 3118909896946635324}
     spawnMode: 0

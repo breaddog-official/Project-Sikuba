@@ -49,6 +49,7 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
+  playOnClients: 1
   objects:
   - effect: {fileID: 9021306960305022623}
     spawnMode: 0
@@ -374,6 +375,7 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
+  playOnClients: 1
   objects:
   - effect: {fileID: 4836339734464392114}
     spawnMode: 0
@@ -395,6 +397,7 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
+  playOnClients: 1
   objects:
   - effect: {fileID: 9168606280300016857}
     spawnMode: 0
@@ -1086,9 +1089,10 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
+  playOnClients: 0
   objects:
   - effect: {fileID: 74078499623404260, guid: f2d060e67ac202a498c0cddb467c1446, type: 3}
-    spawnMode: 3
+    spawnMode: 2
   overrideSpawnPoint: 0
   spawnPoint: {fileID: 0}
 --- !u!114 &1595301897617857790
@@ -1107,6 +1111,7 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
+  playOnClients: 1
   objects:
   - effect: {fileID: 7274385441771564090}
     spawnMode: 0
@@ -1305,6 +1310,7 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
+  playOnClients: 1
   objects:
   - effect: {fileID: 2789922648626322699}
     spawnMode: 0

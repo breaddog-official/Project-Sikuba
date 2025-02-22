@@ -1,9 +1,7 @@
 using Mirror;
 using NaughtyAttributes;
-using Scripts.Extensions;
 using System;
 using UnityEngine;
-using UnityEngine.SocialPlatforms;
 
 namespace Scripts.Gameplay
 {
@@ -20,13 +18,11 @@ namespace Scripts.Gameplay
             [Tooltip("Instantiate object on local machine")]
             Local,
 
-            //[Tooltip("Instantiate object on all clients (server only)")]
-            //LocalRpc,
-
             [Tooltip("Instantiate object on local machine and spawn it on all clients (server only)")]
             Server
         }
 
+        [SerializeField] protected bool playOnClients = true;
         [SerializeField] protected Effect[] objects;
         [Space]
         [SerializeField] protected bool overrideSpawnPoint;
@@ -40,6 +36,14 @@ namespace Scripts.Gameplay
         protected virtual void Awake()
         {
             cachedTransform = transform;
+        }
+
+        public override void Play()
+        {
+            if (playOnClients && NetworkServer.active)
+                PlayOnClients();
+
+            base.Play();
         }
 
         protected override void PlayEffect()
@@ -76,26 +80,14 @@ namespace Scripts.Gameplay
                     break;
 
 
-                /*case SpawnMode.LocalRpc:
-
-                    SpawnAndExecuteRpc(effectIndex);
-                    return;*/
-
-
                 case SpawnMode.Server:
 
                     if (NetworkServer.active)
                     {
                         spawnedEffect = Instantiate(effect.effect, SpawnPoint.position, SpawnPoint.rotation);
                         NetworkServer.Spawn(spawnedEffect.gameObject);
-
-                        break;
                     }
-
-                    else
-                    {
-                        return;
-                    }
+                    break;
             }
 
             if (spawnedEffect != null)
@@ -104,14 +96,6 @@ namespace Scripts.Gameplay
             }
         }
 
-        /*[ClientRpc]
-        protected virtual void SpawnAndExecuteRpc(int effectIndex)
-        {
-            var effect = objects[effectIndex];
-            var spawnedEffect = Instantiate(effect.effect, SpawnPoint.position, SpawnPoint.rotation);
-
-            ExecuteEffect(spawnedEffect);
-        }*/
 
         protected virtual Transform SpawnPoint => overrideSpawnPoint ? spawnPoint : cachedTransform;
 

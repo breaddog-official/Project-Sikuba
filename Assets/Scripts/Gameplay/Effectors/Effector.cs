@@ -9,6 +9,12 @@ namespace Scripts.Gameplay
             PlayEffect();
         }
 
+        [ClientRpc]
+        protected virtual void PlayOnClients()
+        {
+            PlayEffect();
+        }
+
 
         protected abstract void PlayEffect();
     }
